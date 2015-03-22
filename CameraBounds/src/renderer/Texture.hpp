@@ -6,7 +6,6 @@
 /*
  *  Basic texture
  */
-
 class Texture
 {
 public:

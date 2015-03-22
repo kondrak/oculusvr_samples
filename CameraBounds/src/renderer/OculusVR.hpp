@@ -3,21 +3,11 @@
 
 #include "InputHandlers.hpp"
 #include "renderer/OpenGL.hpp"
-#include "OVR.h"
-#include "OVR_CAPI.h"
-#include "OVR_CAPI_GL.h"
-#include "Kernel/OVR_Math.h"
+#include "renderer/CameraFrustum.hpp"
 
-class TrackerFrustum
-{
-public:
-    void Recalculate(ovrHmd hmd);
-    void OnRender();
-private:
-    GLuint m_vertexArrays[3];
-    GLuint m_vertexBuffers[3];
-};
-
+/*
+ * Oculus Rift DK2 setup class (as of SDK 0.4.4)
+ */
 class OculusVR
 {
 public:
@@ -55,7 +45,7 @@ private:
     GLuint m_renderBuffer;
     GLuint m_texture;
 
-    TrackerFrustum m_trackerFrustum;
+    CameraFrustum m_cameraFrustum;
 };
 
 

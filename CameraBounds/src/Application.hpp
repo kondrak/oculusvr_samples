@@ -9,7 +9,6 @@
 /*
  * main application 
  */
-
 class Application
 {
 public:

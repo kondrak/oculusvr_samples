@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     g_oculusVR.InitVR();
     OVR::Vector4i windowDim = g_oculusVR.RenderDimensions();
 
-    g_renderContext.Init("Oculus Rift IR Camera Bound Renderer", windowDim.x, windowDim.y, windowDim.z, windowDim.w);
+    g_renderContext.Init("Oculus Rift IR Camera Bounds Renderer", windowDim.x, windowDim.y, windowDim.z, windowDim.w);
     SDL_ShowCursor( SDL_DISABLE );
 
     if (glewInit() != GLEW_OK)

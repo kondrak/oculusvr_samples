@@ -8,7 +8,6 @@
 /*
  * SDL-based OpenGL render context
  */
-
 class RenderContext
 {
 public:
