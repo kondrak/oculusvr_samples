@@ -1,7 +1,6 @@
 #ifndef APPLICATION_INCLUDED
 #define APPLICATION_INCLUDED
 
-#include <map>
 #include "InputHandlers.hpp"
 #include "renderer/OpenGL.hpp"
 #include "renderer/Texture.hpp"
