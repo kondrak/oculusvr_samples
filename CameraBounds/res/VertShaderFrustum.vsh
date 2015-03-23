@@ -1,7 +1,8 @@
-#version 100
+#version 330
 
-attribute highp   vec3 inVertex;
-uniform highp     mat4 ModelViewProjectionMatrix;
+uniform mat4 ModelViewProjectionMatrix;
+
+in vec3 inVertex;
 
 void main()
 {

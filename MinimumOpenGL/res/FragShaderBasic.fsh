@@ -1,8 +1,9 @@
-#version 100
-uniform sampler2D  sTexture;
+#version 330
 
-varying mediump vec2   TexCoord;
-varying mediump vec4 vertexColor;
+uniform sampler2D sTexture;
+
+in vec2 TexCoord;
+in vec4 vertexColor;
 
 void main()
 {

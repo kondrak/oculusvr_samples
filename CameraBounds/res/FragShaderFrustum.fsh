@@ -1,6 +1,6 @@
-#version 100
+#version 330
 
-uniform lowp vec3 vertexColor;
+uniform vec3 vertexColor;
 
 void main()
 {

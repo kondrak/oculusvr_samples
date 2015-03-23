@@ -1,12 +1,13 @@
-#version 100
+#version 330
 
-attribute highp   vec3 inVertex;
-attribute mediump vec4 inVertexColor;
-attribute mediump vec2 inTexCoord;
+uniform mat4 ModelViewProjectionMatrix;
 
-uniform highp   mat4 ModelViewProjectionMatrix;
-varying mediump vec4 vertexColor;
-varying mediump vec2  TexCoord;
+in vec3 inVertex;
+in vec4 inVertexColor;
+in vec2 inTexCoord;
+
+out vec4 vertexColor;
+out vec2 TexCoord;
 
 void main()
 {
