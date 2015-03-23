@@ -3,6 +3,7 @@
 
 #include "renderer/OpenGL.hpp"
 #include "renderer/Shader.hpp"
+#include <string>
 
 class ShaderManager
 {
@@ -31,7 +32,7 @@ private:
 
     ~ShaderManager();
 
-    char *ReadShaderFromFile(const char *filename);
+    std::string ReadShaderFromFile(const char *filename);
     void CompileShader(GLuint *newShader, GLenum shaderType, const char *shaderSrc);
     void LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename);
     bool LinkShader(GLuint* const pProgramObject, const GLuint VertexShader, const GLuint FragmentShader); /*, const char** const pszAttribs, const int i32NumAttribs)*/

@@ -55,8 +55,6 @@ const ShaderProgram& ShaderManager::UseShaderProgram(ShaderName type)
     if (m_activeShader != type)
     {
         m_activeShader = type;
-        //CLAW_ASSERT(m_activeShader != NUM_SHADERS);
-
         glUseProgram(m_shaderProgram[type].id);
     }
 
@@ -64,12 +62,9 @@ const ShaderProgram& ShaderManager::UseShaderProgram(ShaderName type)
 }
 
 
-char *ShaderManager::ReadShaderFromFile(const char *filename)
+std::string ShaderManager::ReadShaderFromFile(const char *filename)
 {
-    std::ifstream file;
-    std::streampos begin, end;
-
-    file.open(filename);
+    std::ifstream file(filename);
 
     if (!file.is_open())
     {
@@ -77,20 +72,17 @@ char *ShaderManager::ReadShaderFromFile(const char *filename)
         return NULL;
     }
 
-    // get file size
-    begin = file.tellg();
-    file.seekg(0, std::ios::end);
-    end = file.tellg();
-    file.seekg(0, std::ios::beg);
+    std::string shaderSrc;
+    std::string readStr;
 
-    // allocate extra character for null terminator 
-    char *shaderSrc = new char[(unsigned int)(end - begin) + 1];
+    while (!file.eof())
+    {
+        std::getline(file, readStr);
+        shaderSrc.append(readStr);
+        shaderSrc.append("\n");
+    }
 
-    file.read(shaderSrc, end - begin);
     file.close();
-
-    // properly terminate read string
-    shaderSrc[end - begin] = '\0';
 
     return shaderSrc;
 }
@@ -101,7 +93,6 @@ void ShaderManager::CompileShader(GLuint *newShader, GLenum shaderType, const ch
     /* Create and compile the shader object */
     *newShader = glCreateShader(shaderType);
 
-    //const char *src = vShaderSrc;
     glShaderSource(*newShader, 1, &shaderSrc, NULL);
     glCompileShader(*newShader);
 
@@ -124,10 +115,8 @@ void ShaderManager::CompileShader(GLuint *newShader, GLenum shaderType, const ch
 
 // create the actual shader program
 bool ShaderManager::LinkShader(GLuint* const pProgramObject,
-    const GLuint VertexShader,
-    const GLuint FragmentShader) /*,
-                                 const char** const pszAttribs,
-                                 const int i32NumAttribs)*/
+                               const GLuint VertexShader,
+                               const GLuint FragmentShader)
 {
     *pProgramObject = glCreateProgram();
 
@@ -164,11 +153,11 @@ bool ShaderManager::LinkShader(GLuint* const pProgramObject,
 
 void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename)
 {
-    char *vShaderSrc = ReadShaderFromFile(vshFilename);
-    char *fShaderSrc = ReadShaderFromFile(fshFilename);
+    std::string vShaderSrc = ReadShaderFromFile(vshFilename);
+    std::string fShaderSrc = ReadShaderFromFile(fshFilename);
 
-    CompileShader(&m_shaderProgram[shaderName].vertShader, GL_VERTEX_SHADER, vShaderSrc);
-    CompileShader(&m_shaderProgram[shaderName].fragShader, GL_FRAGMENT_SHADER, fShaderSrc);
+    CompileShader(&m_shaderProgram[shaderName].vertShader, GL_VERTEX_SHADER, vShaderSrc.c_str());
+    CompileShader(&m_shaderProgram[shaderName].fragShader, GL_FRAGMENT_SHADER, fShaderSrc.c_str());
 
     LinkShader(&m_shaderProgram[shaderName].id, m_shaderProgram[shaderName].vertShader, m_shaderProgram[shaderName].fragShader);
 
@@ -177,7 +166,4 @@ void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, c
     {
         m_shaderProgram[shaderName].uniforms[j] = glGetUniformLocation(m_shaderProgram[shaderName].id, aszUniformNames[j]);
     }
-
-    delete[] vShaderSrc;
-    delete[] fShaderSrc;
 }
