@@ -1,13 +1,14 @@
-#include "renderer/CameraFrustum.hpp"
+#include "renderer/OVRCameraFrustum.hpp"
 #include "renderer/ShaderManager.hpp"
+#include "Extras/OVR_Math.h"
 
-void CameraFrustum::Recalculate(ovrHmd hmd)
+void OVRCameraFrustum::Recalculate(ovrHmd hmd)
 {
     ovrTrackingState tState = ovrHmd_GetTrackingState(hmd, 0.0f);
 
     ovrVector3f trackerPose = tState.CameraPose.Position;
 
-    float trackerFar = hmd->CameraFrustumFarZInMeters;
+    float trackerFar  = hmd->CameraFrustumFarZInMeters;
     float trackerNear = hmd->CameraFrustumNearZInMeters;
     float trackerHFov = hmd->CameraFrustumHFovInRadians;
     float trackerVFov = hmd->CameraFrustumVFovInRadians;
@@ -106,15 +107,14 @@ void CameraFrustum::Recalculate(ovrHmd hmd)
     glBufferData(GL_ARRAY_BUFFER, sizeof(farPlaneVertexData), farPlaneVertexData, GL_STATIC_DRAW);
 }
 
-void CameraFrustum::OnRender()
+void OVRCameraFrustum::OnRender()
 {
-    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::FrustumShader);
+    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
     GLuint vertexPositionAttr = glGetAttribLocation(shader.id, "inVertex");
 
     const float frustumColor[3] = { 0.67f, 0.27f, 0.05f };
     const float planeColor[3] = { 1.f, 0.f, 0.f };
     const float orientationVecColor[3] = { 0.f, 1.f, 0.f };
-
 
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

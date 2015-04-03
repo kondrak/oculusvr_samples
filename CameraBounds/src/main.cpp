@@ -66,7 +66,7 @@ int main(int argc, char **argv)
             // update MVP in both shaders
             const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
-            const ShaderProgram &shader2 = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::FrustumShader);
+            const ShaderProgram &shader2 = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
             glUniformMatrix4fv(shader2.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
             g_application.OnRender();     

@@ -12,7 +12,7 @@ public:
     enum ShaderName
     {
         BasicShader,
-        FrustumShader,
+        OVRFrustumShader,
         NUM_SHADERS
     };
 

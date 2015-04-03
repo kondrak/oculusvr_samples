@@ -51,7 +51,7 @@
     <ClCompile Include="src\renderer\OculusVR.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\CameraFrustum.cpp">
+    <ClCompile Include="src\renderer\OVRCameraFrustum.cpp">
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClInclude Include="src\renderer\OpenGL.hpp">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\CameraFrustum.hpp">
+    <ClInclude Include="src\renderer\OVRCameraFrustum.hpp">
       <Filter>Source Files\renderer</Filter>
     </ClInclude>
   </ItemGroup>

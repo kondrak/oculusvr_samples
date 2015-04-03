@@ -15,8 +15,8 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\InputHandlers.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\renderer\CameraFrustum.cpp" />
     <ClCompile Include="src\renderer\OculusVR.cpp" />
+    <ClCompile Include="src\renderer\OVRCameraFrustum.cpp" />
     <ClCompile Include="src\renderer\RenderContext.cpp" />
     <ClCompile Include="src\renderer\Shader.cpp" />
     <ClCompile Include="src\renderer\ShaderManager.cpp" />
@@ -27,9 +27,9 @@
     <ClInclude Include="contrib\stb_image\stb_image.h" />
     <ClInclude Include="src\Application.hpp" />
     <ClInclude Include="src\InputHandlers.hpp" />
-    <ClInclude Include="src\renderer\CameraFrustum.hpp" />
     <ClInclude Include="src\renderer\OculusVR.hpp" />
     <ClInclude Include="src\renderer\OpenGL.hpp" />
+    <ClInclude Include="src\renderer\OVRCameraFrustum.hpp" />
     <ClInclude Include="src\renderer\RenderContext.hpp" />
     <ClInclude Include="src\renderer\Shader.hpp" />
     <ClInclude Include="src\renderer\ShaderManager.hpp" />
@@ -84,13 +84,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(OCULUS_SDK)/LibOVR/Include;$(OCULUS_SDK)/LibOVR/Src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OCULUS_SDK)/LibOVR/Include;$(OCULUS_SDK)/LibOVR/Src;$(OCULUS_SDK)/LibOVRKernel/Src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;libovrd.lib;ws2_32.lib;;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVR/Lib/Win32/VS2013/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;ws2_32.lib;libOVR.lib;LibOVRKernel.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVRKernel/Lib/Windows/$(Platform)/$(Configuration)/VS2013/;$(OCULUS_SDK)/LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2013/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,15 +103,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>USE_VR;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(OCULUS_SDK)/LibOVR/Include;$(OCULUS_SDK)/LibOVR/Src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OCULUS_SDK)/LibOVR/Include;$(OCULUS_SDK)/LibOVR/Src;$(OCULUS_SDK)/LibOVRKernel/Src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;libovr.lib;ws2_32.lib;;winmm.lib;;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVR/Lib/Win32/VS2013/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;ws2_32.lib;libOVR.lib;LibOVRKernel.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVRKernel/Lib/Windows/$(Platform)/$(Configuration)/VS2013/;$(OCULUS_SDK)/LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2013/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

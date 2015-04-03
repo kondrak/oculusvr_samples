@@ -1,15 +1,13 @@
-#ifndef CAMERA_FRUSTUM_HPP
-#define CAMERA_FRUSTUM_HPP
+#ifndef OVRCAMERAFRUSTUM_HPP
+#define OVRCAMERAFRUSTUM_HPP
 #include "renderer/OpenGL.hpp"
-#include "OVR.h"
-#include "OVR_CAPI.h"
+#include "OVR_CAPI_0_5_0.h"
 #include "OVR_CAPI_GL.h"
-#include "Kernel/OVR_Math.h"
 
 /*
  * Rendering class for IR tracking camera bounds (frustum)
  */
-class CameraFrustum
+class OVRCameraFrustum
 {
 public:
     void Recalculate(ovrHmd hmd);

@@ -47,7 +47,7 @@ void ShaderManager::DestroyShaders()
 void ShaderManager::LoadShaders()
 {
     LoadShader(BasicShader, "res/VertShaderBasic.vsh", "res/FragShaderBasic.fsh");
-    LoadShader(FrustumShader, "res/VertShaderFrustum.vsh", "res/FragShaderFrustum.fsh");
+    LoadShader(OVRFrustumShader, "res/VertShaderFrustum.vsh", "res/FragShaderFrustum.fsh");
 }
 
 // use shader program

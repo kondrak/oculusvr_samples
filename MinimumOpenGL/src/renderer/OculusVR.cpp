@@ -1,6 +1,6 @@
 #include "renderer/OculusVR.hpp"
 #include "renderer/ShaderManager.hpp"
-
+#include "OVR_CAPI_GL.h"
 
 OculusVR::~OculusVR()
 {
@@ -60,18 +60,18 @@ bool OculusVR::InitVRBuffers()
         return false;
     }
 
-    eyeRenderViewport[0].Pos  = OVR::Vector2i(0, 0);
-    eyeRenderViewport[0].Size = OVR::Sizei(renderTargetSize.w / 2, renderTargetSize.h);
-    eyeRenderViewport[1].Pos  = OVR::Vector2i((renderTargetSize.w + 1) / 2, 0);
-    eyeRenderViewport[1].Size = eyeRenderViewport[0].Size;
+    m_eyeRenderViewport[0].Pos  = OVR::Vector2i(0, 0);
+    m_eyeRenderViewport[0].Size = OVR::Sizei(renderTargetSize.w / 2, renderTargetSize.h);
+    m_eyeRenderViewport[1].Pos  = OVR::Vector2i((renderTargetSize.w + 1) / 2, 0);
+    m_eyeRenderViewport[1].Size = m_eyeRenderViewport[0].Size;
 
-    eyeTexture[0].OGL.Header.API = ovrRenderAPI_OpenGL;
-    eyeTexture[0].OGL.Header.TextureSize = renderTargetSize;
-    eyeTexture[0].OGL.Header.RenderViewport = eyeRenderViewport[0];
-    eyeTexture[0].OGL.TexId = m_texture;
+    m_eyeTexture[0].Header.API = ovrRenderAPI_OpenGL;
+    m_eyeTexture[0].Header.TextureSize = renderTargetSize;
+    m_eyeTexture[0].Header.RenderViewport = m_eyeRenderViewport[0];   
+    ((ovrGLTextureData*)&m_eyeTexture[0])->TexId = m_texture;
 
-    eyeTexture[1] = eyeTexture[0];
-    eyeTexture[1].OGL.Header.RenderViewport = eyeRenderViewport[1];
+    m_eyeTexture[1] = m_eyeTexture[0];
+    m_eyeTexture[1].Header.RenderViewport = m_eyeRenderViewport[1];
 
     return true;
 }
@@ -83,9 +83,8 @@ void OculusVR::ConfigureRender(void *window, int w, int h)
 
     cfg.OGL.Header.API = ovrRenderAPI_OpenGL;
 
-    // normally it would be best to use m_hmd->Resolution.w/h here but as of SDK 0.4.4 
-    // it's impossible to separate window size from framebuffer size. This applies to direct mode only.
-
+    // Normally it would be best to use m_hmd->Resolution.w/h here but with OVR + OpenGL it's impossible to separate window size from framebuffer size.
+    // This applies to direct mode only.
     if (IsDirectMode())
     {
         cfg.OGL.Header.BackBufferSize = OVR::Sizei(w, h);
@@ -103,12 +102,12 @@ void OculusVR::ConfigureRender(void *window, int w, int h)
         ovrHmd_AttachToWindow(m_hmd, window, NULL, NULL);
 
     // Set the configuration and receive eye render descriptors in return.
-    ovrHmd_ConfigureRendering(m_hmd, &cfg.Config, ovrDistortionCap_Chromatic
-                                                  | ovrDistortionCap_Vignette
+    ovrHmd_ConfigureRendering(m_hmd, &cfg.Config, ovrDistortionCap_Vignette
                                                   | ovrDistortionCap_TimeWarp
-                                                  | ovrDistortionCap_Overdrive,
+                                                  | ovrDistortionCap_Overdrive
+                                                  | ovrDistortionCap_HqDistortion,
                                                   m_hmd->DefaultEyeFov, 
-                                                  eyeRenderDesc);
+                                                  m_eyeRenderDesc);
 }
 
 void OculusVR::DestroyVR()
@@ -125,34 +124,38 @@ void OculusVR::DestroyVR()
     }
 }
 
+
 void OculusVR::OnRenderStart()
 {
-    useHmdToEyeViewOffset[0] = eyeRenderDesc[0].HmdToEyeViewOffset;
-    useHmdToEyeViewOffset[1] = eyeRenderDesc[1].HmdToEyeViewOffset;
+    m_useHmdToEyeViewOffset[0] = m_eyeRenderDesc[0].HmdToEyeViewOffset;
+    m_useHmdToEyeViewOffset[1] = m_eyeRenderDesc[1].HmdToEyeViewOffset;
 
-    ovrHmd_BeginFrame(m_hmd, 0);
+    m_frameTiming   = ovrHmd_BeginFrame(m_hmd, 0);
+    m_trackingState = ovrHmd_GetTrackingState(m_hmd, m_frameTiming.ScanoutMidpointSeconds);
+
     glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
 
     // Get both eye poses simultaneously, with IPD offset already included. 
-    ovrHmd_GetEyePoses(m_hmd, 0, useHmdToEyeViewOffset, eyeRenderPose, NULL);
+    ovrHmd_GetEyePoses(m_hmd, 0, m_useHmdToEyeViewOffset, m_eyeRenderPose, NULL);
 }
+
 
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex) const
 {
     ovrEyeType eye = m_hmd->EyeRenderOrder[eyeIndex];
 
-    glViewport(eyeRenderViewport[eye].Pos.x, eyeRenderViewport[eye].Pos.y, eyeRenderViewport[eye].Size.w, eyeRenderViewport[eye].Size.h);
+    glViewport(m_eyeRenderViewport[eye].Pos.x, m_eyeRenderViewport[eye].Pos.y, m_eyeRenderViewport[eye].Size.w, m_eyeRenderViewport[eye].Size.h);
 
-    return OVR::Matrix4f(ovrMatrix4f_Projection(eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, true)) *
-           OVR::Matrix4f::Translation(eyeRenderDesc[eye].HmdToEyeViewOffset) *
-           OVR::Matrix4f(OVR::Quatf(eyeRenderPose[eye].Orientation).Inverted()) *
-           OVR::Matrix4f::Translation(-OVR::Vector3f(eyeRenderPose[eye].Position));
+    return OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, true)) *
+           OVR::Matrix4f::Translation(m_eyeRenderDesc[eye].HmdToEyeViewOffset) *
+           OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eye].Orientation).Inverted()) *
+           OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eye].Position));
 }
 
 
 void OculusVR::OnRenderEnd()
 {
-    ovrHmd_EndFrame(m_hmd, eyeRenderPose, &eyeTexture[0].Texture);
+    ovrHmd_EndFrame(m_hmd, m_eyeRenderPose, &m_eyeTexture[0]);
 }
 
 void OculusVR::OnKeyPress(KeyCode key)
@@ -162,7 +165,7 @@ void OculusVR::OnKeyPress(KeyCode key)
 
     switch (key)
     {
-    case KEY_R:
+    case KEY_SPACE:
         ovrHmd_RecenterPose(m_hmd);
         break;
     }
