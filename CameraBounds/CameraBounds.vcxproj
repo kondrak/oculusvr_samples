@@ -11,33 +11,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="contrib\stb_image\stb_image.c" />
+    <ClCompile Include="..\common_libs\stb_image\stb_image.c" />
+    <ClCompile Include="..\common_src\InputHandlers.cpp" />
+    <ClCompile Include="..\common_src\renderer\RenderContext.cpp" />
+    <ClCompile Include="..\common_src\renderer\Shader.cpp" />
+    <ClCompile Include="..\common_src\renderer\ShaderManager.cpp" />
+    <ClCompile Include="..\common_src\renderer\Texture.cpp" />
+    <ClCompile Include="..\common_src\renderer\TextureManager.cpp" />
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\InputHandlers.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\renderer\OculusVR.cpp" />
     <ClCompile Include="src\renderer\OVRCameraFrustum.cpp" />
-    <ClCompile Include="src\renderer\RenderContext.cpp" />
-    <ClCompile Include="src\renderer\Shader.cpp" />
-    <ClCompile Include="src\renderer\ShaderManager.cpp" />
-    <ClCompile Include="src\renderer\Texture.cpp" />
-    <ClCompile Include="src\renderer\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="contrib\stb_image\stb_image.h" />
+    <ClInclude Include="..\common_libs\stb_image\stb_image.h" />
+    <ClInclude Include="..\common_src\InputHandlers.hpp" />
+    <ClInclude Include="..\common_src\renderer\OpenGL.hpp" />
+    <ClInclude Include="..\common_src\renderer\RenderContext.hpp" />
+    <ClInclude Include="..\common_src\renderer\Shader.hpp" />
+    <ClInclude Include="..\common_src\renderer\ShaderManager.hpp" />
+    <ClInclude Include="..\common_src\renderer\Texture.hpp" />
+    <ClInclude Include="..\common_src\renderer\TextureManager.hpp" />
     <ClInclude Include="src\Application.hpp" />
-    <ClInclude Include="src\InputHandlers.hpp" />
     <ClInclude Include="src\renderer\OculusVR.hpp" />
-    <ClInclude Include="src\renderer\OpenGL.hpp" />
     <ClInclude Include="src\renderer\OVRCameraFrustum.hpp" />
-    <ClInclude Include="src\renderer\RenderContext.hpp" />
-    <ClInclude Include="src\renderer\Shader.hpp" />
-    <ClInclude Include="src\renderer\ShaderManager.hpp" />
-    <ClInclude Include="src\renderer\Texture.hpp" />
-    <ClInclude Include="src\renderer\TextureManager.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{74D78140-348F-4C55-9D29-C41940DBC100}</ProjectGuid>
+    <ProjectGuid>{44716A30-151D-476A-A44A-7C38EB67F7BE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CameraBounds</RootNamespace>
     <ProjectName>CameraBounds</ProjectName>
@@ -68,13 +68,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>contrib\SDL\include;contrib;src;$(IncludePath)</IncludePath>
-    <LibraryPath>contrib\SDL\lib\x86;contrib\glew-1.11.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\common_libs\SDL\include;..\common_libs;..\common_src;src;$(IncludePath)</IncludePath>
+    <LibraryPath>..\common_libs\SDL\lib\x86;..\common_libs\glew-1.11.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>contrib\SDL\include;contrib;src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>contrib\SDL\lib\x86;contrib\glew-1.11.0\lib\Release\Win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>..\common_libs\SDL\include;..\common_libs;..\common_src;src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\common_libs\SDL\lib\x86;..\common_libs\glew-1.11.0\lib\Release\Win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

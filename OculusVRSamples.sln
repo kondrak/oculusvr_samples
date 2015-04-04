@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinimumOpenGL", "MinimumOpenGL\MinimumOpenGL.vcxproj", "{74D78140-348F-4C55-9D29-C41940DBC100}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraBounds", "CameraBounds\CameraBounds.vcxproj", "{44716A30-151D-476A-A44A-7C38EB67F7BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74D78140-348F-4C55-9D29-C41940DBC100}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74D78140-348F-4C55-9D29-C41940DBC100}.Debug|Win32.Build.0 = Debug|Win32
+		{74D78140-348F-4C55-9D29-C41940DBC100}.Release|Win32.ActiveCfg = Release|Win32
+		{74D78140-348F-4C55-9D29-C41940DBC100}.Release|Win32.Build.0 = Release|Win32
+		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Debug|Win32.Build.0 = Debug|Win32
+		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Release|Win32.ActiveCfg = Release|Win32
+		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

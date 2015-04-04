@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\renderer">
+    <Filter Include="Source Files\contrib">
+      <UniqueIdentifier>{3d341720-402a-411c-80f4-6edd4f5aeb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\oculusVR">
       <UniqueIdentifier>{ef909dd3-c34b-41a0-95e6-5c9948c6afbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\contrib">
-      <UniqueIdentifier>{17d3385a-0ab1-42fa-ae7d-c404ffd460a9}</UniqueIdentifier>
+    <Filter Include="Source Files\common_src">
+      <UniqueIdentifier>{dfa6b990-5631-4fe4-89a9-aa8fda7f0d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common_src\renderer">
+      <UniqueIdentifier>{c5de5417-194d-47cd-86e0-7195f992da47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,61 +33,61 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\RenderContext.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="src\renderer\OculusVR.cpp">
+      <Filter>Source Files\oculusVR</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\Texture.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="contrib\stb_image\stb_image.c">
+    <ClCompile Include="..\common_libs\stb_image\stb_image.c">
       <Filter>Source Files\contrib</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputHandlers.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\common_src\renderer\RenderContext.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\Shader.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\common_src\renderer\Shader.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\ShaderManager.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\common_src\renderer\ShaderManager.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\TextureManager.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\common_src\renderer\Texture.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\OculusVR.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="..\common_src\renderer\TextureManager.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\InputHandlers.cpp">
+      <Filter>Source Files\common_src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\RenderContext.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="src\renderer\OculusVR.hpp">
+      <Filter>Source Files\oculusVR</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\Texture.hpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="contrib\stb_image\stb_image.h">
+    <ClInclude Include="..\common_libs\stb_image\stb_image.h">
       <Filter>Source Files\contrib</Filter>
     </ClInclude>
-    <ClInclude Include="src\InputHandlers.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\common_src\renderer\OpenGL.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\Shader.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="..\common_src\renderer\RenderContext.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\ShaderManager.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="..\common_src\renderer\Shader.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\TextureManager.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="..\common_src\renderer\ShaderManager.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\OculusVR.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="..\common_src\renderer\Texture.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\OpenGL.hpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClInclude Include="..\common_src\renderer\TextureManager.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\InputHandlers.hpp">
+      <Filter>Source Files\common_src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
