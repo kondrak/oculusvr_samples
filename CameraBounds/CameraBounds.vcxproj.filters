@@ -36,9 +36,6 @@
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\common_src\renderer\Shader.cpp">
-      <Filter>Source Files\common_src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>

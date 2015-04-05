@@ -16,7 +16,6 @@
     <ClCompile Include="..\common_src\renderer\OculusVR.cpp" />
     <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp" />
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp" />
-    <ClCompile Include="..\common_src\renderer\Shader.cpp" />
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp" />
     <ClCompile Include="..\common_src\renderer\Texture.cpp" />
     <ClCompile Include="..\common_src\renderer\TextureManager.cpp" />

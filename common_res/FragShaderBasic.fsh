@@ -1,11 +1,13 @@
-#version 330
+#version 410
 
 uniform sampler2D sTexture;
 
-in vec2 TexCoord;
-in vec4 vertexColor;
+layout(location = 3) in vec4 vertexColor;
+layout(location = 4) in vec2 TexCoord;
+
+out vec4 fragmentColor;
 
 void main()
 {
-    gl_FragColor = texture2D(sTexture, TexCoord) * vertexColor; 
+    fragmentColor = texture2D(sTexture, TexCoord) * vertexColor; 
 }

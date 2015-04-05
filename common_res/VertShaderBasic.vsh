@@ -1,13 +1,13 @@
-#version 330
+#version 410
 
 uniform mat4 ModelViewProjectionMatrix;
 
-in vec3 inVertex;
-in vec4 inVertexColor;
-in vec2 inTexCoord;
+layout(location = 0) in vec3 inVertex;
+layout(location = 1) in vec4 inVertexColor;
+layout(location = 2) in vec2 inTexCoord;
 
-out vec4 vertexColor;
-out vec2  TexCoord;
+layout(location = 3) out vec4 vertexColor;
+layout(location = 4) out vec2  TexCoord;
 
 void main()
 {

@@ -36,9 +36,6 @@
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\common_src\renderer\Shader.cpp">
-      <Filter>Source Files\common_src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
@@ -71,9 +68,6 @@
     <ClInclude Include="..\common_src\renderer\RenderContext.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\common_src\renderer\Shader.hpp">
-      <Filter>Source Files\common_src\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\common_src\renderer\ShaderManager.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
@@ -90,6 +84,9 @@
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\Shader.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
   </ItemGroup>

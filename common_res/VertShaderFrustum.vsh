@@ -1,8 +1,8 @@
-#version 330
+#version 410
 
 uniform mat4 ModelViewProjectionMatrix;
 
-in vec3 inVertex;
+layout(location = 0) in vec3 inVertex;
 
 void main()
 {

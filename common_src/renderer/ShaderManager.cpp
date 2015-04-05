@@ -1,17 +1,13 @@
 #include "renderer/ShaderManager.hpp"
 #include <fstream>
 
-// shader attribute names
-static const char* aszAttribs[] = { "inVertex", "inVertexColor", "inTexCoord" };
-
 // shader uniform names
-static const char* aszUniformNames[] = { "ModelViewProjectionMatrix",
-                                         "vertexColor" };
+static const char* uniformNames[] = { "ModelViewProjectionMatrix",
+                                      "vertexColor" };
 
 ShaderManager* ShaderManager::GetInstance()
 {
     static ShaderManager instance;
-
     return &instance;
 }
 
@@ -69,7 +65,7 @@ std::string ShaderManager::ReadShaderFromFile(const char *filename)
 
     if (!file.is_open())
     {
-        LOG_MESSAGE("Cannot open input file: " << filename);
+        LOG_MESSAGE_ASSERT(false, "Cannot open input file: " << filename);
         return NULL;
     }
 
@@ -124,11 +120,6 @@ bool ShaderManager::LinkShader(GLuint* const pProgramObject,
     glAttachShader(*pProgramObject, FragmentShader);
     glAttachShader(*pProgramObject, VertexShader);
 
-    for (int i = 0; i < 3; ++i)
-    {
-    glBindAttribLocation(*pProgramObject, i, aszAttribs[i]);
-    }
-
     // Link the program object
     GLint Linked;
     glLinkProgram(*pProgramObject);
@@ -162,9 +153,11 @@ void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, c
 
     LinkShader(&m_shaderProgram[shaderName].id, m_shaderProgram[shaderName].vertShader, m_shaderProgram[shaderName].fragShader);
 
+    glUniform1i(glGetUniformLocation(m_shaderProgram[shaderName].id, "sTexture"), 0);  // Texture unit 0 is the primary texture.
+
     // Store the location of uniforms for later use
     for (int j = 0; j < NUM_UNIFORMS; ++j)
     {
-        m_shaderProgram[shaderName].uniforms[j] = glGetUniformLocation(m_shaderProgram[shaderName].id, aszUniformNames[j]);
+        m_shaderProgram[shaderName].uniforms[j] = glGetUniformLocation(m_shaderProgram[shaderName].id, uniformNames[j]);
     }
 }

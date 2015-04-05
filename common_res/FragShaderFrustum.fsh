@@ -1,8 +1,9 @@
-#version 330
+#version 410
 
 uniform vec3 vertexColor;
+out vec4 fragmentColor;
 
 void main()
 {
-    gl_FragColor = vec4(vertexColor, 1.0); 
+    fragmentColor = vec4(vertexColor, 1.0); 
 }
