@@ -30,7 +30,7 @@ void Application::OnStart()
 
     // load shaders and block texture
     ShaderManager::GetInstance()->LoadShaders();
-    m_texture = TextureManager::GetInstance()->LoadTexture("res/block_blue.png");
+    m_texture = TextureManager::GetInstance()->LoadTexture("../common_res/block_blue.png");
 
     const GLfloat quadBufferData[] = {
         -1.0f, 1.0f, -1.5f,

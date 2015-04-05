@@ -16,9 +16,6 @@
     <Filter Include="Source Files\contrib">
       <UniqueIdentifier>{b5692713-32ef-4e29-9d80-f2c6ebfa7759}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\oculusVR">
-      <UniqueIdentifier>{ef909dd3-c34b-41a0-95e6-5c9948c6afbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\common_src">
       <UniqueIdentifier>{853c4fb1-95b0-49e0-949c-894935192391}</UniqueIdentifier>
     </Filter>
@@ -32,12 +29,6 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderer\OculusVR.cpp">
-      <Filter>Source Files\oculusVR</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderer\OVRCameraFrustum.cpp">
-      <Filter>Source Files\oculusVR</Filter>
     </ClCompile>
     <ClCompile Include="..\common_libs\stb_image\stb_image.c">
       <Filter>Source Files\contrib</Filter>
@@ -60,16 +51,16 @@
     <ClCompile Include="..\common_src\InputHandlers.cpp">
       <Filter>Source Files\common_src</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\renderer\OculusVR.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\OculusVR.hpp">
-      <Filter>Source Files\oculusVR</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\OVRCameraFrustum.hpp">
-      <Filter>Source Files\oculusVR</Filter>
     </ClInclude>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h">
       <Filter>Source Files\contrib</Filter>
@@ -94,6 +85,12 @@
     </ClInclude>
     <ClInclude Include="..\common_src\InputHandlers.hpp">
       <Filter>Source Files\common_src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\OculusVR.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

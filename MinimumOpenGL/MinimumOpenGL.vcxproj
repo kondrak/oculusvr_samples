@@ -13,6 +13,8 @@
   <ItemGroup>
     <ClCompile Include="..\common_libs\stb_image\stb_image.c" />
     <ClCompile Include="..\common_src\InputHandlers.cpp" />
+    <ClCompile Include="..\common_src\renderer\OculusVR.cpp" />
+    <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp" />
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp" />
     <ClCompile Include="..\common_src\renderer\Shader.cpp" />
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp" />
@@ -20,19 +22,19 @@
     <ClCompile Include="..\common_src\renderer\TextureManager.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\renderer\OculusVR.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h" />
     <ClInclude Include="..\common_src\InputHandlers.hpp" />
+    <ClInclude Include="..\common_src\renderer\OculusVR.hpp" />
     <ClInclude Include="..\common_src\renderer\OpenGL.hpp" />
+    <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp" />
     <ClInclude Include="..\common_src\renderer\RenderContext.hpp" />
     <ClInclude Include="..\common_src\renderer\Shader.hpp" />
     <ClInclude Include="..\common_src\renderer\ShaderManager.hpp" />
     <ClInclude Include="..\common_src\renderer\Texture.hpp" />
     <ClInclude Include="..\common_src\renderer\TextureManager.hpp" />
     <ClInclude Include="src\Application.hpp" />
-    <ClInclude Include="src\renderer\OculusVR.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{74D78140-348F-4C55-9D29-C41940DBC100}</ProjectGuid>
