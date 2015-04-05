@@ -13,12 +13,12 @@ Press R while "ingame" to recenter tracking position.
 
 How to build
 -------
-The application was built using VS2013. It should work out of the box with SDK 0.4.4. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK.
+The application was built using VS2013. It should work out of the box with SDK 0.5.0.1. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK.
 
 Dependencies
 -------
 This project uses following external libraries:
 
-- GLee library for extensions (c)2011 Ben Woodhouse
+- GLEW OpenGL extension library
 - stb_image library for image handling (c) Sean Barret
 - SDL2 library for window/input 
