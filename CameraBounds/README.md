@@ -10,7 +10,7 @@ Usage
 -----
 Run <code>CameraBounds.exe</code>
 
-Press R while "ingame" to recenter tracking position.
+Press SPACE while "ingame" to recenter tracking position.
 
 How to build
 -------

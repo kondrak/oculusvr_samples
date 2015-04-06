@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>..\common_libs\SDL\include;..\common_libs;..\common_src;src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\common_libs\SDL\lib\x86;..\common_libs\glew-1.11.0\lib\Release\Win32;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCULUS_SDK)/LibOVR/Include;$(OCULUS_SDK)/LibOVR/Src;$(OCULUS_SDK)/LibOVRKernel/Src</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVRKernel/Lib/Windows/$(Platform)/$(Configuration)/VS2013/;$(OCULUS_SDK)/LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2013/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;ws2_32.lib;libOVR.lib;libOVRKernel.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

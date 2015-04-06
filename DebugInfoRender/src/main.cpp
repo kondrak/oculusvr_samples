@@ -48,6 +48,7 @@ int main(int argc, char **argv)
     SDL_GetWindowWMInfo(g_renderContext.window, &info);
 
     g_oculusVR.ConfigureRender(info.info.win.window, windowDim.z, windowDim.w);
+    g_oculusVR.CreateDebug();
 
     g_application.OnStart();
 
@@ -60,6 +61,7 @@ int main(int argc, char **argv)
         glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
 
         g_oculusVR.OnRenderStart();
+        g_oculusVR.UpdateDebug();
 
         for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
         {
@@ -70,6 +72,7 @@ int main(int argc, char **argv)
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
             g_application.OnRender();     
+            g_oculusVR.RenderDebug();
         }
 
         g_oculusVR.OnRenderEnd();

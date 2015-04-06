@@ -15,7 +15,7 @@ OculusVRDebug::OculusVRDebug() : m_frameCounter(0),
                                  m_fps(0.0f),
                                  m_lastFpsUpdate(0.0f)
 {
-    m_font = new Font("res/font.png");
+    m_font = new Font("../common_res/font.png");
     m_font->SetScale(Math::Vector2f(3.f * (float)g_renderContext.height / 1080.f, 3.f * (float)g_renderContext.height / 1080.f));
 }
 

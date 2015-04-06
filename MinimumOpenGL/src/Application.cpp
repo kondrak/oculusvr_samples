@@ -34,8 +34,7 @@ void Application::OnStart()
 
     g_cameraDirector.AddCamera(0.0f, 0.0f, 0.0f);
 
-    // load shaders and block texture
-    ShaderManager::GetInstance()->LoadShaders();
+    // load block texture
     m_texture = TextureManager::GetInstance()->LoadTexture("../common_res/block_blue.png");
 
     const GLfloat quadBufferData[] = {

@@ -40,6 +40,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    ShaderManager::GetInstance()->LoadShaders();
+
     SDL_SysWMinfo info;
     memset(&info, 0, sizeof(SDL_SysWMinfo));
     SDL_VERSION(&info.version);

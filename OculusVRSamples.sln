@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinimumOpenGL", "MinimumOpe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraBounds", "CameraBounds\CameraBounds.vcxproj", "{44716A30-151D-476A-A44A-7C38EB67F7BE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DebugInfoRender", "DebugInfoRender\DebugInfoRender.vcxproj", "{BD905C38-F11E-462B-BB48-A23A2379207F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Debug|Win32.Build.0 = Debug|Win32
 		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Release|Win32.ActiveCfg = Release|Win32
 		{44716A30-151D-476A-A44A-7C38EB67F7BE}.Release|Win32.Build.0 = Release|Win32
+		{BD905C38-F11E-462B-BB48-A23A2379207F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD905C38-F11E-462B-BB48-A23A2379207F}.Debug|Win32.Build.0 = Debug|Win32
+		{BD905C38-F11E-462B-BB48-A23A2379207F}.Release|Win32.ActiveCfg = Release|Win32
+		{BD905C38-F11E-462B-BB48-A23A2379207F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
