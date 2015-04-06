@@ -13,7 +13,13 @@
   <ItemGroup>
     <ClCompile Include="..\common_libs\stb_image\stb_image.c" />
     <ClCompile Include="..\common_src\InputHandlers.cpp" />
+    <ClCompile Include="..\common_src\Math.cpp" />
+    <ClCompile Include="..\common_src\renderer\Camera.cpp" />
+    <ClCompile Include="..\common_src\renderer\CameraDirector.cpp" />
+    <ClCompile Include="..\common_src\renderer\Font.cpp" />
     <ClCompile Include="..\common_src\renderer\OculusVR.cpp" />
+    <ClCompile Include="..\common_src\renderer\OculusVRDebug.cpp" />
+    <ClCompile Include="..\common_src\renderer\OpenGL.cpp" />
     <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp" />
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp" />
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp" />
@@ -25,7 +31,12 @@
   <ItemGroup>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h" />
     <ClInclude Include="..\common_src\InputHandlers.hpp" />
+    <ClInclude Include="..\common_src\Math.hpp" />
+    <ClInclude Include="..\common_src\renderer\Camera.hpp" />
+    <ClInclude Include="..\common_src\renderer\CameraDirector.hpp" />
+    <ClInclude Include="..\common_src\renderer\Font.hpp" />
     <ClInclude Include="..\common_src\renderer\OculusVR.hpp" />
+    <ClInclude Include="..\common_src\renderer\OculusVRDebug.hpp" />
     <ClInclude Include="..\common_src\renderer\OpenGL.hpp" />
     <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp" />
     <ClInclude Include="..\common_src\renderer\RenderContext.hpp" />

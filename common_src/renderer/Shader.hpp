@@ -7,6 +7,7 @@
 enum UniformId
 {
     ModelViewProjectionMatrix,
+    TextureMatrix,
     VertexColor,
     NUM_UNIFORMS
 };

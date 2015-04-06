@@ -13,6 +13,7 @@ public:
     {
         BasicShader,
         OVRFrustumShader,
+        FontShader,
         NUM_SHADERS
     };
 

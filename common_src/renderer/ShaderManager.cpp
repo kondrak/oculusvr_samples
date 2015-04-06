@@ -3,6 +3,7 @@
 
 // shader uniform names
 static const char* uniformNames[] = { "ModelViewProjectionMatrix",
+                                      "TextureMatrix",
                                       "vertexColor" };
 
 ShaderManager* ShaderManager::GetInstance()
@@ -42,8 +43,9 @@ void ShaderManager::DestroyShaders()
 // load all shaders
 void ShaderManager::LoadShaders()
 {
-    LoadShader(BasicShader, "../common_res/VertShaderBasic.vsh", "../common_res/FragShaderBasic.fsh");
-    LoadShader(OVRFrustumShader, "../common_res/VertShaderFrustum.vsh", "../common_res/FragShaderFrustum.fsh");
+    LoadShader(BasicShader, "../common_res/Basic.vsh", "../common_res/Basic.fsh");
+    LoadShader(OVRFrustumShader, "../common_res/OVRFrustum.vsh", "../common_res/OVRFrustum.fsh");
+    LoadShader(FontShader, "../common_res/Font.vsh", "../common_res/Font.fsh");
 }
 
 // use shader program

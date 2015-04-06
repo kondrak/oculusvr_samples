@@ -5,6 +5,7 @@
 OculusVR::~OculusVR()
 {
     DestroyVR();
+    delete m_debugData;
 }
 
 bool OculusVR::InitVR()
@@ -179,6 +180,24 @@ const OVR::Vector4i OculusVR::RenderDimensions() const
 const bool OculusVR::IsDirectMode() const
 {
     return (m_hmd->HmdCaps & ovrHmdCap_ExtendDesktop) == 0;
+}
+
+void OculusVR::CreateDebug()
+{
+    if (!m_debugData)
+        m_debugData = new OculusVRDebug();
+}
+
+void OculusVR::UpdateDebug()
+{
+    LOG_MESSAGE_ASSERT(m_debugData, "Debug data not created!");
+    m_debugData->OnUpdate(m_trackingState);
+}
+
+void OculusVR::RenderDebug()
+{
+    LOG_MESSAGE_ASSERT(m_debugData, "Debug data not created!");
+    m_debugData->OnRender(m_hmd, m_trackingState, m_eyeRenderDesc, m_eyeTexture);
 }
 
 void OculusVR::RenderTrackerFrustum()

@@ -54,6 +54,24 @@
     <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\renderer\Font.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\renderer\OculusVRDebug.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\Math.cpp">
+      <Filter>Source Files\common_src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\renderer\Camera.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\renderer\CameraDirector.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common_src\renderer\OpenGL.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -87,6 +105,21 @@
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\common_src\renderer\Shader.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\Font.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\OculusVRDebug.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\Math.hpp">
+      <Filter>Source Files\common_src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\Camera.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\CameraDirector.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
   </ItemGroup>

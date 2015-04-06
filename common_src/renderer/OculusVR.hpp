@@ -3,6 +3,7 @@
 
 #include "InputHandlers.hpp"
 #include "renderer/OpenGL.hpp"
+#include "renderer/OculusVRDebug.hpp"
 #include "renderer/OVRCameraFrustum.hpp"
 #include "Extras/OVR_Math.h"
 #include "OVR_CAPI_0_5_0.h"
@@ -16,7 +17,8 @@ public:
     OculusVR() : m_hmd(nullptr),
                  m_frameBuffer(0),
                  m_renderBuffer(0),
-                 m_texture(0)
+                 m_texture(0),
+                 m_debugData(nullptr)
     {
     }
 
@@ -33,6 +35,9 @@ public:
     void  OnKeyPress(KeyCode key);
     const OVR::Vector4i RenderDimensions() const;
     const bool IsDirectMode() const;
+    void  CreateDebug();
+    void  UpdateDebug();
+    void  RenderDebug();
     void  RenderTrackerFrustum();
     bool  IsDebugHMD() const { return (m_hmd->HmdCaps & ovrHmdCap_DebugDevice) != 0; }
     bool  IsDK2() const { return m_hmd->Type == ovrHmd_DK2; }
@@ -51,6 +56,7 @@ private:
     GLuint m_renderBuffer;
     GLuint m_texture;
 
+    OculusVRDebug   *m_debugData;
     OVRCameraFrustum m_cameraFrustum;
 };
 

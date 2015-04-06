@@ -1,7 +1,10 @@
 #include <SDL.h>
 #include "Application.hpp"
+#include "renderer/CameraDirector.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "renderer/TextureManager.hpp"
+
+CameraDirector g_cameraDirector;
 
 Application::~Application()
 {
@@ -27,6 +30,9 @@ void Application::OnStart()
     glClientActiveTextureARB(GL_TEXTURE0_ARB);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_MULTISAMPLE);
+
+    g_cameraDirector.AddCamera(0.0f, 0.0f, 0.0f);
 
     // load shaders and block texture
     ShaderManager::GetInstance()->LoadShaders();
