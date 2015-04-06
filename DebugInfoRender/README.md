@@ -7,7 +7,7 @@ Rendering HMD debug data similar to the manner it's done in OculusWorldDemo.
 
 Usage
 -----
-Run <code>CameraBounds.exe</code>
+Run <code>DebugInfoRender.exe</code>
 
 Press SPACE while "ingame" to recenter tracking position.
 

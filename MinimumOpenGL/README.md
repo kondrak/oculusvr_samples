@@ -7,7 +7,7 @@ A minimum setup application for Oculus Rift DK2 development with OpenGL and SDL2
 
 Usage
 -----
-Run <code>CameraBounds.exe</code>
+Run <code>MinimumOpenGL.exe</code>
 
 Press SPACE while "ingame" to recenter tracking position.
 
