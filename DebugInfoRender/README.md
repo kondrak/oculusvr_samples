@@ -3,7 +3,7 @@ Oculus Rift DK2 Debug Data Rendering
 
 Rendering HMD debug data similar to the manner it's done in OculusWorldDemo.
 
-![Screenshot](http://kondrak.info/images/vr_minimum.png?raw=true)
+![Screenshot](http://kondrak.info/images/vr_debug.png?raw=true)
 
 Usage
 -----
