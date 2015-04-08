@@ -23,13 +23,6 @@ Application::~Application()
 
 void Application::OnStart()
 {
-    glEnable(GL_DEPTH_TEST);
-    glClientActiveTextureARB(GL_TEXTURE1_ARB);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    glClientActiveTextureARB(GL_TEXTURE0_ARB);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnable(GL_MULTISAMPLE);
 
     g_cameraDirector.AddCamera(0.0f, 0.0f, 0.0f);
