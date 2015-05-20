@@ -48,10 +48,16 @@ Font::Font(const char *tex) : m_scale(1.f, 1.f), m_position(0.0f, 0.0f, 0.0f), m
 
 Font::~Font()
 {
-    glDeleteBuffers(1, &m_vertexBuffer);
-    glDeleteBuffers(1, &m_indexBuffer);
+    if (glIsBuffer(m_vertexBuffer))
+        glDeleteBuffers(1, &m_vertexBuffer);
+
+    if (glIsBuffer(m_indexBuffer))
+        glDeleteBuffers(1, &m_indexBuffer);
+
     glDisableVertexAttribArray(m_vertexPosAttr);
-    glDeleteVertexArrays(1, &m_fontVertexArray);
+
+    if (glIsVertexArray(m_fontVertexArray))
+        glDeleteVertexArrays(1, &m_fontVertexArray);
 }
 
 void Font::renderAt(const Math::Vector3f &pos, int w, int h, int uo, int vo, const Math::Vector4f &color)

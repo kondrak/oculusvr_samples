@@ -28,8 +28,8 @@ private:
     // OpenGL thingamabobs
     GLuint m_fontVertexArray; // VAO
 
-    GLuint m_vertexBuffer;    // VBOs
-    GLuint m_indexBuffer;
+    GLuint m_vertexBuffer;    // VBO
+    GLuint m_indexBuffer;     // IBO
 
     GLuint m_vertexPosAttr;   // attribute location
 };

@@ -17,8 +17,8 @@ Application::~Application()
     if (glIsBuffer(m_texcoordBuffer))
         glDeleteBuffers(1, &m_texcoordBuffer);
 
-    if (glIsBuffer(m_vertexArray))
-        glDeleteBuffers(1, &m_vertexArray);
+    if (glIsVertexArray(m_vertexArray))
+        glDeleteVertexArrays(1, &m_vertexArray);
 }
 
 void Application::OnStart()
@@ -94,7 +94,6 @@ void Application::OnRender()
     glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // draw the quad!
-    glBindVertexArray(m_vertexArray);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); 
 
     glDisableVertexAttribArray(vertexPosition_modelspaceID);

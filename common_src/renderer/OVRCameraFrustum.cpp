@@ -2,6 +2,19 @@
 #include "renderer/ShaderManager.hpp"
 #include "Extras/OVR_Math.h"
 
+OVRCameraFrustum::~OVRCameraFrustum()
+{
+    if (glIsBuffer(m_vertexBuffers[0]))
+    {
+        glDeleteBuffers(3, m_vertexBuffers);
+    }
+
+    if (glIsVertexArray(m_vertexArray))
+    {
+        glDeleteVertexArrays(1, &m_vertexArray);
+    }
+}
+
 void OVRCameraFrustum::Recalculate(ovrHmd hmd)
 {
     ovrTrackingState tState = ovrHmd_GetTrackingState(hmd, 0.0f);
@@ -87,14 +100,14 @@ void OVRCameraFrustum::Recalculate(ovrHmd hmd)
     if (glIsBuffer(m_vertexBuffers[0]))
         glDeleteBuffers(3, m_vertexBuffers);
 
-    if (glIsVertexArray(m_vertexArrays[0]))
-        glDeleteVertexArrays(3, m_vertexArrays);
+    if (glIsVertexArray(m_vertexArray))
+        glDeleteVertexArrays(1, &m_vertexArray);
 
     // create line VAO
-    glGenVertexArrays(3, m_vertexArrays);
+    glGenVertexArrays(1, &m_vertexArray);
     glGenBuffers(3, m_vertexBuffers);
 
-    glBindVertexArray(m_vertexArrays[0]);
+    glBindVertexArray(m_vertexArray);
 
     // Get a handle for our buffers (VBO)
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffers[0]);
@@ -120,7 +133,7 @@ void OVRCameraFrustum::OnRender()
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render camera bounds
-    glBindVertexArray(m_vertexArrays[0]);
+    glBindVertexArray(m_vertexArray);
     glEnableVertexAttribArray(vertexPositionAttr);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffers[0]);
@@ -141,7 +154,6 @@ void OVRCameraFrustum::OnRender()
 
     for (int i = 1; i < 3; i++)
     {
-        glBindVertexArray(m_vertexArrays[i]);
         glEnableVertexAttribArray(vertexPositionAttr);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffers[i]);

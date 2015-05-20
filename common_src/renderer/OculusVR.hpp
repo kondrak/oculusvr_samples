@@ -18,7 +18,8 @@ public:
                  m_frameBuffer(0),
                  m_renderBuffer(0),
                  m_texture(0),
-                 m_debugData(nullptr)
+                 m_debugData(nullptr),
+                 m_cameraFrustum(nullptr)
     {
     }
 
@@ -56,8 +57,8 @@ private:
     GLuint m_renderBuffer;
     GLuint m_texture;
 
-    OculusVRDebug   *m_debugData;
-    OVRCameraFrustum m_cameraFrustum;
+    OculusVRDebug    *m_debugData;
+    OVRCameraFrustum *m_cameraFrustum;
 };
 
 

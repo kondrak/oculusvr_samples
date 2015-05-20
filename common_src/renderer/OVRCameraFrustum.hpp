@@ -10,10 +10,11 @@
 class OVRCameraFrustum
 {
 public:
+    ~OVRCameraFrustum();
     void Recalculate(ovrHmd hmd);
     void OnRender();
 private:
-    GLuint m_vertexArrays[3];
+    GLuint m_vertexArray;
     GLuint m_vertexBuffers[3];
 };
 

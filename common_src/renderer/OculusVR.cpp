@@ -4,8 +4,9 @@
 
 OculusVR::~OculusVR()
 {
-    DestroyVR();
-    delete m_debugData;
+    ovrHmd_Destroy(m_hmd);
+    ovr_Shutdown();
+    m_hmd = nullptr;
 }
 
 bool OculusVR::InitVR()
@@ -23,6 +24,8 @@ bool OculusVR::InitVR()
     ovrHmd_ConfigureTracking(m_hmd, ovrTrackingCap_Orientation |
                                     ovrTrackingCap_MagYawCorrection |
                                     ovrTrackingCap_Position, 0);
+
+    m_cameraFrustum = new OVRCameraFrustum;
 
     return m_hmd != nullptr;
 }
@@ -115,13 +118,20 @@ void OculusVR::DestroyVR()
 {
     if (m_hmd)
     {
-        glDeleteFramebuffers(1, &m_frameBuffer);
-        glDeleteTextures(1, &m_texture);
-        glDeleteRenderbuffers(1, &m_renderBuffer);
+        delete m_debugData;
+        delete m_cameraFrustum;
 
-        ovrHmd_Destroy(m_hmd);
-        ovr_Shutdown();
-        m_hmd = nullptr;
+        if(glIsFramebuffer(m_frameBuffer))
+            glDeleteFramebuffers(1, &m_frameBuffer);
+
+        if (glIsTexture(m_texture))
+            glDeleteTextures(1, &m_texture);
+
+        if (glIsRenderbuffer(m_renderBuffer))
+            glDeleteRenderbuffers(1, &m_renderBuffer);
+
+        m_debugData = nullptr;
+        m_cameraFrustum = nullptr;
     }
 }
 
@@ -202,9 +212,9 @@ void OculusVR::RenderDebug()
 
 void OculusVR::RenderTrackerFrustum()
 {
-    if (!IsDebugHMD() && IsDK2())
+    if (!IsDebugHMD() && IsDK2() && m_cameraFrustum)
     {
-        m_cameraFrustum.Recalculate(m_hmd);
-        m_cameraFrustum.OnRender();
+        m_cameraFrustum->Recalculate(m_hmd);
+        m_cameraFrustum->OnRender();
     }
 }
