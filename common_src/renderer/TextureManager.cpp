@@ -4,6 +4,7 @@
 TextureManager* TextureManager::GetInstance()
 {
     static TextureManager instance;
+
     return &instance;
 }
 
@@ -27,9 +28,17 @@ Texture *TextureManager::LoadTexture(const char *textureName)
 {
     if (m_textures.count(textureName) == 0)
     {
-        Texture *newTex = new Texture(textureName);
-        m_textures[textureName] = newTex;
-        newTex->Load();
+        LOG_MESSAGE("[TextureManager] Loading texture: " << textureName);
+        Texture *newTex = new Texture(textureName);   
+
+        // failed to load texture/file doesn't exist
+        if (newTex->Load() == 0)
+        {
+            delete newTex;
+            return NULL;
+        }
+
+        m_textures[textureName] = newTex;       
     }
 
     return m_textures[textureName];

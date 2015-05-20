@@ -2,7 +2,6 @@
 #define FONT_HPP
 
 #include "renderer/OpenGL.hpp"
-#include "Math.hpp"
 #include <string>
 
 class Texture;
