@@ -18,11 +18,17 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    g_oculusVR.InitVR();
-    OVR::Vector4i windowDim = g_oculusVR.RenderDimensions();
+    if (!g_oculusVR.InitVR())
+    {
+        SDL_Quit();
+        return 1;
+    }
 
-    g_renderContext.Init("Oculus Rift Minimum OpenGL", windowDim.x, windowDim.y, windowDim.z, windowDim.w);
-    SDL_ShowCursor( SDL_DISABLE );
+    ovrSizei hmdResolution = g_oculusVR.GetResolution();
+    ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
+
+    g_renderContext.Init("Oculus Rift OpenGL Debug Info Renderer", 100, 100, windowSize.w, windowSize.h);
+    SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
     {
@@ -30,9 +36,9 @@ int main(int argc, char **argv)
         g_oculusVR.DestroyVR();
         SDL_Quit();
         return 1;
-   }
-    
-    if (!g_oculusVR.InitVRBuffers())
+    }
+
+    if (!g_oculusVR.InitVRBuffers(windowSize.w, windowSize.h))
     {
         g_renderContext.Destroy();
         g_oculusVR.DestroyVR();
@@ -41,13 +47,6 @@ int main(int argc, char **argv)
     }
 
     ShaderManager::GetInstance()->LoadShaders();
-
-    SDL_SysWMinfo info;
-    memset(&info, 0, sizeof(SDL_SysWMinfo));
-    SDL_VERSION(&info.version);
-    SDL_GetWindowWMInfo(g_renderContext.window, &info);
-
-    g_oculusVR.ConfigureRender(info.info.win.window, windowDim.z, windowDim.w);
     g_oculusVR.CreateDebug();
 
     g_application.OnStart();
@@ -73,9 +72,12 @@ int main(int argc, char **argv)
 
             g_application.OnRender();     
             g_oculusVR.RenderDebug();
+            g_oculusVR.OnEyeRenderFinish(eyeIndex);
         }
 
-        g_oculusVR.OnRenderEnd();
+        g_oculusVR.SubmitFrame();
+        g_oculusVR.BlitMirror();
+        SDL_GL_SwapWindow(g_renderContext.window);
     }
 
     g_renderContext.Destroy();

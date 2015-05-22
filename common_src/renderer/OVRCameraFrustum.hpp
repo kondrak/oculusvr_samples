@@ -1,7 +1,7 @@
 #ifndef OVRCAMERAFRUSTUM_HPP
 #define OVRCAMERAFRUSTUM_HPP
 #include "renderer/OpenGL.hpp"
-#include "OVR_CAPI_0_5_0.h"
+#include "OVR_CAPI_0_6_0.h"
 #include "OVR_CAPI_GL.h"
 
 /*

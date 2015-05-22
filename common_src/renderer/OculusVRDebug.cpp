@@ -29,7 +29,7 @@ void OculusVRDebug::OnUpdate(const ovrTrackingState &trackingState)
     UpdateFrameRateCounter(ovr_GetTimeInSeconds());
 }
 
-void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingState, const ovrEyeRenderDesc *eyeRenderDescs, const ovrTexture *eyeTextures)
+void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingState, const ovrEyeRenderDesc *eyeRenderDescs, const ovrSizei &eyeTextureSize)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glActiveTexture(GL_TEXTURE0);
@@ -64,12 +64,9 @@ void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingS
     OVR::FovPort rightFov = eyeRenderDescs[1].Fov;
 
     // Rendered size changes based on selected options & dynamic rendering.
-    int pixelSizeWidth  =  eyeTextures[0].Header.RenderViewport.Size.w + eyeTextures[1].Header.RenderViewport.Size.w;
-    int pixelSizeHeight = (eyeTextures[0].Header.RenderViewport.Size.h + eyeTextures[1].Header.RenderViewport.Size.h) / 2;
-
     OVR::OVR_sprintf(buf, sizeof(buf), "FOV %2.1fx%2.1f, Resolution: %ix%i", (leftFov.GetHorizontalFovDegrees() + rightFov.GetHorizontalFovDegrees()) * 0.5f,
                                                                              (leftFov.GetVerticalFovDegrees() + rightFov.GetVerticalFovDegrees()) * 0.5,
-                                                                             pixelSizeWidth, pixelSizeHeight);
+                                                                             eyeTextureSize.w, eyeTextureSize.h);
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 4.f, 0.f);
 
     // latency readings

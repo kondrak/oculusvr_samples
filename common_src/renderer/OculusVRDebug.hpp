@@ -1,6 +1,6 @@
 #ifndef OCULUSVRDEBUG_HPP
 #define OCULUSVRDEBUG_HPP
-#include "OVR_CAPI_0_5_0.h"
+#include "OVR_CAPI_0_6_0.h"
 
 class Font;
 
@@ -11,7 +11,7 @@ public:
     ~OculusVRDebug();
 
     void OnUpdate(const ovrTrackingState &trackingState);
-    void OnRender(const ovrHmd hmd, const ovrTrackingState &trackingState, const ovrEyeRenderDesc *eyeRenderDescs, const ovrTexture *eyeTextures);
+    void OnRender(const ovrHmd hmd, const ovrTrackingState &trackingState, const ovrEyeRenderDesc *eyeRenderDescs, const ovrSizei &eyeTextureSize);
 
 private:   
     void UpdateFrameRateCounter(double curtime);
