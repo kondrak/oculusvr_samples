@@ -183,17 +183,18 @@ void OculusVR::OnRenderStart()
 
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex) const
 {
-    m_eyeBuffers[eyeIndex]->OnRender();
+    int eye = m_hmd->EyeRenderOrder[eyeIndex];
+    m_eyeBuffers[eye]->OnRender();
 
-    return OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eyeIndex].Fov, 0.01f, 10000.0f, true)) *
-        OVR::Matrix4f::Translation(m_eyeRenderDesc[eyeIndex].HmdToEyeViewOffset) *
-        OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eyeIndex].Orientation).Inverted()) *
-        OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eyeIndex].Position));
+    return OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, true)) *
+        OVR::Matrix4f::Translation(m_eyeRenderDesc[eye].HmdToEyeViewOffset) *
+        OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eye].Orientation).Inverted()) *
+        OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eye].Position));
 }
 
 void OculusVR::OnEyeRenderFinish(int eyeIndex)
 {
-    m_eyeBuffers[eyeIndex]->OnRenderFinish();
+    m_eyeBuffers[ m_hmd->EyeRenderOrder[eyeIndex] ]->OnRenderFinish();
 }
 
 void OculusVR::SubmitFrame()
