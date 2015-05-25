@@ -57,17 +57,19 @@ private:
         ovrSwapTextureSet *m_swapTextureSet = nullptr;
     };
 
+    // data and buffers used to render to HMD
     ovrHmd            m_hmd;
-    ovrEyeRenderDesc  m_eyeRenderDesc[2];
+    ovrEyeRenderDesc  m_eyeRenderDesc[ovrEye_Count];
+    ovrPosef          m_eyeRenderPose[ovrEye_Count];
+    ovrVector3f       m_hmdToEyeViewOffset[ovrEye_Count];
+    OVRBuffer        *m_eyeBuffers[ovrEye_Count];
 
-    ovrPosef          m_eyeRenderPose[2];
-    ovrVector3f       m_hmdToEyeViewOffset[2];
-    ovrGLTexture     *m_mirrorTexture;
-
+    // frame timing data and tracking info
     ovrFrameTiming    m_frameTiming;
     ovrTrackingState  m_trackingState;
 
-    OVRBuffer        *m_eyeBuffers[ovrEye_Count];
+    // mirror texture used to render HMD view to OpenGL window
+    ovrGLTexture     *m_mirrorTexture;
     GLuint            m_mirrorFBO;
 
     OculusVRDebug    *m_debugData;

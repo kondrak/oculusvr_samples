@@ -114,7 +114,8 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
 {
     for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
     {
-        m_eyeBuffers[eyeIdx] = new OVRBuffer(m_hmd, eyeIdx);
+        m_eyeBuffers[eyeIdx]    = new OVRBuffer(m_hmd, eyeIdx);
+        m_eyeRenderDesc[eyeIdx] = ovrHmd_GetRenderDesc(m_hmd, (ovrEyeType)eyeIdx, m_hmd->DefaultEyeFov[eyeIdx]);
     }
 
     // since SDK 0.6 we're using a mirror texture + FBO which in turn copies contents of mirror to back buffer
@@ -133,9 +134,6 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
         LOG_MESSAGE_ASSERT(false, "Could not initialize VR buffers!");
         return false;
     }
-
-    m_eyeRenderDesc[0] = ovrHmd_GetRenderDesc(m_hmd, ovrEye_Left, m_hmd->DefaultEyeFov[0]);
-    m_eyeRenderDesc[1] = ovrHmd_GetRenderDesc(m_hmd, ovrEye_Right, m_hmd->DefaultEyeFov[1]);
 
     return true;
 }
@@ -210,7 +208,7 @@ void OculusVR::SubmitFrame()
     ld.Header.Type = ovrLayerType_EyeFov;
     ld.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;   // Because OpenGL.
 
-    for (int eye = 0; eye < 2; eye++)
+    for (int eye = 0; eye < ovrEye_Count; eye++)
     {
         ld.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureSet;
         ld.Viewport[eye] = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
@@ -260,7 +258,7 @@ void OculusVR::RenderDebug()
     LOG_MESSAGE_ASSERT(m_debugData, "Debug data not created!");
 
     // Rendered size changes based on selected options & dynamic rendering.
-    int pixelSizeWidth = m_eyeBuffers[0]->m_eyeTextureSize.w + m_eyeBuffers[1]->m_eyeTextureSize.w;
+    int pixelSizeWidth  = m_eyeBuffers[0]->m_eyeTextureSize.w + m_eyeBuffers[1]->m_eyeTextureSize.w;
     int pixelSizeHeight = (m_eyeBuffers[0]->m_eyeTextureSize.h + m_eyeBuffers[1]->m_eyeTextureSize.h) / 2;
 
     ovrSizei texSize = { pixelSizeWidth, pixelSizeHeight };
