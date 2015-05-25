@@ -4,7 +4,7 @@
 
 OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
 {
-    m_eyeTextureSize = ovrHmd_GetFovTextureSize(hmd, ovrEye_Left, hmd->DefaultEyeFov[eyeIdx], 1.0f);
+    m_eyeTextureSize = ovrHmd_GetFovTextureSize(hmd, (ovrEyeType)eyeIdx, hmd->DefaultEyeFov[eyeIdx], 1.0f);
 
     ovrHmd_CreateSwapTextureSetGL(hmd, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
 
