@@ -41,7 +41,7 @@ OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_eyeTextureSize.w, m_eyeTextureSize.h, 0, GL_DEPTH_COMPONENT, type, NULL);
 }
 
-void OculusVR::OVRBuffer::OnRender(int eyeIdx)
+void OculusVR::OVRBuffer::OnRender()
 {
     // Increment to use next texture, just before writing
     m_swapTextureSet->CurrentIndex = (m_swapTextureSet->CurrentIndex + 1) % m_swapTextureSet->TextureCount;
@@ -57,14 +57,14 @@ void OculusVR::OVRBuffer::OnRender(int eyeIdx)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OculusVR::OVRBuffer::OnRenderFinish(int eyeIdx)
+void OculusVR::OVRBuffer::OnRenderFinish()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_eyeFbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 }
 
-void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd, int eyeIdx)
+void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
 {
     if (glIsFramebuffer(m_eyeFbo))
         glDeleteFramebuffers(1, &m_eyeFbo);  
@@ -157,7 +157,7 @@ void OculusVR::DestroyVR()
 
         for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
         {
-            m_eyeBuffers[eyeIdx]->Destroy(m_hmd, eyeIdx);
+            m_eyeBuffers[eyeIdx]->Destroy(m_hmd);
         }
     }
 }
@@ -183,7 +183,7 @@ void OculusVR::OnRenderStart()
 
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex) const
 {
-    m_eyeBuffers[eyeIndex]->OnRender(eyeIndex);
+    m_eyeBuffers[eyeIndex]->OnRender();
 
     return OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eyeIndex].Fov, 0.01f, 10000.0f, true)) *
         OVR::Matrix4f::Translation(m_eyeRenderDesc[eyeIndex].HmdToEyeViewOffset) *
@@ -193,7 +193,7 @@ const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex) const
 
 void OculusVR::OnEyeRenderFinish(int eyeIndex)
 {
-    m_eyeBuffers[eyeIndex]->OnRenderFinish(eyeIndex);
+    m_eyeBuffers[eyeIndex]->OnRenderFinish();
 }
 
 void OculusVR::SubmitFrame()

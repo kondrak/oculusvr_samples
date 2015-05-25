@@ -46,9 +46,9 @@ private:
     struct OVRBuffer
     {  
         OVRBuffer(const ovrHmd &hmd, int eyeIdx);
-        void OnRender(int eyeIdx);
-        void OnRenderFinish(int eyeIdx);
-        void Destroy(const ovrHmd &hmd, int eyeIdx);
+        void OnRender();
+        void OnRenderFinish();
+        void Destroy(const ovrHmd &hmd);
 
         ovrTexture m_eyeTexture;
         ovrSizei   m_eyeTextureSize;
