@@ -197,27 +197,30 @@ void OculusVR::OnEyeRenderFinish(int eyeIndex)
 
 void OculusVR::SubmitFrame()
 {
-
-    // Set up positional data.
+    // set up positional data
     ovrViewScaleDesc viewScaleDesc;
     viewScaleDesc.HmdSpaceToWorldScaleInMeters = 1.0f;
     viewScaleDesc.HmdToEyeViewOffset[0] = m_hmdToEyeViewOffset[0];
     viewScaleDesc.HmdToEyeViewOffset[1] = m_hmdToEyeViewOffset[1];
 
-    ovrLayerEyeFov ld;
-    ld.Header.Type = ovrLayerType_EyeFov;
-    ld.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;   // Because OpenGL.
+    // create the main eye layer
+    ovrLayerEyeFov eyeLayer;
+    eyeLayer.Header.Type = ovrLayerType_EyeFov;
+    eyeLayer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;   // Because OpenGL.
 
     for (int eye = 0; eye < ovrEye_Count; eye++)
     {
-        ld.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureSet;
-        ld.Viewport[eye] = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
-        ld.Fov[eye] = m_hmd->DefaultEyeFov[eye];
-        ld.RenderPose[eye] = m_eyeRenderPose[eye];
+        eyeLayer.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureSet;
+        eyeLayer.Viewport[eye] = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
+        eyeLayer.Fov[eye] = m_hmd->DefaultEyeFov[eye];
+        eyeLayer.RenderPose[eye] = m_eyeRenderPose[eye];
     }
 
-    ovrLayerHeader* layers = &ld.Header;
-    ovrResult result = ovrHmd_SubmitFrame(m_hmd, 0, &viewScaleDesc, &layers, 1);
+    // append all the layers to global list
+    ovrLayerHeader* layerList[1];
+    layerList[0] = &eyeLayer.Header;
+
+    ovrResult result = ovrHmd_SubmitFrame(m_hmd, 0, &viewScaleDesc, layerList, 1);
 }
 
 void OculusVR::BlitMirror()
