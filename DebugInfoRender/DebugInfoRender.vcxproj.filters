@@ -72,6 +72,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\Utils.cpp">
+      <Filter>Source Files\common_src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="src\Application.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\Utils.hpp">
+      <Filter>Source Files\common_src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

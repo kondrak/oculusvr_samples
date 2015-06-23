@@ -58,13 +58,3 @@ namespace Renderer
         matrix[14] = z.DotProduct(eye);
     }
 }
-
-void LogError(const char *msg)
-{
-    // basic error logging for VS debugger
-#ifdef _WIN32
-    OutputDebugStringA(msg);
-#else
-    printf("%s\n", msg);
-#endif
-}

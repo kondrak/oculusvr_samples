@@ -72,6 +72,9 @@
     <ClCompile Include="..\common_src\renderer\OpenGL.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\Utils.cpp">
+      <Filter>Source Files\common_src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="..\common_src\renderer\CameraDirector.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\Utils.hpp">
+      <Filter>Source Files\common_src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

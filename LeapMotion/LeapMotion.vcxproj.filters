@@ -81,6 +81,9 @@
     <ClCompile Include="src\leap\LeapListener.cpp">
       <Filter>Source Files\leap</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\Utils.cpp">
+      <Filter>Source Files\common_src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="src\leap\LeapListener.hpp">
       <Filter>Source Files\leap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\Utils.hpp">
+      <Filter>Source Files\common_src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
