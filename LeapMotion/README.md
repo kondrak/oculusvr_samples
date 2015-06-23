@@ -1,4 +1,4 @@
-Oculus Rift DK2 Leap Motion integration test
+Oculus Rift DK2 Leap Motion 2.2.6 integration test
 ================
 
 Test of Leap Motion integration with DK2.
