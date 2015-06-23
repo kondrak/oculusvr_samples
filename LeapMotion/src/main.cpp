@@ -3,12 +3,13 @@
 #include "renderer/RenderContext.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "renderer/OculusVR.hpp"
+#include "leap/LeapMotion.hpp"
 
 // application globals
 RenderContext g_renderContext;
 Application   g_application;
 OculusVR      g_oculusVR;
-
+LeapMotion    g_leapMotion;
 
 int main(int argc, char **argv)
 {
@@ -17,6 +18,8 @@ int main(int argc, char **argv)
     {
         return 1;
     }
+
+    g_leapMotion.Init();
 
     if (!g_oculusVR.InitVR())
     {
@@ -78,6 +81,8 @@ int main(int argc, char **argv)
 
     g_renderContext.Destroy();
     g_oculusVR.DestroyVR();
+
+    g_leapMotion.Destroy();
 
     SDL_Quit(); 
 

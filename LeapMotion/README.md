@@ -1,19 +1,17 @@
 Oculus Rift DK2 Leap Motion integration test
 ================
 
-A minimum setup application for Oculus Rift DK2 development with OpenGL and SDL2 as window manager. While the entire code could be squashed into a single file, a separate OculusVR class exists to handle all OVR initialization and processing. Along with it comes a separate ShaderManager with Shader class for cleaner shader loading. The application also handles dismissal of healt warning and provides head tracking recenter functionality at a keystroke.
-
-![Screenshot](http://kondrak.info/images/vr_debug.png?raw=true)
+Test of Leap Motion integration with DK2.
 
 Usage
 -----
-Run <code>MinimumOpenGL.exe</code>
+Run <code>LeapMotion.exe</code>
 
 Press SPACE while "ingame" to recenter tracking position.
 
 How to build
 -------
-The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK.
+The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK and LEAP_SDK pointing to root directory of your LeapMotion SDK 2.2.6.
 
 Dependencies
 -------

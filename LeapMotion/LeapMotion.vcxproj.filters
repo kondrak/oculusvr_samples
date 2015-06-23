@@ -22,6 +22,9 @@
     <Filter Include="Source Files\common_src\renderer">
       <UniqueIdentifier>{22b04e6a-6d0e-42c1-96c8-e77ce27ad769}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\leap">
+      <UniqueIdentifier>{f6fb29ba-d12e-4539-888d-329953db672b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -72,6 +75,12 @@
     <ClCompile Include="..\common_libs\stb_image\stb_image.c">
       <Filter>Source Files\contrib</Filter>
     </ClCompile>
+    <ClCompile Include="src\leap\LeapMotion.cpp">
+      <Filter>Source Files\leap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\leap\LeapListener.cpp">
+      <Filter>Source Files\leap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -121,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h">
       <Filter>Source Files\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\leap\LeapMotion.hpp">
+      <Filter>Source Files\leap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\leap\LeapListener.hpp">
+      <Filter>Source Files\leap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

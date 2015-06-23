@@ -87,6 +87,8 @@
     <ClCompile Include="..\common_src\renderer\Texture.cpp" />
     <ClCompile Include="..\common_src\renderer\TextureManager.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\leap\LeapListener.cpp" />
+    <ClCompile Include="src\leap\LeapMotion.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +108,8 @@
     <ClInclude Include="..\common_src\renderer\Texture.hpp" />
     <ClInclude Include="..\common_src\renderer\TextureManager.hpp" />
     <ClInclude Include="src\Application.hpp" />
+    <ClInclude Include="src\leap\LeapListener.hpp" />
+    <ClInclude Include="src\leap\LeapMotion.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
