@@ -9,6 +9,9 @@ public:
 
     ~LeapMotion();
 
+    void RecalculateSkeleton();
+    void OnRender();
+
     void Init();
     void Destroy();
 private:

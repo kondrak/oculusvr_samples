@@ -19,8 +19,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    g_leapMotion.Init();
-
     if (!g_oculusVR.InitVR())
     {
         SDL_Quit();
@@ -49,6 +47,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    g_leapMotion.Init();
+
     ShaderManager::GetInstance()->LoadShaders();
     g_application.OnStart();
 
@@ -69,8 +69,11 @@ int main(int argc, char **argv)
             // update MVP in quad shader
             const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
+            const ShaderProgram &shader2 = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
+            glUniformMatrix4fv(shader2.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
             g_application.OnRender();    
+            g_leapMotion.OnRender();
             g_oculusVR.OnEyeRenderFinish(eyeIndex);
         }
 

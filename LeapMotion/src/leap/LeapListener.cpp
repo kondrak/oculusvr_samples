@@ -5,6 +5,8 @@ static const char *fingerNames[] = { "Thumb", "Index", "Middle", "Ring", "Pinky"
 static const char *boneNames[] = { "Metacarpal", "Proximal", "Middle", "Distal" };
 static const char *stateNames[] = { "STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END" };
 
+Leap::HandList handList;
+
 void LeapListener::onInit(const Leap::Controller& controller) 
 {
     LOG_MESSAGE("[LeapMotion] Initialized");
@@ -45,6 +47,8 @@ void LeapListener::onFrame(const Leap::Controller& controller)
     LOG_MESSAGE(frameInfo.str());
 
     Leap::HandList hands = frame.hands();
+    handList = hands;
+
     for (Leap::HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) 
     {
         // Get the first hand
