@@ -19,6 +19,8 @@ void LeapListener::onConnect(const Leap::Controller& controller)
     controller.enableGesture(Leap::Gesture::TYPE_KEY_TAP);
     controller.enableGesture(Leap::Gesture::TYPE_SCREEN_TAP);
     controller.enableGesture(Leap::Gesture::TYPE_SWIPE);
+
+    //controller.setPolicy(Leap::Controller::POLICY_OPTIMIZE_HMD);
 }
 
 void LeapListener::onDisconnect(const Leap::Controller& controller) 
