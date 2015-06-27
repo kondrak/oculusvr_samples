@@ -31,10 +31,10 @@ void Application::OnStart()
     m_texture = TextureManager::GetInstance()->LoadTexture("../common_res/block_blue.png");
 
     const GLfloat quadBufferData[] = {
-        -1.0f, 1.0f, -1.5f,
-        1.0f, 1.0f, -1.5f,
-        -1.0f, -1.0f, -1.5f,
-        1.0f, -1.0f, -1.5f
+        -100.0f, 100.0f, -400.5f,
+        100.0f, 100.0f, -400.5f,
+        -100.0f, -100.0f, -400.5f,
+        100.0f, -100.0f, -400.5f
     };
 
     const GLfloat vertexColorData[] = {

@@ -5,8 +5,6 @@ static const char *fingerNames[] = { "Thumb", "Index", "Middle", "Ring", "Pinky"
 static const char *boneNames[] = { "Metacarpal", "Proximal", "Middle", "Distal" };
 static const char *stateNames[] = { "STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END" };
 
-Leap::HandList handList;
-
 void LeapListener::onInit(const Leap::Controller& controller) 
 {
     LOG_MESSAGE("[LeapMotion] Initialized");
@@ -20,7 +18,7 @@ void LeapListener::onConnect(const Leap::Controller& controller)
     controller.enableGesture(Leap::Gesture::TYPE_SCREEN_TAP);
     controller.enableGesture(Leap::Gesture::TYPE_SWIPE);
 
-    //controller.setPolicy(Leap::Controller::POLICY_OPTIMIZE_HMD);
+    controller.setPolicy(static_cast<Leap::Controller::PolicyFlag>(Leap::Controller::POLICY_IMAGES | Leap::Controller::POLICY_OPTIMIZE_HMD));
 }
 
 void LeapListener::onDisconnect(const Leap::Controller& controller) 
@@ -49,7 +47,6 @@ void LeapListener::onFrame(const Leap::Controller& controller)
     LOG_MESSAGE(frameInfo.str());
 
     Leap::HandList hands = frame.hands();
-    handList = hands;
 
     for (Leap::HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) 
     {

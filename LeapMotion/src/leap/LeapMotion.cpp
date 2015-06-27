@@ -6,8 +6,6 @@
 GLuint m_vertexArray;
 GLuint m_handVertexBuffer[2];
 
-extern Leap::HandList handList;
-
 struct LeapData
 {
     LeapListener     m_listener;
@@ -27,7 +25,14 @@ void LeapMotion::Init()
 
 void LeapMotion::RecalculateSkeleton()
 {
-    Leap::HandList hands = handList;
+    Leap::HandList hands = m_leapData->m_controller.frame().hands();
+
+    // reset hand vertex buffers
+    if (glIsBuffer(m_handVertexBuffer[0]))
+        glDeleteBuffers(1, &m_handVertexBuffer[0]);
+
+    if (glIsBuffer(m_handVertexBuffer[1]))
+        glDeleteBuffers(1, &m_handVertexBuffer[1]);
 
     if (!hands.count())
         return;
@@ -54,10 +59,6 @@ void LeapMotion::RecalculateSkeleton()
 
         Leap::Vector curBoxBase;
         Leap::Vector lastBoxBase = wrist;
-
-        // reset current hand vertex buffer
-        if (glIsBuffer(m_handVertexBuffer[i]))
-            glDeleteBuffers(1, &m_handVertexBuffer[i]);
 
         glGenBuffers(1, &m_handVertexBuffer[i]);
 
@@ -129,7 +130,7 @@ void LeapMotion::OnRender()
 
     const float frustumColor[3] = { 0.f, 1.f, 0.f };
 
-    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render camera bounds
