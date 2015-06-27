@@ -13,6 +13,11 @@ TextureManager::~TextureManager()
     ReleaseTextures();
 }
 
+void TextureManager::ReleaseUnmanagedTexture(Texture *t)
+{
+    delete t;
+    t = nullptr;
+}
 
 void TextureManager::ReleaseTextures()
 {
@@ -35,13 +40,27 @@ Texture *TextureManager::LoadTexture(const char *textureName)
         if (newTex->Load() == 0)
         {
             delete newTex;
-            return NULL;
+            return nullptr;
         }
 
         m_textures[textureName] = newTex;       
     }
 
     return m_textures[textureName];
+}
+
+Texture *TextureManager::LoadUnmanagedTexture(unsigned char *data, int width, int height, int components, int format, int internalFormat)
+{
+        LOG_MESSAGE("[TextureManager] Loading unmanaged texture: " << width << "x" << height << "x" << components);
+        Texture *newTex = new Texture(data, width, height, components, format, internalFormat);
+
+        if (newTex->Load() == 0)
+        {
+            delete newTex;
+            return nullptr;
+        }
+
+        return newTex;
 }
 
 void TextureManager::BindTexture(Texture *t)

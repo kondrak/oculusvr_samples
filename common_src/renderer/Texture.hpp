@@ -18,6 +18,7 @@ public:
     
 private:
     Texture(const char *filename);
+    Texture(unsigned char *data, int width, int height, int components, int format, int internalFormat);
     ~Texture();
 
     GLuint Load();
@@ -25,8 +26,11 @@ private:
     int    m_width;
     int    m_height;
     int    m_components;
+    int    m_format;
+    int    m_internalFormat;
+    bool   m_releaseData;     // should data release be handled automatically?
     GLuint m_texId;
-    unsigned char *m_textureData;
+    unsigned char *m_textureData;    
 };
 
 #endif
