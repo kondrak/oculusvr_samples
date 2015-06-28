@@ -28,34 +28,6 @@ struct LeapData
     Texture *m_camImgTexture;
 };
 
-LeapMotion::~LeapMotion()
-{
-    if (glIsVertexArray(m_leapData->m_handVertexArray))
-        glDeleteVertexArrays(1, &m_leapData->m_handVertexArray);
-
-    if (glIsVertexArray(m_leapData->m_camImgVertexArray))
-        glDeleteVertexArrays(1, &m_leapData->m_camImgVertexArray);
-
-    if (glIsBuffer(m_leapData->m_handVertexBuffers[0]))
-        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[0]);
-
-    if (glIsBuffer(m_leapData->m_handVertexBuffers[1]))
-        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[1]);
-
-    if (glIsBuffer(m_leapData->m_camImgVertexBuffer))
-        glDeleteBuffers(1, &m_leapData->m_camImgVertexBuffer);
-
-    if (glIsBuffer(m_leapData->m_camImgColorBuffer))
-        glDeleteBuffers(1, &m_leapData->m_camImgColorBuffer);
-
-    if (glIsBuffer(m_leapData->m_camImgTexcoordBuffer))
-        glDeleteBuffers(1, &m_leapData->m_camImgTexcoordBuffer);
-
-    delete m_leapData->m_camImgTexture;
-
-    delete m_leapData;
-}
-
 void LeapMotion::Init()
 {
     m_leapData = new LeapData;
@@ -195,7 +167,36 @@ void LeapMotion::OnRender()
 
 void LeapMotion::Destroy()
 {
+    if (!m_leapData)
+        return;
+
     m_leapData->m_controller.removeListener(m_leapData->m_listener);
+
+    if (glIsVertexArray(m_leapData->m_handVertexArray))
+        glDeleteVertexArrays(1, &m_leapData->m_handVertexArray);
+
+    if (glIsVertexArray(m_leapData->m_camImgVertexArray))
+        glDeleteVertexArrays(1, &m_leapData->m_camImgVertexArray);
+
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[0]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[0]);
+
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[1]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[1]);
+
+    if (glIsBuffer(m_leapData->m_camImgVertexBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgVertexBuffer);
+
+    if (glIsBuffer(m_leapData->m_camImgColorBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgColorBuffer);
+
+    if (glIsBuffer(m_leapData->m_camImgTexcoordBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgTexcoordBuffer);
+
+    delete m_leapData->m_camImgTexture;
+    delete m_leapData;
+
+    m_leapData = nullptr;
 }
 
 void LeapMotion::ProcessGestures()

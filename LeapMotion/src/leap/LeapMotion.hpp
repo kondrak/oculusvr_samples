@@ -7,7 +7,6 @@ public:
     {
     }
 
-    ~LeapMotion();
     void OnUpdate();
     void OnRender();
 

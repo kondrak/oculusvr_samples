@@ -74,8 +74,8 @@ int main(int argc, char **argv)
             const ShaderProgram &shader2 = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
             
             // with Leap Motion's Up(+Y), Forward(-Z) and Right(+X) orientations, rotate the final matrix by X and Y for proper VR orientation of rendered hand skeletons
-            OVR::Matrix4f MVPMatrixLM = MVPMatrix * OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(1.0, 0.0, 0.0), -PIdiv2))
-                                                  *  OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(0.0, 1.0, 0.0), PI));
+            OVR::Matrix4f MVPMatrixLM = MVPMatrix * OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(1.0f, 0.0f, 0.0f), -PIdiv2))
+                                                  *  OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(0.0f, 1.0f, 0.0f), PI));
             glUniformMatrix4fv(shader2.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrixLM.Transposed().M[0][0]);
 
             g_application.OnRender();    
@@ -88,10 +88,9 @@ int main(int argc, char **argv)
         SDL_GL_SwapWindow(g_renderContext.window);
     }
 
+    g_leapMotion.Destroy();
     g_renderContext.Destroy();
     g_oculusVR.DestroyVR();
-
-    g_leapMotion.Destroy();
 
     SDL_Quit(); 
 
