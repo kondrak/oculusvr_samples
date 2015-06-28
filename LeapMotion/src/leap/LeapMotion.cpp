@@ -200,7 +200,16 @@ void LeapMotion::Destroy()
 
 void LeapMotion::ProcessGestures()
 {
-    const Leap::GestureList gestures = m_leapData->m_controller.frame(0).gestures();
+    const Leap::GestureList gestures = m_leapData->m_controller.frame().gestures();
+
+    static bool swipeTracked = false;
+
+    // on left/right swipe gesture switch between camera view and "ingame" hand rendering
+    if (gestures.isEmpty() && swipeTracked)
+    {
+        m_renderCameraImage = !m_renderCameraImage;
+        swipeTracked = false;
+    }
 
     for (auto it = gestures.begin(); it != gestures.end(); ++it)
     {
@@ -208,10 +217,13 @@ void LeapMotion::ProcessGestures()
 
         switch (gesture.type())
         {
-        case Leap::Gesture::TYPE_SWIPE:    
-            if (gesture.state() == Leap::Gesture::STATE_STOP)
-            {                
-                m_renderCameraImage = !m_renderCameraImage;
+        case Leap::Gesture::TYPE_SWIPE:
+            {
+                Leap::Vector handDir = gesture.hands()[0].direction();
+
+                // naive left/right swipe detection
+                if (handDir.x > 0.5f || handDir.x < -0.5f)
+                    swipeTracked = true;
             }
             break;
         default:
