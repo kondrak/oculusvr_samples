@@ -10,7 +10,7 @@
 extern CameraDirector g_cameraDirector;
 extern RenderContext g_renderContext;
 
-
+// helper struct containing LM data and render data
 struct LeapData
 {
     LeapListener     m_listener;
@@ -69,7 +69,7 @@ void LeapMotion::RecalculateSkeletonHands()
 {
     Leap::HandList hands = m_leapData->m_controller.frame().hands();
 
-    // reset hand vertex buffers
+    // reset hand vertex buffers - this will prevent hand rendering if no hands are detected
     if (glIsBuffer(m_leapData->m_handVertexBuffers[0]))
         glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[0]);
 
@@ -79,10 +79,10 @@ void LeapMotion::RecalculateSkeletonHands()
     if (!hands.count())
         return;
 
+    // reset hand VAO
     if (glIsVertexArray(m_leapData->m_handVertexArray))
         glDeleteVertexArrays(1, &m_leapData->m_handVertexArray);
-
-    // create line VAO
+  
     glGenVertexArrays(1, &m_leapData->m_handVertexArray);
     glBindVertexArray(m_leapData->m_handVertexArray);
 
@@ -160,17 +160,64 @@ void LeapMotion::RecalculateSkeletonHands()
     }
 }
 
-void LeapMotion::OnRender()
+void LeapMotion::UpdateCameraImage()
+{
+    delete m_leapData->m_camImgTexture;
+    m_leapData->m_camImgTexture = nullptr;
+
+    // fetch latest Leap Motion camera images
+    Leap::ImageList images = m_leapData->m_controller.frame().images();
+
+    if (!images.count())
+        return;
+
+    // final image is monoscopic, so we only render one camera image
+    Leap::Image image = images[0];
+
+    // setup OpenGL texture from image data
+    m_leapData->m_camImgTexture = new Texture((unsigned char*)image.data(), image.width(), image.height(), 3, GL_LUMINANCE, GL_LUMINANCE);
+}
+
+void LeapMotion::OnUpdate()
 {
     RecalculateSkeletonHands();
+    UpdateCameraImage();
+    ProcessGestures();
+}
 
-    RenderCameraImage();
-    RenderSkeletonHands();
+void LeapMotion::OnRender()
+{
+    if (m_renderCameraImage)
+        RenderCameraImage();
+    else
+        RenderSkeletonHands();
 }
 
 void LeapMotion::Destroy()
 {
     m_leapData->m_controller.removeListener(m_leapData->m_listener);
+}
+
+void LeapMotion::ProcessGestures()
+{
+    const Leap::GestureList gestures = m_leapData->m_controller.frame(0).gestures();
+
+    for (auto it = gestures.begin(); it != gestures.end(); ++it)
+    {
+        Leap::Gesture gesture = *it;
+
+        switch (gesture.type())
+        {
+        case Leap::Gesture::TYPE_SWIPE:    
+            if (gesture.state() == Leap::Gesture::STATE_STOP)
+            {                
+                m_renderCameraImage = !m_renderCameraImage;
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void LeapMotion::RenderSkeletonHands()
@@ -250,29 +297,11 @@ void LeapMotion::SetupCameraImageTexture()
 
 void LeapMotion::RenderCameraImage()
 {
-    delete m_leapData->m_camImgTexture;
-    m_leapData->m_camImgTexture = nullptr;
-
-    // fetch latest Leap Motion camera images
-    Leap::ImageList images = m_leapData->m_controller.frame().images();
-
-    if (!images.count())
+    if (!m_leapData->m_camImgTexture)
         return;
 
-    // final image is monoscopic, so we only render one camera image
-    Leap::Image image = images[0];
-   
-    // setup OpenGL texture from image data
-    m_leapData->m_camImgTexture = new Texture((unsigned char*)image.data(), image.width(), image.height(), 3, GL_LUMINANCE, GL_LUMINANCE);
     m_leapData->m_camImgTexture->Load();
 
-    if (!m_leapData->m_camImgTexture)
-    {
-        LOG_MESSAGE_ASSERT(false, "Could not load Leap Motion camera texture!");
-        return;
-    }
-
-    // do the rendering
     g_cameraDirector.GetActiveCamera()->SetMode(Camera::CAM_ORTHO);
     Math::Matrix4f MVP = g_cameraDirector.GetActiveCamera()->ProjectionMatrix();
 

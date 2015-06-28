@@ -2,8 +2,8 @@
 #include "Utils.hpp"
 
 static const char *fingerNames[] = { "Thumb", "Index", "Middle", "Ring", "Pinky" };
-static const char *boneNames[] = { "Metacarpal", "Proximal", "Middle", "Distal" };
-static const char *stateNames[] = { "STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END" };
+static const char *boneNames[]   = { "Metacarpal", "Proximal", "Middle", "Distal" };
+static const char *stateNames[]  = { "STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END" };
 
 void LeapListener::onInit(const Leap::Controller& controller) 
 {
