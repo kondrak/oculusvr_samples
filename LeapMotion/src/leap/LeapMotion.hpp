@@ -8,12 +8,17 @@ public:
     }
 
     ~LeapMotion();
-
-    void RecalculateSkeleton();
+    
     void OnRender();
 
     void Init();
     void Destroy();
-private:
+private:    
+    void RecalculateSkeletonHands();
+    void RenderSkeletonHands();
+
+    void SetupCameraImageTexture();
+    void RenderCameraImage();
+
     LeapData* m_leapData;
 };

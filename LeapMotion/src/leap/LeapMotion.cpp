@@ -2,47 +2,89 @@
 #include "leap/LeapListener.hpp"
 #include "renderer/OpenGL.hpp"
 #include "renderer/ShaderManager.hpp"
+#include "renderer/TextureManager.hpp"
+#include "renderer/Texture.hpp"
+#include "renderer/CameraDirector.hpp"
+#include "renderer/RenderContext.hpp"
 
-GLuint m_vertexArray;
-GLuint m_handVertexBuffer[2];
+extern CameraDirector g_cameraDirector;
+extern RenderContext g_renderContext;
+
 
 struct LeapData
 {
     LeapListener     m_listener;
     Leap::Controller m_controller;
+
+    // skeletal hand data
+    GLuint m_handVertexArray;
+    GLuint m_handVertexBuffers[2];
+
+    // camera image data
+    GLuint   m_camImgVertexArray;
+    GLuint   m_camImgVertexBuffer;
+    GLuint   m_camImgColorBuffer;
+    GLuint   m_camImgTexcoordBuffer;
+    Texture *m_camImgTexture;
 };
 
 LeapMotion::~LeapMotion()
 {
+    if (glIsVertexArray(m_leapData->m_handVertexArray))
+        glDeleteVertexArrays(1, &m_leapData->m_handVertexArray);
+
+    if (glIsVertexArray(m_leapData->m_camImgVertexArray))
+        glDeleteVertexArrays(1, &m_leapData->m_camImgVertexArray);
+
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[0]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[0]);
+
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[1]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[1]);
+
+    if (glIsBuffer(m_leapData->m_camImgVertexBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgVertexBuffer);
+
+    if (glIsBuffer(m_leapData->m_camImgColorBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgColorBuffer);
+
+    if (glIsBuffer(m_leapData->m_camImgTexcoordBuffer))
+        glDeleteBuffers(1, &m_leapData->m_camImgTexcoordBuffer);
+
+    delete m_leapData->m_camImgTexture;
+
     delete m_leapData;
 }
 
 void LeapMotion::Init()
 {
     m_leapData = new LeapData;
+    m_leapData->m_camImgTexture = nullptr;
     m_leapData->m_controller.addListener(m_leapData->m_listener);
+
+    SetupCameraImageTexture();
 }
 
-void LeapMotion::RecalculateSkeleton()
+void LeapMotion::RecalculateSkeletonHands()
 {
     Leap::HandList hands = m_leapData->m_controller.frame().hands();
 
     // reset hand vertex buffers
-    if (glIsBuffer(m_handVertexBuffer[0]))
-        glDeleteBuffers(1, &m_handVertexBuffer[0]);
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[0]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[0]);
 
-    if (glIsBuffer(m_handVertexBuffer[1]))
-        glDeleteBuffers(1, &m_handVertexBuffer[1]);
+    if (glIsBuffer(m_leapData->m_handVertexBuffers[1]))
+        glDeleteBuffers(1, &m_leapData->m_handVertexBuffers[1]);
 
     if (!hands.count())
         return;
 
-    if (glIsVertexArray(m_vertexArray))
-        glDeleteVertexArrays(1, &m_vertexArray);
+    if (glIsVertexArray(m_leapData->m_handVertexArray))
+        glDeleteVertexArrays(1, &m_leapData->m_handVertexArray);
 
     // create line VAO
-    glGenVertexArrays(1, &m_vertexArray);
-    glBindVertexArray(m_vertexArray);
+    glGenVertexArrays(1, &m_leapData->m_handVertexArray);
+    glBindVertexArray(m_leapData->m_handVertexArray);
 
     for (int i = 0, numHands = hands.count(); i < numHands; i++)
     {
@@ -60,7 +102,7 @@ void LeapMotion::RecalculateSkeleton()
         Leap::Vector curBoxBase;
         Leap::Vector lastBoxBase = wrist;
 
-        glGenBuffers(1, &m_handVertexBuffer[i]);
+        glGenBuffers(1, &m_leapData->m_handVertexBuffers[i]);
 
         // 5 fingers (indexed 0 - 4)
         // 4 bones per finger;
@@ -113,50 +155,156 @@ void LeapMotion::RecalculateSkeleton()
         handVertexData[4 * 6 * 4 + 3 * 6 + 5 + 6] = lastBoxBase.z;
 
         // bind hand vertices to buffer
-        glBindBuffer(GL_ARRAY_BUFFER, m_handVertexBuffer[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_handVertexBuffers[i]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(handVertexData), handVertexData, GL_STATIC_DRAW);
     }
 }
 
 void LeapMotion::OnRender()
 {
-    RecalculateSkeleton();
+    RecalculateSkeletonHands();
 
-    if (!glIsVertexArray(m_vertexArray))
+    RenderCameraImage();
+    RenderSkeletonHands();
+}
+
+void LeapMotion::Destroy()
+{
+    m_leapData->m_controller.removeListener(m_leapData->m_listener);
+}
+
+void LeapMotion::RenderSkeletonHands()
+{
+    // if the vertex array for hands is not set up, then we have no hands to render
+    if (!glIsVertexArray(m_leapData->m_handVertexArray))
         return;
 
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
     GLuint vertexPositionAttr = glGetAttribLocation(shader.id, "inVertex");
 
-    const float frustumColor[3] = { 0.f, 1.f, 0.f };
+    const float boneColor[3] = { 0.f, 1.f, 0.f };
 
-    //glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    // render camera bounds
-    glBindVertexArray(m_vertexArray);
+    glBindVertexArray(m_leapData->m_handVertexArray);
     glEnableVertexAttribArray(vertexPositionAttr);
 
+    // draw the hands
     for (int i = 0; i < 2; i++)
     {
-        if (!glIsBuffer(m_handVertexBuffer[i]))
+        if (!glIsBuffer(m_leapData->m_handVertexBuffers[i]))
             continue;
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_handVertexBuffer[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_handVertexBuffers[i]);
         glVertexAttribPointer(vertexPositionAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-        // draw the frustum lines
-        glUniform3fv(shader.uniforms[VertexColor], 1, frustumColor);
+        glUniform3fv(shader.uniforms[VertexColor], 1, boneColor);
         glDrawArrays(GL_LINES, 0, 126 / 3);
     }
 
     glDisableVertexAttribArray(vertexPositionAttr);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_DEPTH_TEST);
 }
 
-void LeapMotion::Destroy()
+void LeapMotion::SetupCameraImageTexture()
 {
-    m_leapData->m_controller.removeListener(m_leapData->m_listener);
+    // origin is at screen center
+    const GLfloat vertexBufferData[] = {
+        -g_renderContext.scrRatio,  1.0f, -1.0f,
+         g_renderContext.scrRatio,  1.0f, -1.0f,
+        -g_renderContext.scrRatio, -1.0f, -1.0f,
+         g_renderContext.scrRatio, -1.0f, -1.0f
+    };
+
+    const GLfloat vertexColorData[] = {
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+    };
+
+    const GLfloat vertexTexcoordData[] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f
+    };
+
+    // create quad VAO and VBOs for camera texture quad
+    glGenVertexArrays(1, &m_leapData->m_camImgVertexArray);
+    glBindVertexArray(m_leapData->m_camImgVertexArray);
+
+    glGenBuffers(1, &m_leapData->m_camImgVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &m_leapData->m_camImgColorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgColorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexColorData), vertexColorData, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &m_leapData->m_camImgTexcoordBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgTexcoordBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexTexcoordData), vertexTexcoordData, GL_STATIC_DRAW);
+}
+
+void LeapMotion::RenderCameraImage()
+{
+    delete m_leapData->m_camImgTexture;
+    m_leapData->m_camImgTexture = nullptr;
+
+    // fetch latest Leap Motion camera images
+    Leap::ImageList images = m_leapData->m_controller.frame().images();
+
+    if (!images.count())
+        return;
+
+    // final image is monoscopic, so we only render one camera image
+    Leap::Image image = images[0];
+   
+    // setup OpenGL texture from image data
+    m_leapData->m_camImgTexture = new Texture((unsigned char*)image.data(), image.width(), image.height(), 3, GL_LUMINANCE, GL_LUMINANCE);
+    m_leapData->m_camImgTexture->Load();
+
+    if (!m_leapData->m_camImgTexture)
+    {
+        LOG_MESSAGE_ASSERT(false, "Could not load Leap Motion camera texture!");
+        return;
+    }
+
+    // do the rendering
+    g_cameraDirector.GetActiveCamera()->SetMode(Camera::CAM_ORTHO);
+    Math::Matrix4f MVP = g_cameraDirector.GetActiveCamera()->ProjectionMatrix();
+
+    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
+    glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVP[0]);
+
+    GLuint vertexPosition_modelspaceID = glGetAttribLocation(shader.id, "inVertex");
+    GLuint vertexColorAttr = glGetAttribLocation(shader.id, "inVertexColor");
+    GLuint texCoordAttr = glGetAttribLocation(shader.id, "inTexCoord");
+
+    TextureManager::GetInstance()->BindTexture(m_leapData->m_camImgTexture);
+
+    // OpenGL render 
+    glBindVertexArray(m_leapData->m_camImgVertexArray);
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glEnableVertexAttribArray(vertexColorAttr);
+    glEnableVertexAttribArray(texCoordAttr);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgVertexBuffer);
+    glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgColorBuffer);
+    glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_camImgTexcoordBuffer);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glDisableVertexAttribArray(vertexPosition_modelspaceID);
+    glDisableVertexAttribArray(vertexColorAttr);
+    glDisableVertexAttribArray(texCoordAttr);
+
+    g_cameraDirector.GetActiveCamera()->SetMode(Camera::CAM_FPS);
 }
