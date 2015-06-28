@@ -9,7 +9,11 @@
 class Texture
 {
 public:
-    friend class TextureManager;
+    Texture(const char *filename);
+    Texture(unsigned char *data, int width, int height, int components, int format, int internalFormat);
+    ~Texture();
+
+    GLuint Load();
 
     const int Width()      const { return m_width; }
     const int Height()     const { return m_height; }
@@ -17,12 +21,6 @@ public:
     const GLuint Id()      const { return m_texId; }
     
 private:
-    Texture(const char *filename);
-    Texture(unsigned char *data, int width, int height, int components, int format, int internalFormat);
-    ~Texture();
-
-    GLuint Load();
-
     int    m_width;
     int    m_height;
     int    m_components;
