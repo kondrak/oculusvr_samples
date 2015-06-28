@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraBounds", "CameraBound
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DebugInfoRender", "DebugInfoRender\DebugInfoRender.vcxproj", "{BD905C38-F11E-462B-BB48-A23A2379207F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeapMotion", "LeapMotion\LeapMotion.vcxproj", "{13454422-09D4-4C5C-8E18-5497D7FF240F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{BD905C38-F11E-462B-BB48-A23A2379207F}.Debug|Win32.Build.0 = Debug|Win32
 		{BD905C38-F11E-462B-BB48-A23A2379207F}.Release|Win32.ActiveCfg = Release|Win32
 		{BD905C38-F11E-462B-BB48-A23A2379207F}.Release|Win32.Build.0 = Release|Win32
+		{13454422-09D4-4C5C-8E18-5497D7FF240F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{13454422-09D4-4C5C-8E18-5497D7FF240F}.Debug|Win32.Build.0 = Debug|Win32
+		{13454422-09D4-4C5C-8E18-5497D7FF240F}.Release|Win32.ActiveCfg = Release|Win32
+		{13454422-09D4-4C5C-8E18-5497D7FF240F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,7 +12,7 @@ Make sure you have the <code>Leap.dll</code> file on your computer (comes with t
 
 Run <code>LeapMotion.exe</code>
 
-During the demo, swipe your hand left or right to toggle between hand skeleton rendering and camera view.
+During the demo, swipe your hand left or right to toggle between hand skeleton rendering and camera view. For image capture to work you have to tick the "Allow Images" box in Leap Motion Control Panel.
 
 How to build
 -------

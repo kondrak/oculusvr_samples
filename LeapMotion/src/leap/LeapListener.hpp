@@ -1,5 +1,8 @@
+#ifndef LEAPLISTENER_HPP
+#define LEAPLISTENER_HPP
 #include "Leap.h"
 
+// the Leap Motion listner
 class LeapListener : public Leap::Listener
 {
 public:
@@ -14,3 +17,5 @@ public:
     virtual void onServiceConnect(const Leap::Controller&);
     virtual void onServiceDisconnect(const Leap::Controller&);
 };
+
+#endif

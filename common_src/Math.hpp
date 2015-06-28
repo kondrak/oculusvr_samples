@@ -7,7 +7,7 @@
  * Basic math structures (vectors, quaternions, matrices)
  */
 
-#define PI 3.1415926535897932384626433832795
+#define PI          3.141592653589f
 #define PIdiv180inv 57.29577951308f
 #define PIdiv180    0.01745329251f
 #define PIdiv2      1.57079632679f

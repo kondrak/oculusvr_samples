@@ -111,6 +111,7 @@
     <ClInclude Include="..\common_src\Utils.hpp" />
     <ClInclude Include="src\Application.hpp" />
     <ClInclude Include="src\leap\LeapListener.hpp" />
+    <ClInclude Include="src\leap\LeapLogger.hpp" />
     <ClInclude Include="src\leap\LeapMotion.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

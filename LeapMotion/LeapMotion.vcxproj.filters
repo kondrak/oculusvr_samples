@@ -143,5 +143,8 @@
     <ClInclude Include="..\common_src\Utils.hpp">
       <Filter>Source Files\common_src</Filter>
     </ClInclude>
+    <ClInclude Include="src\leap\LeapLogger.hpp">
+      <Filter>Source Files\leap</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     ovrSizei hmdResolution = g_oculusVR.GetResolution();
     ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
 
-    g_renderContext.Init("Oculus Rift Leap Motion integration test", 100, 100, windowSize.w, windowSize.h);
+    g_renderContext.Init("Oculus Rift Leap Motion demo", 100, 100, windowSize.w, windowSize.h);
     SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
@@ -73,9 +73,10 @@ int main(int argc, char **argv)
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
             const ShaderProgram &shader2 = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
             
-            // with Leap Motion's Up(+Y), Forward(-Z) and Right(+X) orientations, rotate the final matrix by X and Y for proper VR orientation of rendered hand skeletons
+            // with Leap Motion's Up(+Y), Forward(-Z) and Right(+X) orientations, 
+            // rotate the final matrix by X and Y for proper VR positioning of rendered hand skeletons
             OVR::Matrix4f MVPMatrixLM = MVPMatrix * OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(1.0f, 0.0f, 0.0f), -PIdiv2))
-                                                  *  OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(0.0f, 1.0f, 0.0f), PI));
+                                                  * OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(0.0f, 1.0f, 0.0f), PI));
             glUniformMatrix4fv(shader2.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrixLM.Transposed().M[0][0]);
 
             g_application.OnRender();    

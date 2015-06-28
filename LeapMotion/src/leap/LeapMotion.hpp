@@ -1,5 +1,9 @@
+#ifndef LEAPMOTION_HPP
+#define LEAPMOTION_HPP
+
 struct LeapData;
 
+// Leap Motion public interface
 class LeapMotion
 {
 public:
@@ -24,3 +28,5 @@ private:
     LeapData* m_leapData;
     bool m_renderCameraImage;
 };
+
+#endif
