@@ -23,14 +23,17 @@ public:
     ~OculusVR();
     bool  InitVR();
     bool InitVRBuffers(int windowWidth, int windowHeight);
+    bool InitNonDistortMirror(int windowWidth, int windowHeight);
     void  DestroyVR();
     const ovrSizei GetResolution() const;
-
     void  OnRenderStart();
-    const OVR::Matrix4f OnEyeRender(int eyeIndex) const;
+    const OVR::Matrix4f OnEyeRender(int eyeIndex);
     void  OnEyeRenderFinish(int eyeIndex);
+    const OVR::Matrix4f GetEyeMVPMatrix(int eyeIdx) const;
     void  SubmitFrame();
     void  BlitMirror();
+    void  BlitStart(int windowWidth, int windowHeight);
+    void  BlitNonDistort(int windowWidth, int windowHeight, int offset);
 
     void  OnKeyPress(KeyCode key);
     void  CreateDebug();
@@ -64,13 +67,21 @@ private:
     ovrVector3f       m_hmdToEyeViewOffset[ovrEye_Count];
     OVRBuffer        *m_eyeBuffers[ovrEye_Count];
 
+    OVR::Matrix4f     m_projectionMatrix[ovrEye_Count];
+    OVR::Matrix4f     m_eyeViewOffset[ovrEye_Count];
+    OVR::Matrix4f     m_eyeOrientation[ovrEye_Count];
+    OVR::Matrix4f     m_eyePose[ovrEye_Count];
+
     // frame timing data and tracking info
     ovrFrameTiming    m_frameTiming;
     ovrTrackingState  m_trackingState;
 
     // mirror texture used to render HMD view to OpenGL window
     ovrGLTexture     *m_mirrorTexture;
+    GLuint            m_nonDistortTexture;
+    GLuint            m_nonDistortDepthBuffer;
     GLuint            m_mirrorFBO;
+    GLuint            m_nonDistortFBO;
 
     OculusVRDebug    *m_debugData;
     OVRCameraFrustum *m_cameraFrustum;
