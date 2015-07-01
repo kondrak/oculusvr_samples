@@ -33,16 +33,16 @@ int main(int argc, char **argv)
 
     if (glewInit() != GLEW_OK)
     {
-        g_renderContext.Destroy();
         g_oculusVR.DestroyVR();
+        g_renderContext.Destroy();
         SDL_Quit();
         return 1;
     }
 
     if (!g_oculusVR.InitVRBuffers(windowSize.w, windowSize.h))
     {
-        g_renderContext.Destroy();
         g_oculusVR.DestroyVR();
+        g_renderContext.Destroy();
         SDL_Quit();
         return 1;
     }
@@ -90,8 +90,8 @@ int main(int argc, char **argv)
     }
 
     g_leapMotion.Destroy();
-    g_renderContext.Destroy();
     g_oculusVR.DestroyVR();
+    g_renderContext.Destroy();
 
     SDL_Quit(); 
 
