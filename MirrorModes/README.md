@@ -9,6 +9,7 @@ This application introduces different ways to mirror the DK2 output to a window 
 A green rectangle will determine which eye is currently rendered in single eye mode.
 
 ![Screenshot](http://kondrak.info/images/vr_mirror1.png?raw=true)
+![Screenshot](http://kondrak.info/images/vr_mirror2.png?raw=true)
 
 Usage
 -----
