@@ -140,6 +140,13 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
 
 bool OculusVR::InitNonDistortMirror(int windowWidth, int windowHeight)
 {
+    LOG_MESSAGE_ASSERT(!glIsFramebuffer(m_nonDistortFBO), "Non-distort mirror FBO already initialized!");
+
+    // we render per-eye only, so take only half of the target window width
+    windowWidth /= 2;
+    m_nonDistortViewPortWidth  = windowWidth;
+    m_nonDistortViewPortHeight = windowHeight;
+
     // Configure non-distorted frame buffer
     glGenTextures(1, &m_nonDistortTexture);
     glBindTexture(GL_TEXTURE_2D, m_nonDistortTexture);
@@ -285,22 +292,24 @@ void OculusVR::BlitMirror()
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 
-void OculusVR::BlitStart(int windowWidth, int windowHeight)
+void OculusVR::OnNonDistortMirrorStart()
 {
+    LOG_MESSAGE_ASSERT(glIsFramebuffer(m_nonDistortFBO), "Non-distort mirror FBO not initialized!");
+
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_nonDistortFBO);
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, m_nonDistortViewPortWidth, m_nonDistortViewPortHeight);
 }
 
-void OculusVR::BlitNonDistort(int windowWidth, int windowHeight, int offset)
+void OculusVR::BlitNonDistortMirror(int offset)
 {
+    LOG_MESSAGE_ASSERT(glIsFramebuffer(m_nonDistortFBO), "Non-distort mirror FBO not initialized!");
+
     // Blit non distorted mirror to backbuffer
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_nonDistortFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    GLint w = windowWidth;
-    GLint h = windowHeight;
     GLint dstX = 0 + offset;
-    GLint dstW = w + offset;
-    glBlitFramebuffer(0, 0, w, h, dstX, 0, dstW, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    GLint dstW = m_nonDistortViewPortWidth + offset;
+    glBlitFramebuffer(0, 0, m_nonDistortViewPortWidth, m_nonDistortViewPortHeight, dstX, 0, dstW, m_nonDistortViewPortHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 

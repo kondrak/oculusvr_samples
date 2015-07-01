@@ -21,7 +21,8 @@ public:
         MM_Count
     };
 
-    Application::Application() : m_mirrorMode(Mirror_Regular), m_running(true)
+
+    Application::Application() : m_running(true), m_mirrorMode(Mirror_Regular)
     {
     }
 
@@ -34,12 +35,11 @@ public:
     inline void Terminate()      { m_running = false; }
 
     void OnKeyPress(KeyCode key);
-    VRMirrorMode CurrMirrorMode() { return (VRMirrorMode)m_mirrorMode; }
 
-private:
-    int m_mirrorMode;
-
+    const VRMirrorMode CurrMirrorMode() const { return (VRMirrorMode)m_mirrorMode; }
+private:  
     bool m_running;
+    int m_mirrorMode;
 
     // rendered quad data
     GLuint m_vertexBuffer;

@@ -23,7 +23,7 @@ public:
     ~OculusVR();
     bool  InitVR();
     bool InitVRBuffers(int windowWidth, int windowHeight);
-    bool InitNonDistortMirror(int windowWidth, int windowHeight);
+    bool InitNonDistortMirror(int windowWidth, int windowHeight); // create non-distorted mirror if necessary (debug purposes)
     void  DestroyVR();
     const ovrSizei GetResolution() const;
     void  OnRenderStart();
@@ -31,9 +31,10 @@ public:
     void  OnEyeRenderFinish(int eyeIndex);
     const OVR::Matrix4f GetEyeMVPMatrix(int eyeIdx) const;
     void  SubmitFrame();
-    void  BlitMirror();
-    void  BlitStart(int windowWidth, int windowHeight);
-    void  BlitNonDistort(int windowWidth, int windowHeight, int offset);
+
+    void  BlitMirror();                     // regular OculusVR mirror view
+    void  OnNonDistortMirrorStart();        // non-distorted mirror rendering start (debug purposes)
+    void  BlitNonDistortMirror(int offset); // non-distorted mirror rendering (debug purposes)
 
     void  OnKeyPress(KeyCode key);
     void  CreateDebug();
@@ -78,12 +79,19 @@ private:
 
     // mirror texture used to render HMD view to OpenGL window
     ovrGLTexture     *m_mirrorTexture;
+
+    // debug non-distorted mirror texture data
     GLuint            m_nonDistortTexture;
     GLuint            m_nonDistortDepthBuffer;
     GLuint            m_mirrorFBO;
     GLuint            m_nonDistortFBO;
+    int               m_nonDistortViewPortWidth;
+    int               m_nonDistortViewPortHeight;
 
+    // debug hardware output data
     OculusVRDebug    *m_debugData;
+
+    // debug camera frustum renderer
     OVRCameraFrustum *m_cameraFrustum;
 };
 

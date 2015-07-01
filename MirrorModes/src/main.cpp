@@ -95,17 +95,18 @@ int main(int argc, char **argv)
             // non distorted, dual view
             for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
             {
+                g_oculusVR.OnNonDistortMirrorStart();
+
                 const OVR::Matrix4f MVPMatrix = g_oculusVR.GetEyeMVPMatrix(eyeIndex);
                 const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
                 glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-                g_oculusVR.BlitStart(windowSize.w / 2, windowSize.h);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
 
                 g_application.OnRender();
 
-                g_oculusVR.BlitNonDistort(windowSize.w / 2, windowSize.h, eyeIndex == 0 ? 0 : windowSize.w / 2);
+                g_oculusVR.BlitNonDistortMirror(eyeIndex == 0 ? 0 : windowSize.w / 2);
             }
             // non distort end
         }
@@ -113,21 +114,18 @@ int main(int argc, char **argv)
         if (mirrorMode == Application::Mirror_LeftEye)
         {
             // non distorted, centered
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glClearColor(0.f, 0.f, 0.f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ClearWindow(0.f, 0.f, 0.f);
+            g_oculusVR.OnNonDistortMirrorStart();
 
             const OVR::Matrix4f MVPMatrix = g_oculusVR.GetEyeMVPMatrix(ovrEye_Left);
             const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-            g_oculusVR.BlitStart(windowSize.w / 2, windowSize.h);
-
             glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             g_application.OnRender();
-            g_oculusVR.BlitNonDistort(windowSize.w / 2, windowSize.h, windowSize.w / 4);
+            g_oculusVR.BlitNonDistortMirror(windowSize.w / 4);
             // non distorted end
 
             ShaderManager::GetInstance()->DisableShader();
@@ -138,21 +136,18 @@ int main(int argc, char **argv)
         if (mirrorMode == Application::Mirror_RightEye)
         {
             // non distorted, centered
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glClearColor(0.f, 0.f, 0.f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ClearWindow(0.f, 0.f, 0.f);
+            g_oculusVR.OnNonDistortMirrorStart();
 
             const OVR::Matrix4f MVPMatrix = g_oculusVR.GetEyeMVPMatrix(ovrEye_Right);
             const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-            g_oculusVR.BlitStart(windowSize.w / 2, windowSize.h);
-
             glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             g_application.OnRender();
-            g_oculusVR.BlitNonDistort(windowSize.w / 2, windowSize.h, windowSize.w / 4);
+            g_oculusVR.BlitNonDistortMirror(windowSize.w / 4);
 
 
             ShaderManager::GetInstance()->DisableShader();

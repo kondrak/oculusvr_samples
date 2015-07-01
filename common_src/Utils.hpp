@@ -23,5 +23,6 @@
 
 
 void LogError(const char *msg);
+void ClearWindow(float r, float g, float b);
 void DrawRectangle(float x, float y, float w, float h, float r, float g, float b);
 #endif

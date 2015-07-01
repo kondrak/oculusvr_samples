@@ -15,6 +15,12 @@ void LogError(const char *msg)
 #endif
 }
 
+void ClearWindow(float r, float g, float b)
+{
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glClearColor(r, g, b, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 void DrawRectangle(float x, float y, float w, float h, float r, float g, float b)
 {
