@@ -283,14 +283,29 @@ void OculusVR::SubmitFrame()
     ovrResult result = ovrHmd_SubmitFrame(m_hmd, 0, &viewScaleDesc, layerList, 1);
 }
 
-void OculusVR::BlitMirror()
+void OculusVR::BlitMirror(ovrEyeType numEyes, int offset)
 {
     // Blit mirror texture to back buffer
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_mirrorFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     GLint w = m_mirrorTexture->OGL.Header.TextureSize.w;
     GLint h = m_mirrorTexture->OGL.Header.TextureSize.h;
-    glBlitFramebuffer(0, h, w, 0, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    switch (numEyes)
+    {
+    case ovrEye_Count:
+        glBlitFramebuffer(0, h, w, 0, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        break;
+    case ovrEye_Left:
+        glBlitFramebuffer(0, h, w / 2, 0, offset, 0, w / 2 + offset, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        break;
+    case ovrEye_Right:
+        glBlitFramebuffer(w / 2, h, w, 0, offset, 0, w / 2 + offset, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        break;
+    default:
+        LOG_MESSAGE_ASSERT(false, "Unrecognized ovrEyeType");
+    }
+
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }
 

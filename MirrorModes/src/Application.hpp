@@ -15,9 +15,11 @@ public:
     enum VRMirrorMode
     {
         Mirror_Regular,
+        Mirror_RegularLeftEye,
+        Mirror_RegularRightEye,
         Mirror_NonDistort,
-        Mirror_LeftEye,
-        Mirror_RightEye,
+        Mirror_NonDistortLeftEye,
+        Mirror_NonDistortRightEye,
         MM_Count
     };
 

@@ -32,7 +32,7 @@ public:
     const OVR::Matrix4f GetEyeMVPMatrix(int eyeIdx) const;
     void  SubmitFrame();
 
-    void  BlitMirror();                     // regular OculusVR mirror view
+    void  BlitMirror(ovrEyeType numEyes=ovrEye_Count, int offset = 0);   // regular OculusVR mirror view
     void  OnNonDistortMirrorStart();        // non-distorted mirror rendering start (debug purposes)
     void  BlitNonDistortMirror(int offset); // non-distorted mirror rendering (debug purposes)
 

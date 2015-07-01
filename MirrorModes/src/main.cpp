@@ -87,9 +87,30 @@ int main(int argc, char **argv)
 
         if (mirrorMode == Application::Mirror_Regular)
         {
-            g_oculusVR.BlitMirror();
+            ClearWindow(0.f, 0.f, 0.f);
+            g_oculusVR.BlitMirror(ovrEye_Count, 0);
         }
        
+        if (mirrorMode == Application::Mirror_RegularLeftEye)
+        {
+            ClearWindow(0.f, 0.f, 0.f);
+            g_oculusVR.BlitMirror(ovrEye_Left, windowSize.w / 4);
+
+            ShaderManager::GetInstance()->DisableShader();
+            glViewport(0, 0, windowSize.w, windowSize.h);
+            DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
+        }
+
+        if (mirrorMode == Application::Mirror_RegularRightEye)
+        {
+            ClearWindow(0.f, 0.f, 0.f);
+            g_oculusVR.BlitMirror(ovrEye_Right, windowSize.w / 4);
+
+            ShaderManager::GetInstance()->DisableShader();
+            glViewport(0, 0, windowSize.w, windowSize.h);
+            DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
+        }
+
         if (mirrorMode == Application::Mirror_NonDistort)
         {
             // non distorted, dual view
@@ -111,7 +132,7 @@ int main(int argc, char **argv)
             // non distort end
         }
 
-        if (mirrorMode == Application::Mirror_LeftEye)
+        if (mirrorMode == Application::Mirror_NonDistortLeftEye)
         {
             // non distorted, centered
             ClearWindow(0.f, 0.f, 0.f);
@@ -133,7 +154,7 @@ int main(int argc, char **argv)
             DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
-        if (mirrorMode == Application::Mirror_RightEye)
+        if (mirrorMode == Application::Mirror_NonDistortRightEye)
         {
             // non distorted, centered
             ClearWindow(0.f, 0.f, 0.f);
@@ -157,7 +178,6 @@ int main(int argc, char **argv)
         }
 
         SDL_GL_SwapWindow(g_renderContext.window);
-
     }
 
     g_oculusVR.DestroyVR();
