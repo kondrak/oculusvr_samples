@@ -1,15 +1,20 @@
-Oculus Rift DK2 minimum OpenGL setup
+Oculus Rift DK2 mirror modes
 ================
 
-A minimum setup application for Oculus Rift DK2 development with OpenGL and SDL2 as window manager. While the entire code could be squashed into a single file, a separate OculusVR class exists to handle all OVR initialization and processing. Along with it comes a separate ShaderManager with Shader class for cleaner shader loading. The application also handles dismissal of healt warning and provides head tracking recenter functionality at a keystroke.
+This application introduces different ways to mirror the DK2 output to a window which can be used for debugging. Press 'M' while running the program to toggle between:
+- standard mirror with DK2 distortion
+- single-eye mirror (useful for detecting stereoscopic bugs)
+- non-distorted mirror for convenience
 
-![Screenshot](http://kondrak.info/images/vr_debug.png?raw=true)
+A green rectangle will determine which eye is currently rendered in single eye mode.
+
+![Screenshot](http://kondrak.info/images/vr_mirror1.png?raw=true)
 
 Usage
 -----
-Run <code>MinimumOpenGL.exe</code>
+Run <code>MirrorModes.exe</code>
 
-Press SPACE while "ingame" to recenter tracking position.
+Press SPACE while "ingame" to recenter tracking position. 'M' toggles between different mirror modes.
 
 How to build
 -------
