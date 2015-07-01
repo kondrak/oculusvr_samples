@@ -26,13 +26,10 @@ void DrawRectangle(float x, float y, float w, float h, float r, float g, float b
     glLoadIdentity();
 
     glBegin(GL_QUADS);
-    glColor3f(0.f, 1.f, 0.f);
+    glColor3f(r, g, b);
     glVertex3f(x - w / 2.f, y - w / 2.f, -1.f);
-    glColor3f(0.f, 1.f, 0.f);
     glVertex3f(x + w / 2.f, y - w / 2.f, -1.f);
-    glColor3f(0.f, 1.f, 0.f);
     glVertex3f(x + w / 2.f, y + w / 2.f, -1.f);
-    glColor3f(0.f, 1.f, 0.f);
     glVertex3f(x - w / 2.f, y + w / 2.f, -1.f);
     glEnd();
 }

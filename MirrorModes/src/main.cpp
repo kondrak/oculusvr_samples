@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
-            DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0, 0, 0);
+            DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
         if (mirrorMode == Application::Mirror_RightEye)
@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
-            DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0, 0, 0);
+            DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
             // non distorted end
         }
 
