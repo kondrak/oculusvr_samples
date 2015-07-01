@@ -21,6 +21,7 @@
 #define LOG_MESSAGE_ASSERT(x, msg)
 #endif
 
-void LogError(const char *msg);
 
+void LogError(const char *msg);
+void DrawRectangle(float x, float y, float w, float h, float r, float g, float b);
 #endif

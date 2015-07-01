@@ -60,6 +60,11 @@ const ShaderProgram& ShaderManager::UseShaderProgram(ShaderName type)
     return m_shaderProgram[type];
 }
 
+void ShaderManager::DisableShader()
+{
+    glUseProgram(0);
+    m_activeShader = NUM_SHADERS;
+}
 
 std::string ShaderManager::ReadShaderFromFile(const char *filename)
 {
@@ -143,7 +148,6 @@ bool ShaderManager::LinkShader(GLuint* const pProgramObject,
 
     return true;
 }
-
 
 void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename)
 {

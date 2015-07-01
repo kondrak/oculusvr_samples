@@ -129,6 +129,10 @@ int main(int argc, char **argv)
             g_application.OnRender();
             g_oculusVR.BlitNonDistort(windowSize.w / 2, windowSize.h, windowSize.w / 4);
             // non distorted end
+
+            ShaderManager::GetInstance()->DisableShader();
+            glViewport(0, 0, windowSize.w, windowSize.h);
+            DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0, 0, 0);
         }
 
         if (mirrorMode == Application::Mirror_RightEye)
@@ -149,6 +153,11 @@ int main(int argc, char **argv)
 
             g_application.OnRender();
             g_oculusVR.BlitNonDistort(windowSize.w / 2, windowSize.h, windowSize.w / 4);
+
+
+            ShaderManager::GetInstance()->DisableShader();
+            glViewport(0, 0, windowSize.w, windowSize.h);
+            DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0, 0, 0);
             // non distorted end
         }
 
