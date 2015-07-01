@@ -237,12 +237,12 @@ const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex)
     int eye = m_hmd->EyeRenderOrder[eyeIndex];
     m_eyeBuffers[eye]->OnRender();
 
-    m_projectionMatrix[eyeIndex] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
-    m_eyeViewOffset[eyeIndex]    = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eye]);
-    m_eyeOrientation[eyeIndex]   = OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eye].Orientation).Inverted());
-    m_eyePose[eyeIndex]          = OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eye].Position));
+    m_projectionMatrix[eye] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
+    m_eyeViewOffset[eye]    = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eye]);
+    m_eyeOrientation[eye]   = OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eye].Orientation).Inverted());
+    m_eyePose[eye]          = OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eye].Position));
 
-    return m_projectionMatrix[eyeIndex] * m_eyeViewOffset[eyeIndex] * m_eyeOrientation[eyeIndex] * m_eyePose[eyeIndex];
+    return m_projectionMatrix[eye] * m_eyeViewOffset[eye] * m_eyeOrientation[eye] * m_eyePose[eye];
 }
 
 void OculusVR::OnEyeRenderFinish(int eyeIndex)

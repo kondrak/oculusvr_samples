@@ -85,18 +85,14 @@ int main(int argc, char **argv)
 
         Application::VRMirrorMode mirrorMode = g_application.CurrMirrorMode();
 
-        /*
-         * Standard mirror blit (both eyes, distorted)
-         */
+        // Standard mirror blit (both eyes, distorted)
         if (mirrorMode == Application::Mirror_Regular)
         {
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.BlitMirror(ovrEye_Count, 0);
         }
        
-        /*
-         * Standard mirror blit (single eye, left)
-         */
+        // Standard mirror blit (left eye, distorted)
         if (mirrorMode == Application::Mirror_RegularLeftEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
@@ -108,9 +104,7 @@ int main(int argc, char **argv)
             DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
-        /*
-         * Standard mirror blit (single eye, right)
-         */
+        // Standard mirror blit (right eye, distorted)
         if (mirrorMode == Application::Mirror_RegularRightEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
@@ -122,9 +116,7 @@ int main(int argc, char **argv)
             DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
-        /*
-         *  Both eye mirror - no distortion (requires 2 extra renders!)
-         */
+        // Both eye mirror - no distortion (requires 2 extra renders!)
         if (mirrorMode == Application::Mirror_NonDistort)
         {
             g_oculusVR.OnNonDistortMirrorStart();
@@ -139,14 +131,11 @@ int main(int argc, char **argv)
                 glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
 
                 g_application.OnRender();
-
                 g_oculusVR.BlitNonDistortMirror(eyeIndex == 0 ? 0 : windowSize.w / 2);
             }
         }
 
-        /*
-         *  Left eye - no distortion (1 extra render)
-         */
+        // Left eye - no distortion (1 extra render)
         if (mirrorMode == Application::Mirror_NonDistortLeftEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
@@ -167,9 +156,7 @@ int main(int argc, char **argv)
             DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
-        /*
-         *  Right eye - no distortion (1 extra render)
-         */
+        //  Right eye - no distortion (1 extra render)
         if (mirrorMode == Application::Mirror_NonDistortRightEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
