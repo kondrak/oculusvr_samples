@@ -85,39 +85,52 @@ int main(int argc, char **argv)
 
         Application::VRMirrorMode mirrorMode = g_application.CurrMirrorMode();
 
+        /*
+         * Standard mirror blit (both eyes, distorted)
+         */
         if (mirrorMode == Application::Mirror_Regular)
         {
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.BlitMirror(ovrEye_Count, 0);
         }
        
+        /*
+         * Standard mirror blit (single eye, left)
+         */
         if (mirrorMode == Application::Mirror_RegularLeftEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.BlitMirror(ovrEye_Left, windowSize.w / 4);
 
+            // rectangle indicating we're rendering left eye
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
             DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
+        /*
+         * Standard mirror blit (single eye, right)
+         */
         if (mirrorMode == Application::Mirror_RegularRightEye)
         {
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.BlitMirror(ovrEye_Right, windowSize.w / 4);
 
+            // rectangle indicating we're rendering right eye
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
             DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
+        /*
+         *  Both eye mirror - no distortion (requires 2 extra renders!)
+         */
         if (mirrorMode == Application::Mirror_NonDistort)
         {
-            // non distorted, dual view
+            g_oculusVR.OnNonDistortMirrorStart();
+
             for (int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
             {
-                g_oculusVR.OnNonDistortMirrorStart();
-
                 const OVR::Matrix4f MVPMatrix = g_oculusVR.GetEyeMVPMatrix(eyeIndex);
                 const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
                 glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
@@ -129,12 +142,13 @@ int main(int argc, char **argv)
 
                 g_oculusVR.BlitNonDistortMirror(eyeIndex == 0 ? 0 : windowSize.w / 2);
             }
-            // non distort end
         }
 
+        /*
+         *  Left eye - no distortion (1 extra render)
+         */
         if (mirrorMode == Application::Mirror_NonDistortLeftEye)
         {
-            // non distorted, centered
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.OnNonDistortMirrorStart();
 
@@ -147,16 +161,17 @@ int main(int argc, char **argv)
 
             g_application.OnRender();
             g_oculusVR.BlitNonDistortMirror(windowSize.w / 4);
-            // non distorted end
 
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
             DrawRectangle(-0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
         }
 
+        /*
+         *  Right eye - no distortion (1 extra render)
+         */
         if (mirrorMode == Application::Mirror_NonDistortRightEye)
         {
-            // non distorted, centered
             ClearWindow(0.f, 0.f, 0.f);
             g_oculusVR.OnNonDistortMirrorStart();
 
@@ -170,11 +185,9 @@ int main(int argc, char **argv)
             g_application.OnRender();
             g_oculusVR.BlitNonDistortMirror(windowSize.w / 4);
 
-
             ShaderManager::GetInstance()->DisableShader();
             glViewport(0, 0, windowSize.w, windowSize.h);
             DrawRectangle(0.75f, 0.f, 0.1f, 0.1f, 0.f, 1.f, 0.f);
-            // non distorted end
         }
 
         SDL_GL_SwapWindow(g_renderContext.window);
