@@ -158,12 +158,20 @@ bool OculusVR::InitNonDistortMirror(int windowWidth, int windowHeight)
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, windowWidth, windowHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
-    // depth buffer
-    glGenRenderbuffers(1, &m_nonDistortDepthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_nonDistortDepthBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowWidth, windowHeight);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_nonDistortDepthBuffer);
+    // create depth buffer
+    glGenTextures(1, &m_nonDistortDepthBuffer);
+    glBindTexture(GL_TEXTURE_2D, m_nonDistortDepthBuffer);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    GLenum internalFormat = GL_DEPTH_COMPONENT24;
+    GLenum type = GL_UNSIGNED_INT;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, windowWidth, windowHeight, 0, GL_DEPTH_COMPONENT, type, NULL);
+
+    // create FBO for non-disortion mirror
     glGenFramebuffers(1, &m_nonDistortFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_nonDistortFBO);
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_nonDistortTexture, 0);
@@ -314,6 +322,9 @@ void OculusVR::OnNonDistortMirrorStart()
     LOG_MESSAGE_ASSERT(glIsFramebuffer(m_nonDistortFBO), "Non-distort mirror FBO not initialized!");
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_nonDistortFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_nonDistortTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_nonDistortDepthBuffer, 0);
+
     glViewport(0, 0, m_nonDistortViewPortWidth, m_nonDistortViewPortHeight);
 }
 
