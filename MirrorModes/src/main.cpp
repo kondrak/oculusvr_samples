@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     ovrSizei hmdResolution = g_oculusVR.GetResolution();
     ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
 
-    g_renderContext.Init("Oculus Rift Minimum OpenGL", 100, 100, windowSize.w, windowSize.h);
+    g_renderContext.Init("Oculus Rift mirror modes (press M to cycle)", 100, 100, windowSize.w, windowSize.h);
     SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
