@@ -1,4 +1,4 @@
-Oculus Rift DK2 Leap Motion 2.2.6 integration
+Oculus Rift DK2 Leap Motion 2.2.7 integration
 ================
 
 Demo of Leap Motion SDK integration with DK2. This program demonstrates how to track hands, gestures, how to render the skeletal outlines (using simple line segments) as well as how to display raw camera image on the screen. 
@@ -16,7 +16,7 @@ During the demo, swipe your hand left or right to toggle between hand skeleton r
 
 How to build
 -------
-The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK and LEAP_SDK pointing to root directory of your LeapMotion SDK 2.2.6.
+The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK and LEAP_SDK pointing to root directory of your LeapMotion SDK.
 
 Dependencies
 -------
@@ -25,4 +25,4 @@ This project uses following external libraries:
 - GLEW OpenGL extension library
 - stb_image library for image handling (c) Sean Barret
 - SDL2 library for window/input 
-- Leap Motion SDK 2.2.6
+- Leap Motion SDK with indicated version number

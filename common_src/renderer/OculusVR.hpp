@@ -9,7 +9,7 @@
 #include "OVR_CAPI_0_6_0.h"
 
 /*
- * Oculus Rift DK2 setup class (as of SDK 0.6.0.0)
+ * Oculus Rift DK2 setup class (as of SDK 0.6.0.1)
  */
 class OculusVR
 {
