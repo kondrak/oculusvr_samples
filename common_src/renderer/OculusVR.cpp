@@ -384,3 +384,8 @@ void OculusVR::RenderTrackerFrustum()
         m_cameraFrustum->OnRender();
     }
 }
+
+void OculusVR::ShowPerfStats(ovrPerfHudMode statsMode)
+{
+    ovrHmd_SetInt(m_hmd, "PerfHudMode", (int)statsMode);
+}

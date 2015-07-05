@@ -43,6 +43,7 @@ public:
     void  RenderTrackerFrustum();   
     bool  IsDebugHMD() const { return (m_hmd->HmdCaps & ovrHmdCap_DebugDevice) != 0; }
     bool  IsDK2() const { return m_hmd->Type == ovrHmd_DK2; }
+    void  ShowPerfStats(ovrPerfHudMode statsMode);
 private:
     // A buffer struct used to store eye textures and framebuffers.
     // We create one instance for the left eye, one for the right eye.
