@@ -326,6 +326,7 @@ void OculusVR::OnNonDistortMirrorStart()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_nonDistortDepthBuffer, 0);
 
     glViewport(0, 0, m_nonDistortViewPortWidth, m_nonDistortViewPortHeight);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void OculusVR::BlitNonDistortMirror(int offset)
