@@ -24,8 +24,17 @@ void ClearWindow(float r, float g, float b)
 
 void DrawRectangle(float x, float y, float w, float h, float r, float g, float b)
 {
+    GLboolean texOn   = glIsEnabled(GL_TEXTURE_2D);
+    GLboolean depthOn = glIsEnabled(GL_DEPTH_TEST);
+    GLboolean blendOn = glIsEnabled(GL_BLEND);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glActiveTexture(GL_TEXTURE0);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    glLoadIdentity();  
     glOrtho(-1.f, 1.f, 1.f, -1.0f, 0.1f, 10.0f);
 
     glMatrixMode(GL_MODELVIEW);
@@ -38,4 +47,13 @@ void DrawRectangle(float x, float y, float w, float h, float r, float g, float b
     glVertex3f(x + w / 2.f, y + w / 2.f, -1.f);
     glVertex3f(x - w / 2.f, y + w / 2.f, -1.f);
     glEnd();
+
+    if (texOn)
+        glEnable(GL_TEXTURE_2D);
+
+    if (depthOn)
+        glEnable(GL_DEPTH_TEST);
+
+    if (blendOn)
+        glEnable(GL_BLEND);
 }
