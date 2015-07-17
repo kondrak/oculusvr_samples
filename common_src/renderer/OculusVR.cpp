@@ -58,6 +58,19 @@ void OculusVR::OVRBuffer::SetupMSAA()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_LEVEL, mipcount - 1);    
+
+    // create MSAA depth buffer
+    glGenTextures(1, &m_depthTexMSAA);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_depthTexMSAA);
+
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, m_eyeTextureSize.w, m_eyeTextureSize.h, false);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_LEVEL, mipcount - 1);
 
     LOG_MESSAGE_ASSERT(!glGetError(), "MSAA setup failed");
@@ -70,10 +83,7 @@ void OculusVR::OVRBuffer::OnRenderMSAA()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_msaaEyeFbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA, 0);
-    
-    // as of SDK 0.6.0.1 MSAA for depth component is not supported, so use the standard depth buffer associated with non-MSAA FBO
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthBuffer, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_depthTexMSAA, 0);
 
     glViewport(0, 0, m_eyeTextureSize.w, m_eyeTextureSize.h);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -139,6 +149,9 @@ void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
 
     if (glIsTexture(m_eyeTexMSAA))
         glDeleteTextures(1, &m_eyeTexMSAA);
+
+    if (glIsTexture(m_depthTexMSAA))
+        glDeleteTextures(1, &m_depthTexMSAA);
 
     ovrHmd_DestroySwapTextureSet(hmd, m_swapTextureSet);
 }

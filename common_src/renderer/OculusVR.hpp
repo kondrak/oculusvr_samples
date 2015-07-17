@@ -68,7 +68,7 @@ private:
 
         GLuint m_msaaEyeFbo   = 0;   // framebuffer for MSAA texture
         GLuint m_eyeTexMSAA   = 0;   // color texture for MSAA
-        //GLuint m_depthTexMSAA = 0; // as of SDK 0.6.0.1 MSAA is not supported for depth textures in OpenGL
+        GLuint m_depthTexMSAA = 0;   // depth texture for MSAA
 
         ovrSwapTextureSet *m_swapTextureSet = nullptr;
     };
