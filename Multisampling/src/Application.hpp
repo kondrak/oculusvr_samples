@@ -3,7 +3,6 @@
 
 #include "InputHandlers.hpp"
 #include "renderer/OpenGL.hpp"
-#include "renderer/Texture.hpp"
 
 /*
  * main application 
@@ -30,10 +29,7 @@ private:
     // rendered quad data
     GLuint m_vertexBuffer;
     GLuint m_colorBuffer;
-    GLuint m_texcoordBuffer;
     GLuint m_vertexArray;
-    Texture *m_texture;
-
 };
 
 #endif

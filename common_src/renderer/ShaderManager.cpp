@@ -46,6 +46,7 @@ void ShaderManager::LoadShaders()
     LoadShader(BasicShader, "../common_res/Basic.vsh", "../common_res/Basic.fsh");
     LoadShader(OVRFrustumShader, "../common_res/OVRFrustum.vsh", "../common_res/OVRFrustum.fsh");
     LoadShader(FontShader, "../common_res/Font.vsh", "../common_res/Font.fsh");
+    LoadShader(BasicShaderNoTex, "../common_res/BasicNoTex.vsh", "../common_res/BasicNoTex.fsh");
 }
 
 // use shader program

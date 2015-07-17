@@ -16,14 +16,15 @@ class OculusVR
 public:
     OculusVR() : m_hmd(nullptr),
                  m_debugData(nullptr),
-                 m_cameraFrustum(nullptr)
+                 m_cameraFrustum(nullptr),
+                 m_msaaEnabled(false)
     {
     }
 
     ~OculusVR();
     bool  InitVR();
-    bool InitVRBuffers(int windowWidth, int windowHeight);
-    bool InitNonDistortMirror(int windowWidth, int windowHeight); // create non-distorted mirror if necessary (debug purposes)
+    bool  InitVRBuffers(int windowWidth, int windowHeight);
+    bool  InitNonDistortMirror(int windowWidth, int windowHeight); // create non-distorted mirror if necessary (debug purposes)
     void  DestroyVR();
     const ovrSizei GetResolution() const;
     void  OnRenderStart();
@@ -44,6 +45,8 @@ public:
     bool  IsDebugHMD() const { return (m_hmd->HmdCaps & ovrHmdCap_DebugDevice) != 0; }
     bool  IsDK2() const { return m_hmd->Type == ovrHmd_DK2; }
     void  ShowPerfStats(ovrPerfHudMode statsMode);
+    void  SetMSAA(bool val) { m_msaaEnabled = val; }
+    bool  MSAAEnabled() const { return m_msaaEnabled; }
 private:
     // A buffer struct used to store eye textures and framebuffers.
     // We create one instance for the left eye, one for the right eye.
@@ -53,12 +56,20 @@ private:
         OVRBuffer(const ovrHmd &hmd, int eyeIdx);
         void OnRender();
         void OnRenderFinish();
+        void SetupMSAA(); 
+        void OnRenderMSAA();
+        void OnRenderMSAAFinish();
         void Destroy(const ovrHmd &hmd);
 
         ovrTexture m_eyeTexture;
         ovrSizei   m_eyeTextureSize;
         GLuint     m_eyeFbo      = 0;
         GLuint     m_depthBuffer = 0;
+
+        GLuint m_msaaEyeFbo   = 0;   // framebuffer for MSAA texture
+        GLuint m_eyeTexMSAA   = 0;   // color texture for MSAA
+        //GLuint m_depthTexMSAA = 0; // as of SDK 0.6.0.1 MSAA is not supported for depth textures in OpenGL
+
         ovrSwapTextureSet *m_swapTextureSet = nullptr;
     };
 
@@ -88,6 +99,7 @@ private:
     GLuint            m_nonDistortFBO;
     int               m_nonDistortViewPortWidth;
     int               m_nonDistortViewPortHeight;
+    bool              m_msaaEnabled;
 
     // debug hardware output data
     OculusVRDebug    *m_debugData;

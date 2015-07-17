@@ -3,8 +3,10 @@
 #include "renderer/CameraDirector.hpp"
 #include "renderer/ShaderManager.hpp"
 #include "renderer/TextureManager.hpp"
+#include "renderer/OculusVR.hpp"
 
-CameraDirector g_cameraDirector;
+CameraDirector  g_cameraDirector;
+extern OculusVR g_oculusVR;
 
 Application::~Application()
 {
@@ -14,41 +16,26 @@ Application::~Application()
     if (glIsBuffer(m_colorBuffer))
         glDeleteBuffers(1, &m_colorBuffer);
 
-    if (glIsBuffer(m_texcoordBuffer))
-        glDeleteBuffers(1, &m_texcoordBuffer);
-
     if (glIsVertexArray(m_vertexArray))
         glDeleteVertexArrays(1, &m_vertexArray);
 }
 
 void Application::OnStart()
 {
-    glEnable(GL_MULTISAMPLE);
+    //glEnable(GL_MULTISAMPLE);
 
     g_cameraDirector.AddCamera(0.0f, 0.0f, 0.0f);
 
-    // load block texture
-    m_texture = TextureManager::GetInstance()->LoadTexture("../common_res/block_blue.png");
-
-    const GLfloat quadBufferData[] = {
-        -1.0f, 1.0f, -1.5f,
-        1.0f, 1.0f, -1.5f,
-        -1.0f, -1.0f, -1.5f,
-        1.0f, -1.0f, -1.5f
+    const GLfloat triangleBufferData[] = {
+        -1.0f, -1.0f, -15.f,
+        0.0f, 1.0f, -15.f,
+        1.0f, -1.0f, -15.f
     };
 
     const GLfloat vertexColorData[] = {
-        1.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f,
-    };
-
-    const GLfloat vertexTexcoordData[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f
     };
 
     // create quad VAO and VBOs
@@ -57,32 +44,24 @@ void Application::OnStart()
 
     glGenBuffers(1, &m_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadBufferData), quadBufferData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangleBufferData), triangleBufferData, GL_STATIC_DRAW);
 
     glGenBuffers(1, &m_colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexColorData), vertexColorData, GL_STATIC_DRAW);
-
-    glGenBuffers(1, &m_texcoordBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexTexcoordData), vertexTexcoordData, GL_STATIC_DRAW);
 }
 
 void Application::OnRender()
 {
-    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
+    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShaderNoTex);
 
     GLuint vertexPosition_modelspaceID = glGetAttribLocation(shader.id, "inVertex");
     GLuint vertexColorAttr = glGetAttribLocation(shader.id, "inVertexColor");
-    GLuint texCoordAttr = glGetAttribLocation(shader.id, "inTexCoord");
-
-    TextureManager::GetInstance()->BindTexture(m_texture);
 
     // setup quad data
-   glBindVertexArray(m_vertexArray);
-   glEnableVertexAttribArray(vertexPosition_modelspaceID);
-   glEnableVertexAttribArray(vertexColorAttr);
-   glEnableVertexAttribArray(texCoordAttr);
+    glBindVertexArray(m_vertexArray);
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glEnableVertexAttribArray(vertexColorAttr);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
     glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -90,15 +69,11 @@ void Application::OnRender()
     glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
     glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
     // draw the quad!
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); 
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glDisableVertexAttribArray(vertexPosition_modelspaceID);
     glDisableVertexAttribArray(vertexColorAttr);
-    glDisableVertexAttribArray(texCoordAttr);
 }
 
 void Application::OnKeyPress(KeyCode key)
@@ -108,6 +83,9 @@ void Application::OnKeyPress(KeyCode key)
     case KEY_ESC:
         Terminate();
         break;
+    case KEY_M:
+        // MSAA toggle
+        g_oculusVR.SetMSAA(!g_oculusVR.MSAAEnabled());
     default:
         break;
     } 

@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     ovrSizei hmdResolution = g_oculusVR.GetResolution();
     ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
 
-    g_renderContext.Init("Oculus Rift Multisampling example", 100, 100, windowSize.w, windowSize.h);
+    g_renderContext.Init("Oculus Rift Multisampling (press M to toggle)", 100, 100, windowSize.w, windowSize.h);
     SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
         // handle key presses
         processEvents();
 
-        glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         g_oculusVR.OnRenderStart();
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
             OVR::Matrix4f MVPMatrix = g_oculusVR.OnEyeRender(eyeIndex);
 
             // update MVP in quad shader
-            const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
+            const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShaderNoTex);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
             g_application.OnRender();    

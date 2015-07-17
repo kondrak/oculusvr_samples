@@ -14,6 +14,7 @@ public:
         BasicShader,
         OVRFrustumShader,
         FontShader,
+        BasicShaderNoTex,
         NUM_SHADERS
     };
 

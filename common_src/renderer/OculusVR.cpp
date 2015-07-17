@@ -29,17 +29,79 @@ OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    GLenum internalFormat = GL_DEPTH_COMPONENT24;
-    GLenum type = GL_UNSIGNED_INT;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_eyeTextureSize.w, m_eyeTextureSize.h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 
-    /*if (GLE_ARB_depth_buffer_float)
-    {
-    internalFormat = GL_DEPTH_COMPONENT32F;
-    type = GL_FLOAT;
-    } */
-
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_eyeTextureSize.w, m_eyeTextureSize.h, 0, GL_DEPTH_COMPONENT, type, NULL);
+    // MSAA color texture and fbo setup; depth buffer is the same as non-MSAA since OpenGL doesn't support it yet with OVR
+    // simply comment this line out to skip MSAA altogether
+    SetupMSAA();
 }
+
+void OculusVR::OVRBuffer::SetupMSAA()
+{
+    glGenFramebuffers(1, &m_msaaEyeFbo);
+
+    // create color MSAA texture
+    int samples  = 4;
+    int mipcount = 1;
+
+    glGenTextures(1, &m_eyeTexMSAA);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA);
+
+    LOG_MESSAGE_ASSERT(!glGetError(), "Could not create MSAA texture");
+
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, false);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    // linear filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_LEVEL, mipcount - 1);
+
+    LOG_MESSAGE_ASSERT(!glGetError(), "MSAA setup failed");
+}
+
+void OculusVR::OVRBuffer::OnRenderMSAA()
+{
+    // Increment to use next texture, just before writing
+    m_swapTextureSet->CurrentIndex = (m_swapTextureSet->CurrentIndex + 1) % m_swapTextureSet->TextureCount;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, m_msaaEyeFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA, 0);
+    
+    // as of SDK 0.6.0.1 MSAA for depth component is not supported, so use the standard depth buffer associated with non-MSAA FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthBuffer, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+
+    glViewport(0, 0, m_eyeTextureSize.w, m_eyeTextureSize.h);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OculusVR::OVRBuffer::OnRenderMSAAFinish()
+{
+    // blit the contents of MSAA FBO to the regular eye buffer "connected" to the HMD
+    ovrGLTexture* tex = (ovrGLTexture*)&m_swapTextureSet->Textures[m_swapTextureSet->CurrentIndex];
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaEyeFbo);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA, 0);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+
+    LOG_MESSAGE_ASSERT((glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Could not complete framebuffer operation");
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_eyeFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->OGL.TexId, 0);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+
+    LOG_MESSAGE_ASSERT((glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Could not complete framebuffer operation");
+
+    glBlitFramebuffer(0, 0, m_eyeTextureSize.w, m_eyeTextureSize.h,
+                      0, 0, m_eyeTextureSize.w, m_eyeTextureSize.h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 void OculusVR::OVRBuffer::OnRender()
 {
@@ -71,6 +133,12 @@ void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
 
     if (glIsTexture(m_depthBuffer))
         glDeleteTextures(1, &m_depthBuffer);
+
+    if (glIsFramebuffer(m_msaaEyeFbo))
+        glDeleteFramebuffers(1, &m_msaaEyeFbo);
+
+    if (glIsTexture(m_eyeTexMSAA))
+        glDeleteTextures(1, &m_eyeTexMSAA);
 
     ovrHmd_DestroySwapTextureSet(hmd, m_swapTextureSet);
 }
@@ -243,7 +311,11 @@ void OculusVR::OnRenderStart()
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex)
 {
     int eye = m_hmd->EyeRenderOrder[eyeIndex];
-    m_eyeBuffers[eye]->OnRender();
+
+    if (m_msaaEnabled)
+        m_eyeBuffers[eye]->OnRenderMSAA();
+    else
+        m_eyeBuffers[eye]->OnRender();
 
     m_projectionMatrix[eye] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
     m_eyeViewOffset[eye]    = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eye]);
@@ -255,7 +327,10 @@ const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex)
 
 void OculusVR::OnEyeRenderFinish(int eyeIndex)
 {
-    m_eyeBuffers[ m_hmd->EyeRenderOrder[eyeIndex] ]->OnRenderFinish();
+    if (m_msaaEnabled)
+        m_eyeBuffers[m_hmd->EyeRenderOrder[eyeIndex]]->OnRenderMSAAFinish();
+    else
+        m_eyeBuffers[m_hmd->EyeRenderOrder[eyeIndex]]->OnRenderFinish();
 }
 
 const OVR::Matrix4f OculusVR::GetEyeMVPMatrix(int eyeIndex) const
