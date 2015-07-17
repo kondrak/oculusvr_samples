@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeapMotion", "LeapMotion\Le
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MirrorModes", "MirrorModes\MirrorModes.vcxproj", "{7637221B-F60F-4AA2-AD70-42D1459F315A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multisampling", "Multisampling\Multisampling.vcxproj", "{54BC05A7-DD2E-41CA-9136-E7145871DD60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{7637221B-F60F-4AA2-AD70-42D1459F315A}.Debug|Win32.Build.0 = Debug|Win32
 		{7637221B-F60F-4AA2-AD70-42D1459F315A}.Release|Win32.ActiveCfg = Release|Win32
 		{7637221B-F60F-4AA2-AD70-42D1459F315A}.Release|Win32.Build.0 = Release|Win32
+		{54BC05A7-DD2E-41CA-9136-E7145871DD60}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54BC05A7-DD2E-41CA-9136-E7145871DD60}.Debug|Win32.Build.0 = Debug|Win32
+		{54BC05A7-DD2E-41CA-9136-E7145871DD60}.Release|Win32.ActiveCfg = Release|Win32
+		{54BC05A7-DD2E-41CA-9136-E7145871DD60}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

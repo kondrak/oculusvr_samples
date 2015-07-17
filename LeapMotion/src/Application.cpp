@@ -79,10 +79,10 @@ void Application::OnRender()
     TextureManager::GetInstance()->BindTexture(m_texture);
 
     // setup quad data
-   glBindVertexArray(m_vertexArray);
-   glEnableVertexAttribArray(vertexPosition_modelspaceID);
-   glEnableVertexAttribArray(vertexColorAttr);
-   glEnableVertexAttribArray(texCoordAttr);
+    glBindVertexArray(m_vertexArray);
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glEnableVertexAttribArray(vertexColorAttr);
+    glEnableVertexAttribArray(texCoordAttr);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
     glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -94,7 +94,7 @@ void Application::OnRender()
     glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // draw the quad!
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); 
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glDisableVertexAttribArray(vertexPosition_modelspaceID);
     glDisableVertexAttribArray(vertexColorAttr);
