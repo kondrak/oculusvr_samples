@@ -31,7 +31,7 @@ OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_eyeTextureSize.w, m_eyeTextureSize.h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 
-    // MSAA color texture and fbo setup; depth buffer is the same as non-MSAA since OpenGL doesn't support it yet with OVR
+    // MSAA color texture and fbo setup
     // simply comment this line out to skip MSAA altogether
     SetupMSAA();
 }

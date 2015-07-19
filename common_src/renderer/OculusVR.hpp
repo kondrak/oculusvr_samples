@@ -50,7 +50,7 @@ public:
 private:
     // A buffer struct used to store eye textures and framebuffers.
     // We create one instance for the left eye, one for the right eye.
-    // Final endering is done via blitting two separate frame buffers into one render target.
+    // Final rendering is done via blitting two separate frame buffers into one render target.
     struct OVRBuffer
     {  
         OVRBuffer(const ovrHmd &hmd, int eyeIdx);
