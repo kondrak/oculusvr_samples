@@ -1,4 +1,4 @@
-Sample projects for Oculus Rift DK2 (SDK 0.5.0.1)
+Samples for Oculus Rift DK2 (SDK 0.5.0.1)
 =======
 
 Legacy samples kept for the purpose of tracking major changes to the Oculus SDK.
