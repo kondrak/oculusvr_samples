@@ -1,4 +1,4 @@
-Sample projects for Oculus Rift DK2 (SDK 0.6.0.1)
+Samples for Oculus Rift DK2 (SDK 0.6.0.1)
 =======
 
 - <code>CameraBounds</code>    - IR tracking camera bounds renderer (OpenGL)
