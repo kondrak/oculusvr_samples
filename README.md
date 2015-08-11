@@ -1,7 +1,7 @@
 Sample projects for Oculus Rift DK2 (SDK 0.5.0.1)
 =======
 
-Legacy samples for the no longer supported 0.5 SDK - kept for the purpose of tracking major changes to the Oculus SDK.
+Legacy samples kept for the purpose of tracking major changes to the Oculus SDK.
 
 - <code>CameraBounds</code>    - IR tracking camera bounds renderer (OpenGL)
 - <code>DebugInfoRender</code> - Oculus Rift DK2 Debug Data Rendering
