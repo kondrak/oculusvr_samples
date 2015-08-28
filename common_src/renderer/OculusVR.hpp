@@ -6,10 +6,10 @@
 #include "renderer/OculusVRDebug.hpp"
 #include "renderer/OVRCameraFrustum.hpp"
 #include "Extras/OVR_Math.h"
-#include "OVR_CAPI_0_6_0.h"
+#include "OVR_CAPI_0_7_0.h"
 
 /*
- * Oculus Rift DK2 setup class (as of SDK 0.6.0.1)
+ * Oculus Rift DK2 setup class (as of SDK 0.7.0.0)
  */
 class OculusVR
 {
@@ -42,8 +42,8 @@ public:
     void  UpdateDebug();
     void  RenderDebug();
     void  RenderTrackerFrustum();   
-    bool  IsDebugHMD() const { return (m_hmd->HmdCaps & ovrHmdCap_DebugDevice) != 0; }
-    bool  IsDK2() const { return m_hmd->Type == ovrHmd_DK2; }
+    bool  IsDebugHMD() const { return (m_hmdDesc.AvailableHmdCaps & ovrHmdCap_DebugDevice) != 0; }
+    bool  IsDK2() const { return m_hmdDesc.Type == ovrHmd_DK2; }
     void  ShowPerfStats(ovrPerfHudMode statsMode);
     void  SetMSAA(bool val) { m_msaaEnabled = val; }
     bool  MSAAEnabled() const { return m_msaaEnabled; }
@@ -75,6 +75,7 @@ private:
 
     // data and buffers used to render to HMD
     ovrHmd            m_hmd;
+    ovrHmdDesc        m_hmdDesc;
     ovrEyeRenderDesc  m_eyeRenderDesc[ovrEye_Count];
     ovrPosef          m_eyeRenderPose[ovrEye_Count];
     ovrVector3f       m_hmdToEyeViewOffset[ovrEye_Count];

@@ -17,14 +17,14 @@ OVRCameraFrustum::~OVRCameraFrustum()
 
 void OVRCameraFrustum::Recalculate(ovrHmd hmd)
 {
-    ovrTrackingState tState = ovrHmd_GetTrackingState(hmd, 0.0f);
-
+    ovrTrackingState tState = ovr_GetTrackingState(hmd, 0.0f);
+    ovrHmdDesc hmdDesc      = ovr_GetHmdDesc(hmd);
     ovrVector3f trackerPose = tState.CameraPose.Position;
 
-    float trackerFar  = hmd->CameraFrustumFarZInMeters;
-    float trackerNear = hmd->CameraFrustumNearZInMeters;
-    float trackerHFov = hmd->CameraFrustumHFovInRadians;
-    float trackerVFov = hmd->CameraFrustumVFovInRadians;
+    float trackerFar  = hmdDesc.CameraFrustumFarZInMeters;
+    float trackerNear = hmdDesc.CameraFrustumNearZInMeters;
+    float trackerHFov = hmdDesc.CameraFrustumHFovInRadians;
+    float trackerVFov = hmdDesc.CameraFrustumVFovInRadians;
 
     float hScale = tanf(trackerHFov / 2.f);
     float vScale = tanf(trackerVFov / 2.f);

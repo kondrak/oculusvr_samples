@@ -4,9 +4,10 @@
 
 OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
 {
-    m_eyeTextureSize = ovrHmd_GetFovTextureSize(hmd, (ovrEyeType)eyeIdx, hmd->DefaultEyeFov[eyeIdx], 1.0f);
+    ovrHmdDesc hmdDesc = ovr_GetHmdDesc(hmd);
+    m_eyeTextureSize   = ovr_GetFovTextureSize(hmd, (ovrEyeType)eyeIdx, hmdDesc.DefaultEyeFov[eyeIdx], 1.0f);
 
-    ovrHmd_CreateSwapTextureSetGL(hmd, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
+    ovr_CreateSwapTextureSetGL(hmd, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
 
     for (int j = 0; j < m_swapTextureSet->TextureCount; ++j)
     {
@@ -153,12 +154,12 @@ void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
     if (glIsTexture(m_depthTexMSAA))
         glDeleteTextures(1, &m_depthTexMSAA);
 
-    ovrHmd_DestroySwapTextureSet(hmd, m_swapTextureSet);
+    ovr_DestroySwapTextureSet(hmd, m_swapTextureSet);
 }
 
 OculusVR::~OculusVR()
 {
-    ovrHmd_Destroy(m_hmd);
+    ovr_Destroy(m_hmd);
     ovr_Shutdown();
     m_hmd = nullptr;
 }
@@ -166,6 +167,7 @@ OculusVR::~OculusVR()
 bool OculusVR::InitVR()
 {
     ovrResult result = ovr_Initialize(nullptr);
+    ovrGraphicsLuid luid; // as of SDK 0.7.0.0 luid is not supported with OpenGL
 
     if (result != ovrSuccess)
     {
@@ -173,19 +175,19 @@ bool OculusVR::InitVR()
         return false;
     }
 
-    result = ovrHmd_Create(0, &m_hmd);
+    result = ovr_Create(&m_hmd, &luid);
 
     if (result != ovrSuccess)
     {
-        result = ovrHmd_CreateDebug(ovrHmd_DK2, &m_hmd);
         LOG_MESSAGE_ASSERT(result == ovrSuccess, "Failed to create OVR device");
     }
 
-    ovrHmd_SetEnabledCaps(m_hmd, ovrHmdCap_LowPersistence | ovrHmdCap_DynamicPrediction);
-    ovrHmd_ConfigureTracking(m_hmd, ovrTrackingCap_Orientation |
-                                    ovrTrackingCap_MagYawCorrection |
-                                    ovrTrackingCap_Position, 0);
-                                    
+    ovr_ConfigureTracking(m_hmd, ovrTrackingCap_Orientation |
+                                 ovrTrackingCap_MagYawCorrection |
+                                 ovrTrackingCap_Position, 0);
+    
+    m_hmdDesc = ovr_GetHmdDesc(m_hmd);
+
     m_cameraFrustum = new OVRCameraFrustum;
 
     return result == ovrSuccess;
@@ -196,11 +198,11 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
     for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
     {
         m_eyeBuffers[eyeIdx]    = new OVRBuffer(m_hmd, eyeIdx);
-        m_eyeRenderDesc[eyeIdx] = ovrHmd_GetRenderDesc(m_hmd, (ovrEyeType)eyeIdx, m_hmd->DefaultEyeFov[eyeIdx]);
+        m_eyeRenderDesc[eyeIdx] = ovr_GetRenderDesc(m_hmd, (ovrEyeType)eyeIdx, m_hmdDesc.DefaultEyeFov[eyeIdx]);
     }
 
     // since SDK 0.6 we're using a mirror texture + FBO which in turn copies contents of mirror to back buffer
-    ovrHmd_CreateMirrorTextureGL(m_hmd, GL_RGBA, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
+    ovr_CreateMirrorTextureGL(m_hmd, GL_RGBA, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
 
     // Configure the mirror read buffer
     glGenFramebuffers(1, &m_mirrorFBO);
@@ -291,7 +293,7 @@ void OculusVR::DestroyVR()
         if (glIsTexture(m_nonDistortDepthBuffer))
             glDeleteTextures(1, &m_nonDistortDepthBuffer);
 
-        ovrHmd_DestroyMirrorTexture(m_hmd, (ovrTexture*)m_mirrorTexture);
+        ovr_DestroyMirrorTexture(m_hmd, (ovrTexture*)m_mirrorTexture);
 
         for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
         {
@@ -304,7 +306,7 @@ void OculusVR::DestroyVR()
 
 const ovrSizei OculusVR::GetResolution() const
 {
-    ovrSizei resolution = { m_hmd->Resolution.w, m_hmd->Resolution.h };
+    ovrSizei resolution = { m_hmdDesc.Resolution.w, m_hmdDesc.Resolution.h };
     return resolution;
 }
 
@@ -313,8 +315,8 @@ void OculusVR::OnRenderStart()
     m_hmdToEyeViewOffset[0] = m_eyeRenderDesc[0].HmdToEyeViewOffset;
     m_hmdToEyeViewOffset[1] = m_eyeRenderDesc[1].HmdToEyeViewOffset;
 
-    m_frameTiming   = ovrHmd_GetFrameTiming(m_hmd, 0);
-    m_trackingState = ovrHmd_GetTrackingState(m_hmd, m_frameTiming.DisplayMidpointSeconds);
+    m_frameTiming   = ovr_GetFrameTiming(m_hmd, 0);
+    m_trackingState = ovr_GetTrackingState(m_hmd, m_frameTiming.DisplayMidpointSeconds);
 
     // Get both eye poses simultaneously, with IPD offset already included. 
     ovr_CalcEyePoses(m_trackingState.HeadPose.ThePose, m_hmdToEyeViewOffset, m_eyeRenderPose);
@@ -323,27 +325,25 @@ void OculusVR::OnRenderStart()
 
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex)
 {
-    int eye = m_hmd->EyeRenderOrder[eyeIndex];
-
     if (m_msaaEnabled)
-        m_eyeBuffers[eye]->OnRenderMSAA();
+        m_eyeBuffers[eyeIndex]->OnRenderMSAA();
     else
-        m_eyeBuffers[eye]->OnRender();
+        m_eyeBuffers[eyeIndex]->OnRender();
 
-    m_projectionMatrix[eye] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eye].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
-    m_eyeViewOffset[eye]    = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eye]);
-    m_eyeOrientation[eye]   = OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eye].Orientation).Inverted());
-    m_eyePose[eye]          = OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eye].Position));
+    m_projectionMatrix[eyeIndex] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eyeIndex].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
+    m_eyeViewOffset[eyeIndex]  = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eyeIndex]);
+    m_eyeOrientation[eyeIndex] = OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eyeIndex].Orientation).Inverted());
+    m_eyePose[eyeIndex]        = OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eyeIndex].Position));
 
-    return m_projectionMatrix[eye] * m_eyeViewOffset[eye] * m_eyeOrientation[eye] * m_eyePose[eye];
+    return m_projectionMatrix[eyeIndex] * m_eyeViewOffset[eyeIndex] * m_eyeOrientation[eyeIndex] * m_eyePose[eyeIndex];
 }
 
 void OculusVR::OnEyeRenderFinish(int eyeIndex)
 {
     if (m_msaaEnabled)
-        m_eyeBuffers[m_hmd->EyeRenderOrder[eyeIndex]]->OnRenderMSAAFinish();
+        m_eyeBuffers[eyeIndex]->OnRenderMSAAFinish();
     else
-        m_eyeBuffers[m_hmd->EyeRenderOrder[eyeIndex]]->OnRenderFinish();
+        m_eyeBuffers[eyeIndex]->OnRenderFinish();
 }
 
 const OVR::Matrix4f OculusVR::GetEyeMVPMatrix(int eyeIndex) const
@@ -361,14 +361,14 @@ void OculusVR::SubmitFrame()
 
     // create the main eye layer
     ovrLayerEyeFov eyeLayer;
-    eyeLayer.Header.Type = ovrLayerType_EyeFov;
+    eyeLayer.Header.Type  = ovrLayerType_EyeFov;
     eyeLayer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;   // Because OpenGL.
 
     for (int eye = 0; eye < ovrEye_Count; eye++)
     {
         eyeLayer.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureSet;
         eyeLayer.Viewport[eye] = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
-        eyeLayer.Fov[eye] = m_hmd->DefaultEyeFov[eye];
+        eyeLayer.Fov[eye] = m_hmdDesc.DefaultEyeFov[eye];
         eyeLayer.RenderPose[eye] = m_eyeRenderPose[eye];
     }
 
@@ -376,7 +376,7 @@ void OculusVR::SubmitFrame()
     ovrLayerHeader* layerList[1];
     layerList[0] = &eyeLayer.Header;
 
-    ovrResult result = ovrHmd_SubmitFrame(m_hmd, 0, &viewScaleDesc, layerList, 1);
+    ovrResult result = ovr_SubmitFrame(m_hmd, 0, &viewScaleDesc, layerList, 1);
 }
 
 void OculusVR::BlitMirror(ovrEyeType numEyes, int offset)
@@ -435,7 +435,7 @@ void OculusVR::OnKeyPress(KeyCode key)
     switch (key)
     {
     case KEY_SPACE:
-        ovrHmd_RecenterPose(m_hmd);
+        ovr_RecenterPose(m_hmd);
         break;
     }
 }
@@ -477,7 +477,7 @@ void OculusVR::ShowPerfStats(ovrPerfHudMode statsMode)
 {
     if (!IsDebugHMD())
     {
-        ovrHmd_SetInt(m_hmd, "PerfHudMode", (int)statsMode);
+        ovr_SetInt(m_hmd, "PerfHudMode", (int)statsMode);
     }
     else
     {

@@ -40,10 +40,11 @@ void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingS
 
     char buf[128];
     float hmdYaw, hmdPitch, hmdRoll;
+    ovrHmdDesc hmdDesc;
     OVR::Quatf headOrientation(trackingState.HeadPose.ThePose.Orientation);
     headOrientation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&hmdYaw, &hmdPitch, &hmdRoll);
 
-    OVR::OVR_sprintf(buf, sizeof(buf), "HMD YPR:%2.0f %2.0f %2.0f  HMD: %s", hmdYaw * PIdiv180inv, hmdPitch * PIdiv180inv, hmdRoll * PIdiv180inv, hmd->ProductName);
+    OVR::OVR_sprintf(buf, sizeof(buf), "HMD YPR:%2.0f %2.0f %2.0f  HMD: %s", hmdYaw * PIdiv180inv, hmdPitch * PIdiv180inv, hmdRoll * PIdiv180inv, hmdDesc.ProductName);
     m_font->drawText(buf, xPos, 0.1f, 0.f);
 
     OVR::OVR_sprintf(buf, sizeof(buf), "FPS: %.1f  ms/frame: %.1f  Frame: %03d %d", m_fps, m_secondsPerFrame * 1000.0f, m_frameCounter, m_totalFrameCounter % 2);
@@ -56,10 +57,10 @@ void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingS
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 2.f, 0.f);
 
 
-    OVR::OVR_sprintf(buf, sizeof(buf), "EyeHeight: %2.2f IPD: %2.1fmm", ovrHmd_GetFloat(hmd, OVR_KEY_EYE_HEIGHT, 0.f), ovrHmd_GetFloat(hmd, OVR_KEY_IPD, 0.f) * 1000.f);
+    OVR::OVR_sprintf(buf, sizeof(buf), "EyeHeight: %2.2f IPD: %2.1fmm", ovr_GetFloat(hmd, OVR_KEY_EYE_HEIGHT, 0.f), ovr_GetFloat(hmd, OVR_KEY_IPD, 0.f) * 1000.f);
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 3.f, 0.f);
 
-    // Average FOVs.
+    // Average FOVs
     OVR::FovPort leftFov  = eyeRenderDescs[0].Fov;
     OVR::FovPort rightFov = eyeRenderDescs[1].Fov;
 
@@ -71,7 +72,7 @@ void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingS
 
     // latency readings
     float latencies[5] = {};
-    if (ovrHmd_GetFloatArray(hmd, "DK2Latency", latencies, 5) == 5)
+    if (ovr_GetFloatArray(hmd, "DK2Latency", latencies, 5) == 5)
     {
         char text[5][32];
         for (int i = 0; i < 5; ++i)
