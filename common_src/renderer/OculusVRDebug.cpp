@@ -40,7 +40,7 @@ void OculusVRDebug::OnRender(const ovrHmd hmd, const ovrTrackingState &trackingS
 
     char buf[128];
     float hmdYaw, hmdPitch, hmdRoll;
-    ovrHmdDesc hmdDesc;
+    ovrHmdDesc hmdDesc = ovr_GetHmdDesc(hmd);
     OVR::Quatf headOrientation(trackingState.HeadPose.ThePose.Orientation);
     headOrientation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&hmdYaw, &hmdPitch, &hmdRoll);
 
