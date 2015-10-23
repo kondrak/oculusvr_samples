@@ -15,10 +15,10 @@ OVRCameraFrustum::~OVRCameraFrustum()
     }
 }
 
-void OVRCameraFrustum::Recalculate(ovrHmd hmd)
+void OVRCameraFrustum::Recalculate(ovrSession session)
 {
-    ovrTrackingState tState = ovr_GetTrackingState(hmd, 0.0f);
-    ovrHmdDesc hmdDesc      = ovr_GetHmdDesc(hmd);
+    ovrTrackingState tState = ovr_GetTrackingState(session, 0.0f, ovrTrue);
+    ovrHmdDesc hmdDesc      = ovr_GetHmdDesc(session);
     ovrVector3f trackerPose = tState.CameraPose.Position;
 
     float trackerFar  = hmdDesc.CameraFrustumFarZInMeters;

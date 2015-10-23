@@ -6,15 +6,15 @@
 #include "renderer/OculusVRDebug.hpp"
 #include "renderer/OVRCameraFrustum.hpp"
 #include "Extras/OVR_Math.h"
-#include "OVR_CAPI_0_7_0.h"
+#include "OVR_CAPI_0_8_0.h"
 
 /*
- * Oculus Rift DK2 setup class (as of SDK 0.7.0.0)
+ * Oculus Rift DK2 setup class (as of SDK 0.8.0.0)
  */
 class OculusVR
 {
 public:
-    OculusVR() : m_hmd(nullptr),
+    OculusVR() : m_hmdSession(nullptr),
                  m_debugData(nullptr),
                  m_cameraFrustum(nullptr),
                  m_msaaEnabled(false)
@@ -53,13 +53,13 @@ private:
     // Final rendering is done via blitting two separate frame buffers into one render target.
     struct OVRBuffer
     {  
-        OVRBuffer(const ovrHmd &hmd, int eyeIdx);
+        OVRBuffer(const ovrSession &session, int eyeIdx);
         void OnRender();
         void OnRenderFinish();
         void SetupMSAA(); 
         void OnRenderMSAA();
         void OnRenderMSAAFinish();
-        void Destroy(const ovrHmd &hmd);
+        void Destroy(const ovrSession &session);
 
         ovrTexture m_eyeTexture;
         ovrSizei   m_eyeTextureSize;
@@ -74,7 +74,7 @@ private:
     };
 
     // data and buffers used to render to HMD
-    ovrHmd            m_hmd;
+    ovrSession        m_hmdSession;
     ovrHmdDesc        m_hmdDesc;
     ovrEyeRenderDesc  m_eyeRenderDesc[ovrEye_Count];
     ovrPosef          m_eyeRenderPose[ovrEye_Count];
@@ -87,7 +87,7 @@ private:
     OVR::Matrix4f     m_eyePose[ovrEye_Count];
 
     // frame timing data and tracking info
-    ovrFrameTiming    m_frameTiming;
+    double            m_frameTiming;
     ovrTrackingState  m_trackingState;
 
     // mirror texture used to render HMD view to OpenGL window

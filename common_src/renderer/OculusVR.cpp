@@ -2,12 +2,12 @@
 #include "renderer/ShaderManager.hpp"
 //#include <GL/CAPI_GLE.h>
 
-OculusVR::OVRBuffer::OVRBuffer(const ovrHmd &hmd, int eyeIdx)
+OculusVR::OVRBuffer::OVRBuffer(const ovrSession &session, int eyeIdx)
 {
-    ovrHmdDesc hmdDesc = ovr_GetHmdDesc(hmd);
-    m_eyeTextureSize   = ovr_GetFovTextureSize(hmd, (ovrEyeType)eyeIdx, hmdDesc.DefaultEyeFov[eyeIdx], 1.0f);
+    ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
+    m_eyeTextureSize   = ovr_GetFovTextureSize(session, (ovrEyeType)eyeIdx, hmdDesc.DefaultEyeFov[eyeIdx], 1.0f);
 
-    ovr_CreateSwapTextureSetGL(hmd, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
+    ovr_CreateSwapTextureSetGL(session, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
 
     for (int j = 0; j < m_swapTextureSet->TextureCount; ++j)
     {
@@ -137,7 +137,7 @@ void OculusVR::OVRBuffer::OnRenderFinish()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 }
 
-void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
+void OculusVR::OVRBuffer::Destroy(const ovrSession &session)
 {
     if (glIsFramebuffer(m_eyeFbo))
         glDeleteFramebuffers(1, &m_eyeFbo);  
@@ -154,14 +154,14 @@ void OculusVR::OVRBuffer::Destroy(const ovrHmd &hmd)
     if (glIsTexture(m_depthTexMSAA))
         glDeleteTextures(1, &m_depthTexMSAA);
 
-    ovr_DestroySwapTextureSet(hmd, m_swapTextureSet);
+    ovr_DestroySwapTextureSet(session, m_swapTextureSet);
 }
 
 OculusVR::~OculusVR()
 {
-    ovr_Destroy(m_hmd);
+    ovr_Destroy(m_hmdSession);
     ovr_Shutdown();
-    m_hmd = nullptr;
+    m_hmdSession = nullptr;
 }
 
 bool OculusVR::InitVR()
@@ -175,18 +175,14 @@ bool OculusVR::InitVR()
         return false;
     }
 
-    result = ovr_Create(&m_hmd, &luid);
+    result = ovr_Create(&m_hmdSession, &luid);
 
     if (result != ovrSuccess)
     {
         LOG_MESSAGE_ASSERT(result == ovrSuccess, "Failed to create OVR device");
     }
 
-    ovr_ConfigureTracking(m_hmd, ovrTrackingCap_Orientation |
-                                 ovrTrackingCap_MagYawCorrection |
-                                 ovrTrackingCap_Position, 0);
-    
-    m_hmdDesc = ovr_GetHmdDesc(m_hmd);
+    m_hmdDesc = ovr_GetHmdDesc(m_hmdSession);
 
     m_cameraFrustum = new OVRCameraFrustum;
 
@@ -197,12 +193,12 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
 {
     for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
     {
-        m_eyeBuffers[eyeIdx]    = new OVRBuffer(m_hmd, eyeIdx);
-        m_eyeRenderDesc[eyeIdx] = ovr_GetRenderDesc(m_hmd, (ovrEyeType)eyeIdx, m_hmdDesc.DefaultEyeFov[eyeIdx]);
+        m_eyeBuffers[eyeIdx]    = new OVRBuffer(m_hmdSession, eyeIdx);
+        m_eyeRenderDesc[eyeIdx] = ovr_GetRenderDesc(m_hmdSession, (ovrEyeType)eyeIdx, m_hmdDesc.DefaultEyeFov[eyeIdx]);
     }
 
     // since SDK 0.6 we're using a mirror texture + FBO which in turn copies contents of mirror to back buffer
-    ovr_CreateMirrorTextureGL(m_hmd, GL_RGBA, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
+    ovr_CreateMirrorTextureGL(m_hmdSession, GL_RGBA, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
 
     // Configure the mirror read buffer
     glGenFramebuffers(1, &m_mirrorFBO);
@@ -273,7 +269,7 @@ bool OculusVR::InitNonDistortMirror(int windowWidth, int windowHeight)
 
 void OculusVR::DestroyVR()
 {
-    if (m_hmd)
+    if (m_hmdSession)
     {
         delete m_debugData;
         delete m_cameraFrustum;
@@ -293,11 +289,11 @@ void OculusVR::DestroyVR()
         if (glIsTexture(m_nonDistortDepthBuffer))
             glDeleteTextures(1, &m_nonDistortDepthBuffer);
 
-        ovr_DestroyMirrorTexture(m_hmd, (ovrTexture*)m_mirrorTexture);
+        ovr_DestroyMirrorTexture(m_hmdSession, (ovrTexture*)m_mirrorTexture);
 
         for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
         {
-            m_eyeBuffers[eyeIdx]->Destroy(m_hmd);
+            m_eyeBuffers[eyeIdx]->Destroy(m_hmdSession);
             delete m_eyeBuffers[eyeIdx];
             m_eyeBuffers[eyeIdx] = nullptr;
         }
@@ -315,8 +311,8 @@ void OculusVR::OnRenderStart()
     m_hmdToEyeViewOffset[0] = m_eyeRenderDesc[0].HmdToEyeViewOffset;
     m_hmdToEyeViewOffset[1] = m_eyeRenderDesc[1].HmdToEyeViewOffset;
 
-    m_frameTiming   = ovr_GetFrameTiming(m_hmd, 0);
-    m_trackingState = ovr_GetTrackingState(m_hmd, m_frameTiming.DisplayMidpointSeconds);
+    m_frameTiming   = ovr_GetPredictedDisplayTime(m_hmdSession, 0);
+    m_trackingState = ovr_GetTrackingState(m_hmdSession, m_frameTiming, ovrTrue);
 
     // Get both eye poses simultaneously, with IPD offset already included. 
     ovr_CalcEyePoses(m_trackingState.HeadPose.ThePose, m_hmdToEyeViewOffset, m_eyeRenderPose);
@@ -376,7 +372,7 @@ void OculusVR::SubmitFrame()
     ovrLayerHeader* layerList[1];
     layerList[0] = &eyeLayer.Header;
 
-    ovrResult result = ovr_SubmitFrame(m_hmd, 0, &viewScaleDesc, layerList, 1);
+    ovrResult result = ovr_SubmitFrame(m_hmdSession, 0, &viewScaleDesc, layerList, 1);
 }
 
 void OculusVR::BlitMirror(ovrEyeType numEyes, int offset)
@@ -435,7 +431,7 @@ void OculusVR::OnKeyPress(KeyCode key)
     switch (key)
     {
     case KEY_SPACE:
-        ovr_RecenterPose(m_hmd);
+        ovr_RecenterPose(m_hmdSession);
         break;
     }
 }
@@ -461,14 +457,14 @@ void OculusVR::RenderDebug()
     int pixelSizeHeight = (m_eyeBuffers[0]->m_eyeTextureSize.h + m_eyeBuffers[1]->m_eyeTextureSize.h) / 2;
 
     ovrSizei texSize = { pixelSizeWidth, pixelSizeHeight };
-    m_debugData->OnRender(m_hmd, m_trackingState, m_eyeRenderDesc, texSize);
+    m_debugData->OnRender(m_hmdSession, m_trackingState, m_eyeRenderDesc, texSize);
 }
 
 void OculusVR::RenderTrackerFrustum()
 {
     if (!IsDebugHMD() && IsDK2() && m_cameraFrustum)
     {
-        m_cameraFrustum->Recalculate(m_hmd);
+        m_cameraFrustum->Recalculate(m_hmdSession);
         m_cameraFrustum->OnRender();
     }
 }
@@ -477,7 +473,7 @@ void OculusVR::ShowPerfStats(ovrPerfHudMode statsMode)
 {
     if (!IsDebugHMD())
     {
-        ovr_SetInt(m_hmd, "PerfHudMode", (int)statsMode);
+        ovr_SetInt(m_hmdSession, "PerfHudMode", (int)statsMode);
     }
     else
     {
