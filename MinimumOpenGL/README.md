@@ -13,7 +13,7 @@ Press SPACE while "ingame" to recenter tracking position.
 
 How to build
 -------
-The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK.
+The application was built using VS2015. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK.
 
 Dependencies
 -------

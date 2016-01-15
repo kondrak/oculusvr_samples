@@ -7,7 +7,7 @@ OculusVR::OVRBuffer::OVRBuffer(const ovrSession &session, int eyeIdx)
     ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
     m_eyeTextureSize   = ovr_GetFovTextureSize(session, (ovrEyeType)eyeIdx, hmdDesc.DefaultEyeFov[eyeIdx], 1.0f);
 
-    ovr_CreateSwapTextureSetGL(session, GL_RGBA, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
+    ovr_CreateSwapTextureSetGL(session, GL_SRGB8_ALPHA8, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
 
     for (int j = 0; j < m_swapTextureSet->TextureCount; ++j)
     {
@@ -198,7 +198,7 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
     }
 
     // since SDK 0.6 we're using a mirror texture + FBO which in turn copies contents of mirror to back buffer
-    ovr_CreateMirrorTextureGL(m_hmdSession, GL_RGBA, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
+    ovr_CreateMirrorTextureGL(m_hmdSession, GL_SRGB8_ALPHA8, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
 
     // Configure the mirror read buffer
     glGenFramebuffers(1, &m_mirrorFBO);

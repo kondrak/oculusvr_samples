@@ -16,7 +16,7 @@ During the demo, swipe your hand left or right to toggle between hand skeleton r
 
 How to build
 -------
-The application was built using VS2013. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK and LEAP_SDK pointing to root directory of your LeapMotion SDK.
+The application was built using VS2015. To compile, you need to set a OCULUS_SDK environment variable which points to the root directory of your Oculus SDK and LEAP_SDK pointing to root directory of your LeapMotion SDK.
 
 Dependencies
 -------
