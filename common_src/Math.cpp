@@ -177,7 +177,7 @@ namespace Math
 
     void Quaternion::Normalize()
     {
-        float l = sqrt( m_x*m_x + m_y*m_y + m_z*m_z + m_w*m_w );
+        float l = sqrtf( m_x*m_x + m_y*m_y + m_z*m_z + m_w*m_w );
         m_x /= l;
         m_y /= l;
         m_z /= l;

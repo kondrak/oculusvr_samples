@@ -14,7 +14,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVRKernel/Lib/Windows/$(Platform)/$(Configuration)/VS2013/;$(OCULUS_SDK)/LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2013/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OCULUS_SDK)/LibOVRKernel/Lib/Windows/$(Platform)/$(Configuration)/VS2015/;$(OCULUS_SDK)/LibOVR/Lib/Windows/$(Platform)/$(Configuration)/VS2015/</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2Main.lib;OpenGL32.lib;glew32.lib;libOVR.lib;libOVRKernel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>

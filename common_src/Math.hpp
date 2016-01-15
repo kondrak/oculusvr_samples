@@ -46,7 +46,7 @@ namespace Math
 
         float Length()
         {
-            return sqrt(m_x*m_x + m_y*m_y + m_z*m_z);
+            return sqrtf(m_x*m_x + m_y*m_y + m_z*m_z);
         }
 
         void Normalize();
@@ -162,10 +162,10 @@ namespace Math
         }
 
         // create from axis/angle representaiton
-        Quaternion(const Vector3f &axis, float angle) : m_x( axis.m_x * sin(angle/2) ),
-                                                        m_y( axis.m_y * sin(angle/2) ),
-                                                        m_z( axis.m_z * sin(angle/2) ),
-                                                        m_w( cos(angle/2) )
+        Quaternion(const Vector3f &axis, float angle) : m_x( axis.m_x * sinf(angle/2) ),
+                                                        m_y( axis.m_y * sinf(angle/2) ),
+                                                        m_z( axis.m_z * sinf(angle/2) ),
+                                                        m_w( cosf(angle/2) )
         {
         }
 
