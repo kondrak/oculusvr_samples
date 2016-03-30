@@ -1,6 +1,8 @@
 Samples for Oculus Rift DK2 (SDK 0.8.0.0)
 =======
 
+Legacy samples kept for the purpose of tracking major changes to the Oculus SDK.
+
 - <code>CameraBounds</code>    - IR tracking camera bounds renderer (OpenGL)
 - <code>DebugInfoRender</code> - Oculus Rift DK2 Debug Data Rendering
 - <code>LeapMotion</code>      - Leap Motion SDK integration demo
