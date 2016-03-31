@@ -17,23 +17,23 @@ OVRCameraFrustum::~OVRCameraFrustum()
 
 void OVRCameraFrustum::Recalculate(ovrSession session)
 {
-    ovrTrackingState tState = ovr_GetTrackingState(session, 0.0f, ovrTrue);
-    ovrHmdDesc hmdDesc      = ovr_GetHmdDesc(session);
-    ovrVector3f trackerPose = tState.CameraPose.Position;
+    ovrTrackerDesc tDesc    = ovr_GetTrackerDesc(session, 0);
+    ovrTrackerPose tPose    = ovr_GetTrackerPose(session, 0);
+    ovrVector3f trackerPose = tPose.LeveledPose.Position;
 
-    float trackerFar  = hmdDesc.CameraFrustumFarZInMeters;
-    float trackerNear = hmdDesc.CameraFrustumNearZInMeters;
-    float trackerHFov = hmdDesc.CameraFrustumHFovInRadians;
-    float trackerVFov = hmdDesc.CameraFrustumVFovInRadians;
+    float trackerFar  = tDesc.FrustumFarZInMeters;
+    float trackerNear = tDesc.FrustumNearZInMeters;
+    float trackerHFov = tDesc.FrustumHFovInRadians;
+    float trackerVFov = tDesc.FrustumVFovInRadians;
 
     float hScale = tanf(trackerHFov / 2.f);
     float vScale = tanf(trackerVFov / 2.f);
 
     // camera orientation quaternion
-    OVR::Quatf trackerOrientationQuat(tState.CameraPose.Orientation.x,
-                                      tState.CameraPose.Orientation.y,
-                                      tState.CameraPose.Orientation.z,
-                                      tState.CameraPose.Orientation.w);
+    OVR::Quatf trackerOrientationQuat(tPose.LeveledPose.Orientation.x,
+                                      tPose.LeveledPose.Orientation.y,
+                                      tPose.LeveledPose.Orientation.z,
+                                      tPose.LeveledPose.Orientation.w);
 
     // orientation indicator vector running from camera pose to near plane
     OVR::Vector3f trackerOrientationVec(0.f, 0.f, trackerNear);

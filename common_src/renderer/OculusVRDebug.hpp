@@ -1,6 +1,6 @@
 #ifndef OCULUSVRDEBUG_HPP
 #define OCULUSVRDEBUG_HPP
-#include "OVR_CAPI_0_8_0.h"
+#include "OVR_CAPI.h"
 
 class Font;
 

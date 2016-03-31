@@ -7,12 +7,26 @@ OculusVR::OVRBuffer::OVRBuffer(const ovrSession &session, int eyeIdx)
     ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
     m_eyeTextureSize   = ovr_GetFovTextureSize(session, (ovrEyeType)eyeIdx, hmdDesc.DefaultEyeFov[eyeIdx], 1.0f);
 
-    ovr_CreateSwapTextureSetGL(session, GL_SRGB8_ALPHA8, m_eyeTextureSize.w, m_eyeTextureSize.h, &m_swapTextureSet);
+    ovrTextureSwapChainDesc desc = {};
+    desc.Type = ovrTexture_2D;
+    desc.ArraySize = 1;
+    desc.Width = m_eyeTextureSize.w;
+    desc.Height = m_eyeTextureSize.h;
+    desc.MipLevels = 1;
+    desc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+    desc.SampleCount = 1;
+    desc.StaticImage = ovrFalse;
 
-    for (int j = 0; j < m_swapTextureSet->TextureCount; ++j)
+    ovrResult result = ovr_CreateTextureSwapChainGL(session, &desc, &m_swapTextureChain);
+
+    int textureCount = 0;
+    ovr_GetTextureSwapChainLength(session, m_swapTextureChain, &textureCount);
+
+    for (int j = 0; j < textureCount; ++j)
     {
-        ovrGLTexture* tex = (ovrGLTexture*)&m_swapTextureSet->Textures[j];
-        glBindTexture(GL_TEXTURE_2D, tex->OGL.TexId);
+        GLuint chainTexId;
+        ovr_GetTextureSwapChainBufferGL(session, m_swapTextureChain, j, &chainTexId);
+        glBindTexture(GL_TEXTURE_2D, chainTexId);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -79,9 +93,6 @@ void OculusVR::OVRBuffer::SetupMSAA()
 
 void OculusVR::OVRBuffer::OnRenderMSAA()
 {
-    // Increment to use next texture, just before writing
-    m_swapTextureSet->CurrentIndex = (m_swapTextureSet->CurrentIndex + 1) % m_swapTextureSet->TextureCount;
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_msaaEyeFbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_depthTexMSAA, 0);
@@ -93,8 +104,6 @@ void OculusVR::OVRBuffer::OnRenderMSAA()
 void OculusVR::OVRBuffer::OnRenderMSAAFinish()
 {
     // blit the contents of MSAA FBO to the regular eye buffer "connected" to the HMD
-    ovrGLTexture* tex = (ovrGLTexture*)&m_swapTextureSet->Textures[m_swapTextureSet->CurrentIndex];
-
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_msaaEyeFbo);
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D_MULTISAMPLE, m_eyeTexMSAA, 0);
     glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
@@ -102,7 +111,7 @@ void OculusVR::OVRBuffer::OnRenderMSAAFinish()
     LOG_MESSAGE_ASSERT((glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Could not complete framebuffer operation");
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_eyeFbo);
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->OGL.TexId, 0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_eyeTexId, 0);
     glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
 
     LOG_MESSAGE_ASSERT((glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Could not complete framebuffer operation");
@@ -116,14 +125,9 @@ void OculusVR::OVRBuffer::OnRenderMSAAFinish()
 
 void OculusVR::OVRBuffer::OnRender()
 {
-    // Increment to use next texture, just before writing
-    m_swapTextureSet->CurrentIndex = (m_swapTextureSet->CurrentIndex + 1) % m_swapTextureSet->TextureCount;
-
     // Switch to eye render target
-    ovrGLTexture* tex = (ovrGLTexture*)&m_swapTextureSet->Textures[m_swapTextureSet->CurrentIndex];
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_eyeFbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->OGL.TexId, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_eyeTexId, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthBuffer, 0);
 
     glViewport(0, 0, m_eyeTextureSize.w, m_eyeTextureSize.h);
@@ -154,7 +158,7 @@ void OculusVR::OVRBuffer::Destroy(const ovrSession &session)
     if (glIsTexture(m_depthTexMSAA))
         glDeleteTextures(1, &m_depthTexMSAA);
 
-    ovr_DestroySwapTextureSet(session, m_swapTextureSet);
+    ovr_DestroyTextureSwapChain(session, m_swapTextureChain);
 }
 
 OculusVR::~OculusVR()
@@ -197,13 +201,20 @@ bool OculusVR::InitVRBuffers(int windowWidth, int windowHeight)
         m_eyeRenderDesc[eyeIdx] = ovr_GetRenderDesc(m_hmdSession, (ovrEyeType)eyeIdx, m_hmdDesc.DefaultEyeFov[eyeIdx]);
     }
 
+    memset(&m_mirrorDesc, 0, sizeof(m_mirrorDesc));
+    m_mirrorDesc.Width  = windowWidth;
+    m_mirrorDesc.Height = windowHeight;
+    m_mirrorDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+
     // since SDK 0.6 we're using a mirror texture + FBO which in turn copies contents of mirror to back buffer
-    ovr_CreateMirrorTextureGL(m_hmdSession, GL_SRGB8_ALPHA8, windowWidth, windowHeight, (ovrTexture**)&m_mirrorTexture);
+    ovr_CreateMirrorTextureGL(m_hmdSession, &m_mirrorDesc, &m_mirrorTexture);
 
     // Configure the mirror read buffer
+    GLuint texId;
+    ovr_GetMirrorTextureBufferGL(m_hmdSession, m_mirrorTexture, &texId);
     glGenFramebuffers(1, &m_mirrorFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_mirrorFBO);
-    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_mirrorTexture->OGL.TexId, 0);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texId, 0);
     glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
@@ -289,7 +300,7 @@ void OculusVR::DestroyVR()
         if (glIsTexture(m_nonDistortDepthBuffer))
             glDeleteTextures(1, &m_nonDistortDepthBuffer);
 
-        ovr_DestroyMirrorTexture(m_hmdSession, (ovrTexture*)m_mirrorTexture);
+        ovr_DestroyMirrorTexture(m_hmdSession, m_mirrorTexture);
 
         for (int eyeIdx = 0; eyeIdx < ovrEye_Count; eyeIdx++)
         {
@@ -308,26 +319,32 @@ const ovrSizei OculusVR::GetResolution() const
 
 void OculusVR::OnRenderStart()
 {
-    m_hmdToEyeViewOffset[0] = m_eyeRenderDesc[0].HmdToEyeViewOffset;
-    m_hmdToEyeViewOffset[1] = m_eyeRenderDesc[1].HmdToEyeViewOffset;
+    m_hmdToEyeOffset[0] = m_eyeRenderDesc[0].HmdToEyeOffset;
+    m_hmdToEyeOffset[1] = m_eyeRenderDesc[1].HmdToEyeOffset;
 
+    // this data is fetched only for the debug display, no need to do this to just get the rendering work
     m_frameTiming   = ovr_GetPredictedDisplayTime(m_hmdSession, 0);
     m_trackingState = ovr_GetTrackingState(m_hmdSession, m_frameTiming, ovrTrue);
 
-    // Get both eye poses simultaneously, with IPD offset already included. 
-    ovr_CalcEyePoses(m_trackingState.HeadPose.ThePose, m_hmdToEyeViewOffset, m_eyeRenderPose);
+    // Get both eye poses simultaneously, with IPD offset already included.
+    ovr_GetEyePoses(m_hmdSession, m_frameIndex, ovrTrue, m_hmdToEyeOffset, m_eyeRenderPose, &m_sensorSampleTime);    
 }
 
 
 const OVR::Matrix4f OculusVR::OnEyeRender(int eyeIndex)
 {
+    // set the current eye texture in swap chain
+    int curIndex;
+    ovr_GetTextureSwapChainCurrentIndex(m_hmdSession, m_eyeBuffers[eyeIndex]->m_swapTextureChain, &curIndex);
+    ovr_GetTextureSwapChainBufferGL(m_hmdSession, m_eyeBuffers[eyeIndex]->m_swapTextureChain, curIndex, &m_eyeBuffers[eyeIndex]->m_eyeTexId);
+
     if (m_msaaEnabled)
         m_eyeBuffers[eyeIndex]->OnRenderMSAA();
     else
         m_eyeBuffers[eyeIndex]->OnRender();
 
-    m_projectionMatrix[eyeIndex] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eyeIndex].Fov, 0.01f, 10000.0f, ovrProjection_RightHanded));
-    m_eyeViewOffset[eyeIndex]  = OVR::Matrix4f::Translation(m_hmdToEyeViewOffset[eyeIndex]);
+    m_projectionMatrix[eyeIndex] = OVR::Matrix4f(ovrMatrix4f_Projection(m_eyeRenderDesc[eyeIndex].Fov, 0.01f, 10000.0f, ovrProjection_None));
+    m_eyeViewOffset[eyeIndex]  = OVR::Matrix4f::Translation(m_hmdToEyeOffset[eyeIndex]);
     m_eyeOrientation[eyeIndex] = OVR::Matrix4f(OVR::Quatf(m_eyeRenderPose[eyeIndex].Orientation).Inverted());
     m_eyePose[eyeIndex]        = OVR::Matrix4f::Translation(-OVR::Vector3f(m_eyeRenderPose[eyeIndex].Position));
 
@@ -340,6 +357,8 @@ void OculusVR::OnEyeRenderFinish(int eyeIndex)
         m_eyeBuffers[eyeIndex]->OnRenderMSAAFinish();
     else
         m_eyeBuffers[eyeIndex]->OnRenderFinish();
+
+    ovr_CommitTextureSwapChain(m_hmdSession, m_eyeBuffers[eyeIndex]->m_swapTextureChain);
 }
 
 const OVR::Matrix4f OculusVR::GetEyeMVPMatrix(int eyeIndex) const
@@ -352,8 +371,8 @@ void OculusVR::SubmitFrame()
     // set up positional data
     ovrViewScaleDesc viewScaleDesc;
     viewScaleDesc.HmdSpaceToWorldScaleInMeters = 1.0f;
-    viewScaleDesc.HmdToEyeViewOffset[0] = m_hmdToEyeViewOffset[0];
-    viewScaleDesc.HmdToEyeViewOffset[1] = m_hmdToEyeViewOffset[1];
+    viewScaleDesc.HmdToEyeOffset[0] = m_hmdToEyeOffset[0];
+    viewScaleDesc.HmdToEyeOffset[1] = m_hmdToEyeOffset[1];
 
     // create the main eye layer
     ovrLayerEyeFov eyeLayer;
@@ -362,17 +381,17 @@ void OculusVR::SubmitFrame()
 
     for (int eye = 0; eye < ovrEye_Count; eye++)
     {
-        eyeLayer.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureSet;
-        eyeLayer.Viewport[eye] = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
-        eyeLayer.Fov[eye] = m_hmdDesc.DefaultEyeFov[eye];
-        eyeLayer.RenderPose[eye] = m_eyeRenderPose[eye];
+        eyeLayer.ColorTexture[eye] = m_eyeBuffers[eye]->m_swapTextureChain;
+        eyeLayer.Viewport[eye]     = OVR::Recti(m_eyeBuffers[eye]->m_eyeTextureSize);
+        eyeLayer.Fov[eye]          = m_hmdDesc.DefaultEyeFov[eye];
+        eyeLayer.RenderPose[eye]   = m_eyeRenderPose[eye];
+        eyeLayer.SensorSampleTime  = m_sensorSampleTime;
     }
 
     // append all the layers to global list
-    ovrLayerHeader* layerList[1];
-    layerList[0] = &eyeLayer.Header;
+    ovrLayerHeader* layerList = &eyeLayer.Header;
 
-    ovrResult result = ovr_SubmitFrame(m_hmdSession, 0, &viewScaleDesc, layerList, 1);
+    ovrResult result = ovr_SubmitFrame(m_hmdSession, m_frameIndex, nullptr, &layerList, 1);
 }
 
 void OculusVR::BlitMirror(ovrEyeType numEyes, int offset)
@@ -380,8 +399,8 @@ void OculusVR::BlitMirror(ovrEyeType numEyes, int offset)
     // Blit mirror texture to back buffer
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_mirrorFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    GLint w = m_mirrorTexture->OGL.Header.TextureSize.w;
-    GLint h = m_mirrorTexture->OGL.Header.TextureSize.h;
+    GLint w = m_mirrorDesc.Width;
+    GLint h = m_mirrorDesc.Height;
 
     switch (numEyes)
     {
@@ -431,7 +450,7 @@ void OculusVR::OnKeyPress(KeyCode key)
     switch (key)
     {
     case KEY_SPACE:
-        ovr_RecenterPose(m_hmdSession);
+        ovr_RecenterTrackingOrigin(m_hmdSession);
         break;
     }
 }
