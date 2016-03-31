@@ -9,7 +9,7 @@
 #include "OVR_CAPI.h"
 
 /*
- * Oculus Rift DK2 setup class (as of SDK 0.8.0.0)
+ * Oculus Rift setup class (as of SDK 1.3.0)
  */
 class OculusVR
 {
@@ -45,7 +45,6 @@ public:
     void  RenderDebug();
     void  RenderTrackerFrustum();   
     bool  IsDebugHMD() const { return (m_hmdDesc.AvailableHmdCaps & ovrHmdCap_DebugDevice) != 0; }
-    bool  IsDK2() const { return m_hmdDesc.Type == ovrHmd_DK2; }
     void  ShowPerfStats(ovrPerfHudMode statsMode);
     void  SetMSAA(bool val) { m_msaaEnabled = val; }
     bool  MSAAEnabled() const { return m_msaaEnabled; }

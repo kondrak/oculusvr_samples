@@ -73,7 +73,7 @@ void OculusVRDebug::OnRender(const ovrSession session, const ovrTrackingState &t
 
     // latency readings
     float latencies[5] = {};
-    if (ovr_GetFloatArray(session, "DK2Latency", latencies, 5) == 5)
+    if (ovr_GetFloatArray(session, "OVRLatency", latencies, 5) == 5)
     {
         char text[5][32];
         for (int i = 0; i < 5; ++i)

@@ -481,7 +481,7 @@ void OculusVR::RenderDebug()
 
 void OculusVR::RenderTrackerFrustum()
 {
-    if (!IsDebugHMD() && IsDK2() && m_cameraFrustum)
+    if (!IsDebugHMD() && m_cameraFrustum)
     {
         m_cameraFrustum->Recalculate(m_hmdSession);
         m_cameraFrustum->OnRender();
