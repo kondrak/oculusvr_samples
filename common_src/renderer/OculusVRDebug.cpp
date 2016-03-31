@@ -56,7 +56,7 @@ void OculusVRDebug::OnRender(const ovrSession session, const ovrTrackingState &t
                                                                  trackingState.StatusFlags & ovrStatus_PositionTracked ? "YES" : "NO");
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 2.f, 0.f);
 
-    float eyeNeckDist[2];
+    float eyeNeckDist[2] = {};
     ovr_GetFloatArray(session, OVR_KEY_EYE_TO_NOSE_DISTANCE, eyeNeckDist, 2);
     OVR::OVR_sprintf(buf, sizeof(buf), "EyeHeight: %2.2f IPD: %2.1fmm", ovr_GetFloat(session, OVR_KEY_EYE_HEIGHT, 0.f), (eyeNeckDist[0] + eyeNeckDist[1]) * 1000.f);
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 3.f, 0.f);
@@ -73,7 +73,7 @@ void OculusVRDebug::OnRender(const ovrSession session, const ovrTrackingState &t
 
     // latency readings
     float latencies[5] = {};
-    if (ovr_GetFloatArray(session, "OVRLatency", latencies, 5) == 5)
+    if (ovr_GetFloatArray(session, "DK2Latency", latencies, 5) == 5)
     {
         char text[5][32];
         for (int i = 0; i < 5; ++i)
