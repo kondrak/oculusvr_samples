@@ -83,7 +83,6 @@ private:
     OVRBuffer        *m_eyeBuffers[ovrEye_Count];
 
     OVR::Matrix4f     m_projectionMatrix[ovrEye_Count];
-    OVR::Matrix4f     m_eyeViewOffset[ovrEye_Count];
     OVR::Matrix4f     m_eyeOrientation[ovrEye_Count];
     OVR::Matrix4f     m_eyePose[ovrEye_Count];
 

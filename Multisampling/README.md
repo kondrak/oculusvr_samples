@@ -1,7 +1,7 @@
-Oculus Rift DK2 OpenGL Multisampling
+Oculus Rift OpenGL Multisampling
 ================
 
-Example application displaying OpenGL multisampling (MSAA) capabilities with Oculus Rift DK2.
+Example application displaying OpenGL multisampling (MSAA) capabilities with Oculus Rift.
 
 ![Screenshot](http://kondrak.info/images/vr_multisample.png?raw=true)
 

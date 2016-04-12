@@ -1,7 +1,7 @@
-Oculus Rift DK2 minimum OpenGL setup
+Oculus Rift minimum OpenGL setup
 ================
 
-A minimum setup application for Oculus Rift DK2 development with OpenGL and SDL2 as window manager. While the entire code could be squashed into a single file, a separate OculusVR class exists to handle all OVR initialization and processing. Along with it comes a separate ShaderManager with Shader class for cleaner shader loading. The application also provides head tracking recenter functionality at a keystroke.
+A minimum setup application for Oculus Rift development with OpenGL and SDL2 as window manager. While the entire code could be squashed into a single file, a separate OculusVR class exists to handle all OVR initialization and processing. Along with it comes a separate ShaderManager with Shader class for cleaner shader loading. The application also provides head tracking recenter functionality at a keystroke.
 
 ![Screenshot](http://kondrak.info/images/vr_minimum.png?raw=true)
 

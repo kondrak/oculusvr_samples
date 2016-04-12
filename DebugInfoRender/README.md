@@ -1,7 +1,7 @@
-Oculus Rift DK2 Debug Data Rendering
+Oculus Rift Debug Data Rendering
 ================
 
-Rendering HMD debug data similar to the manner it's done in OculusWorldDemo.
+Rendering HMD debug data similar to the manner it's done in OculusWorldDemo. This project has been obsoleted after the SDKs introduced built-in debug overlays.
 
 ![Screenshot](http://kondrak.info/images/vr_debug.png?raw=true)
 

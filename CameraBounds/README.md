@@ -1,7 +1,7 @@
-Oculus Rift DK2 IR tracking camera bounds renderer (OpenGL)
+Oculus Rift IR tracking camera bounds renderer (OpenGL)
 ================
 
-Sample program with rendering code for the DK2 tracking camera bounding box (frustum) using OpenGL. The application imitates bounds rendering behavior as seen in the Demo Scene. The "core rendering" is performed in <code>src/renderer/CameraFrustum.hpp</code> and <code>src/renderer/CameraFrustum.cpp</code> which should be fairly straightforward to transfer to your own codebase.
+Sample program with rendering code for the tracking camera bounding box (frustum) using OpenGL. The application imitates bounds rendering behavior as seen in the Demo Scene. The "core rendering" is performed in <code>src/renderer/CameraFrustum.hpp</code> and <code>src/renderer/CameraFrustum.cpp</code> which should be fairly straightforward to transfer to your own codebase.
 
 ![Screenshot](http://kondrak.info/images/vrcam_bb2.png?raw=true)
 ![Screenshot](http://kondrak.info/images/vrcam_bb1.png?raw=true)

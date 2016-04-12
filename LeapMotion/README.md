@@ -1,7 +1,7 @@
-Oculus Rift DK2 Leap Motion 2.2.7 integration
+Oculus Rift and Leap Motion 2.2.7 integration
 ================
 
-Demo of Leap Motion SDK integration with DK2. This program demonstrates how to track hands, gestures, how to render the skeletal outlines (using simple line segments) as well as how to display raw camera image on the screen. 
+Demo of Leap Motion SDK integration. This program demonstrates how to track hands, gestures, how to render the skeletal outlines (using simple line segments) as well as how to display raw camera image on the screen. 
 
 ![Screenshot](http://kondrak.info/images/vr_leap1.png?raw=true)
 ![Screenshot](http://kondrak.info/images/vr_leap2.png?raw=true)
