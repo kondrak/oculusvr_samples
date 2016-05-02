@@ -1,7 +1,7 @@
 #include "renderer/OVRTrackerChaperone.hpp"
 #include "renderer/ShaderManager.hpp"
 
-#define PlanePoints(topEdge, bottomEdge) \
+#define ChaperonePlanePoints(topEdge, bottomEdge) \
         trackerPose.x, trackerPose.y, trackerPose.z, \
         trackerPose.x +    topEdge.x, trackerPose.y + topEdge.y, trackerPose.z + topEdge.z, \
         trackerPose.x +    topEdge.x / 16, trackerPose.y +    topEdge.y / 16, trackerPose.z + topEdge.z / 16, \
@@ -80,10 +80,10 @@ void OVRTrackerChaperone::Recalculate(ovrSession session, const OVR::Vector3f &h
     farV3 = trackerOrientationQuat.Rotate(farV3);
     farV4 = trackerOrientationQuat.Rotate(farV4);
 
-    const GLfloat leftPlaneVertexData[]   = { PlanePoints(farV1, farV2) };
-    const GLfloat rightPlaneVertexData[]  = { PlanePoints(farV4, farV3) };
-    const GLfloat topPlaneVertexData[]    = { PlanePoints(farV1, farV4) };
-    const GLfloat bottomPlaneVertexData[] = { PlanePoints(farV2, farV3) };
+    const GLfloat leftPlaneVertexData[]   = { ChaperonePlanePoints(farV1, farV2) };
+    const GLfloat rightPlaneVertexData[]  = { ChaperonePlanePoints(farV4, farV3) };
+    const GLfloat topPlaneVertexData[]    = { ChaperonePlanePoints(farV1, farV4) };
+    const GLfloat bottomPlaneVertexData[] = { ChaperonePlanePoints(farV2, farV3) };
 
     // near plane of the tracking camera
     const GLfloat nearPlaneVertexData[] = {
@@ -154,8 +154,6 @@ void OVRTrackerChaperone::OnRender()
 {
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
     GLuint vertexPositionAttr = glGetAttribLocation(shader.id, "inVertex");
-
-    const float orientationVecColor[3] = { 0.f, 1.f, 0.f };
 
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
