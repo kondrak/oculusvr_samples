@@ -287,6 +287,7 @@ void OculusVR::DestroyVR()
     {
         delete m_debugData;
         delete m_cameraFrustum;
+        delete m_trackerChaperone;
 
         m_debugData     = nullptr;
         m_cameraFrustum = nullptr;

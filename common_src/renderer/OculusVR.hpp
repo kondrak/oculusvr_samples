@@ -18,6 +18,7 @@ public:
     OculusVR() : m_hmdSession(nullptr),
                  m_debugData(nullptr),
                  m_cameraFrustum(nullptr),
+                 m_trackerChaperone(nullptr),
                  m_msaaEnabled(false),
                  m_frameIndex(0),
                  m_sensorSampleTime(0)
