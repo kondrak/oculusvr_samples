@@ -79,7 +79,7 @@ int main(int argc, char **argv)
                                                   * OVR::Matrix4f(OVR::Quatf(OVR::Vector3f(0.0f, 1.0f, 0.0f), PI));
             glUniformMatrix4fv(shader2.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrixLM.Transposed().M[0][0]);
 
-            g_application.OnRender();    
+            g_application.OnRender();
             g_leapMotion.OnRender();
             g_oculusVR.OnEyeRenderFinish(eyeIndex);
         }

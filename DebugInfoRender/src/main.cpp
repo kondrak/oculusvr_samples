@@ -70,7 +70,7 @@ int main(int argc, char **argv)
             const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-            g_application.OnRender();     
+            g_application.OnRender(); 
             g_oculusVR.RenderDebug();
             g_oculusVR.OnEyeRenderFinish(eyeIndex);
         }

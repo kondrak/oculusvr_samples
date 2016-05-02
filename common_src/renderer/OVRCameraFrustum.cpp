@@ -125,9 +125,9 @@ void OVRCameraFrustum::OnRender()
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
     GLuint vertexPositionAttr = glGetAttribLocation(shader.id, "inVertex");
 
-    const float frustumColor[3] = { 0.67f, 0.27f, 0.05f };
-    const float planeColor[3] = { 1.f, 0.f, 0.f };
-    const float orientationVecColor[3] = { 0.f, 1.f, 0.f };
+    const float frustumColor[4] = { 0.67f, 0.27f, 0.05f, 1.f };
+    const float planeColor[4] = { 1.f, 0.f, 0.f, 1.f };
+    const float orientationVecColor[4] = { 0.f, 1.f, 0.f, 1.f };
 
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -140,17 +140,17 @@ void OVRCameraFrustum::OnRender()
     glVertexAttribPointer(vertexPositionAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // draw the frustum lines
-    glUniform3fv(shader.uniforms[VertexColor], 1, frustumColor);
+    glUniform4fv(shader.uniforms[VertexColor], 1, frustumColor);
     glDrawArrays(GL_LINES, 0, 8);
 
     // draw the orientation vector with separate color
-    glUniform3fv(shader.uniforms[VertexColor], 1, orientationVecColor);
+    glUniform4fv(shader.uniforms[VertexColor], 1, orientationVecColor);
     glDrawArrays(GL_LINES, 8, 2);
 
     glDisableVertexAttribArray(vertexPositionAttr);
 
     // render near and far planes
-    glUniform3fv(shader.uniforms[VertexColor], 1, planeColor);
+    glUniform4fv(shader.uniforms[VertexColor], 1, planeColor);
 
     for (int i = 1; i < 3; i++)
     {

@@ -188,7 +188,10 @@ bool OculusVR::InitVR()
 
     m_hmdDesc = ovr_GetHmdDesc(m_hmdSession);
 
-    m_cameraFrustum = new OVRCameraFrustum;
+    // debug camera tracking frustum
+    m_cameraFrustum    = new OVRCameraFrustum;
+    // debug Vive-style camera tracking chaperone
+    m_trackerChaperone = new OVRTrackerChaperone;
 
     return result == ovrSuccess;
 }
@@ -484,6 +487,15 @@ void OculusVR::RenderTrackerFrustum()
     {
         m_cameraFrustum->Recalculate(m_hmdSession);
         m_cameraFrustum->OnRender();
+    }
+}
+
+void OculusVR::RenderTrackerChaperone()
+{
+    if (!IsDebugHMD() && m_trackerChaperone)
+    {
+        m_trackerChaperone->Recalculate(m_hmdSession, m_trackingState.HeadPose.ThePose.Position);
+        m_trackerChaperone->OnRender();
     }
 }
 

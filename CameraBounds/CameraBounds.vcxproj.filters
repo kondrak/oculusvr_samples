@@ -75,6 +75,9 @@
     <ClCompile Include="..\common_src\Utils.cpp">
       <Filter>Source Files\common_src</Filter>
     </ClCompile>
+    <ClCompile Include="..\common_src\renderer\OVRTrackerChaperone.cpp">
+      <Filter>Source Files\common_src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="..\common_src\Utils.hpp">
       <Filter>Source Files\common_src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common_src\renderer\OVRTrackerChaperone.hpp">
+      <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

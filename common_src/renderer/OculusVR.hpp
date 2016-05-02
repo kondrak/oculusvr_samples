@@ -5,6 +5,7 @@
 #include "renderer/OpenGL.hpp"
 #include "renderer/OculusVRDebug.hpp"
 #include "renderer/OVRCameraFrustum.hpp"
+#include "renderer/OVRTrackerChaperone.hpp"
 #include "Extras/OVR_Math.h"
 #include "OVR_CAPI.h"
 
@@ -43,7 +44,8 @@ public:
     void  CreateDebug();
     void  UpdateDebug();
     void  RenderDebug();
-    void  RenderTrackerFrustum();   
+    void  RenderTrackerFrustum();
+    void  RenderTrackerChaperone();
     bool  IsDebugHMD() const { return (m_hmdDesc.AvailableHmdCaps & ovrHmdCap_DebugDevice) != 0; }
     void  ShowPerfStats(ovrPerfHudMode statsMode);
     void  SetMSAA(bool val) { m_msaaEnabled = val; }
@@ -110,6 +112,9 @@ private:
 
     // debug camera frustum renderer
     OVRCameraFrustum *m_cameraFrustum;
+
+    // debug tracker chaperone
+    OVRTrackerChaperone *m_trackerChaperone;
 };
 
 

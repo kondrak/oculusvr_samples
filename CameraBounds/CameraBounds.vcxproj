@@ -21,6 +21,7 @@
     <ClCompile Include="..\common_src\renderer\OculusVRDebug.cpp" />
     <ClCompile Include="..\common_src\renderer\OpenGL.cpp" />
     <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp" />
+    <ClCompile Include="..\common_src\renderer\OVRTrackerChaperone.cpp" />
     <ClCompile Include="..\common_src\renderer\RenderContext.cpp" />
     <ClCompile Include="..\common_src\renderer\ShaderManager.cpp" />
     <ClCompile Include="..\common_src\renderer\Texture.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\common_src\renderer\OculusVRDebug.hpp" />
     <ClInclude Include="..\common_src\renderer\OpenGL.hpp" />
     <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp" />
+    <ClInclude Include="..\common_src\renderer\OVRTrackerChaperone.hpp" />
     <ClInclude Include="..\common_src\renderer\RenderContext.hpp" />
     <ClInclude Include="..\common_src\renderer\Shader.hpp" />
     <ClInclude Include="..\common_src\renderer\ShaderManager.hpp" />
