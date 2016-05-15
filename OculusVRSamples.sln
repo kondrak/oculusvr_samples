@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multisampling", "Multisampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrackerChaperone", "TrackerChaperone\TrackerChaperone.vcxproj", "{CCF6650A-CE10-402A-84D7-F8FF9EE8D229}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstancedRender", "InstancedRender\InstancedRender.vcxproj", "{F30812ED-1722-4BAE-9E95-24422646234D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -67,6 +69,14 @@ Global
 		{CCF6650A-CE10-402A-84D7-F8FF9EE8D229}.Release|Win32.ActiveCfg = Release|Win32
 		{CCF6650A-CE10-402A-84D7-F8FF9EE8D229}.Release|Win32.Build.0 = Release|Win32
 		{CCF6650A-CE10-402A-84D7-F8FF9EE8D229}.Release|x64.ActiveCfg = Release|Win32
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Debug|Win32.Build.0 = Debug|Win32
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Debug|x64.ActiveCfg = Debug|x64
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Debug|x64.Build.0 = Debug|x64
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Release|Win32.ActiveCfg = Release|Win32
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Release|Win32.Build.0 = Release|Win32
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Release|x64.ActiveCfg = Release|x64
+		{F30812ED-1722-4BAE-9E95-24422646234D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
