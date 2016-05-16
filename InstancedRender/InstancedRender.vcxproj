@@ -118,7 +118,6 @@
     <ClCompile Include="..\common_src\renderer\Camera.cpp" />
     <ClCompile Include="..\common_src\renderer\CameraDirector.cpp" />
     <ClCompile Include="..\common_src\renderer\Font.cpp" />
-    <ClCompile Include="..\common_src\renderer\OculusVR.cpp" />
     <ClCompile Include="..\common_src\renderer\OculusVRDebug.cpp" />
     <ClCompile Include="..\common_src\renderer\OpenGL.cpp" />
     <ClCompile Include="..\common_src\renderer\OVRCameraFrustum.cpp" />
@@ -130,6 +129,7 @@
     <ClCompile Include="..\common_src\Utils.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\OculusVRInstanced.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common_libs\stb_image\stb_image.h" />
@@ -138,7 +138,6 @@
     <ClInclude Include="..\common_src\renderer\Camera.hpp" />
     <ClInclude Include="..\common_src\renderer\CameraDirector.hpp" />
     <ClInclude Include="..\common_src\renderer\Font.hpp" />
-    <ClInclude Include="..\common_src\renderer\OculusVR.hpp" />
     <ClInclude Include="..\common_src\renderer\OculusVRDebug.hpp" />
     <ClInclude Include="..\common_src\renderer\OpenGL.hpp" />
     <ClInclude Include="..\common_src\renderer\OVRCameraFrustum.hpp" />
@@ -150,6 +149,7 @@
     <ClInclude Include="..\common_src\renderer\TextureManager.hpp" />
     <ClInclude Include="..\common_src\Utils.hpp" />
     <ClInclude Include="src\Application.hpp" />
+    <ClInclude Include="src\OculusVRInstanced.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

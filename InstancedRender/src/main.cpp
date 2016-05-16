@@ -2,7 +2,7 @@
 #include "InputHandlers.hpp"
 #include "renderer/RenderContext.hpp"
 #include "renderer/ShaderManager.hpp"
-#include "renderer/OculusVR.hpp"
+#include "OculusVRInstanced.hpp"
 
 // application globals
 RenderContext g_renderContext;
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     ovrSizei hmdResolution = g_oculusVR.GetResolution();
     ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
 
-    g_renderContext.Init("Oculus Rift Minimum OpenGL", 100, 100, windowSize.w, windowSize.h);
+    g_renderContext.Init("Oculus Rift OpenGL instanced rendering", 100, 100, windowSize.w, windowSize.h);
     SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
@@ -53,9 +53,7 @@ int main(int argc, char **argv)
     {
         // handle key presses
         processEvents();
-
         glClearColor(0.2f, 0.2f, 0.6f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         g_oculusVR.OnRenderStart();
 
@@ -68,9 +66,9 @@ int main(int argc, char **argv)
             glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
             g_application.OnRender();
-            g_oculusVR.OnEyeRenderFinish(eyeIndex);
         }
 
+        g_oculusVR.OnRenderFinish();
         g_oculusVR.SubmitFrame();
         g_oculusVR.BlitMirror();
         SDL_GL_SwapWindow(g_renderContext.window);

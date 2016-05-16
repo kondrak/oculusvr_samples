@@ -33,9 +33,6 @@
     <ClCompile Include="..\common_src\renderer\Font.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\common_src\renderer\OculusVR.cpp">
-      <Filter>Source Files\common_src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\common_src\renderer\OculusVRDebug.cpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClCompile>
@@ -78,6 +75,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OculusVRInstanced.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common_src\renderer\Camera.hpp">
@@ -87,9 +87,6 @@
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\common_src\renderer\Font.hpp">
-      <Filter>Source Files\common_src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common_src\renderer\OculusVR.hpp">
       <Filter>Source Files\common_src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\common_src\renderer\OculusVRDebug.hpp">
@@ -132,6 +129,9 @@
       <Filter>Source Files\contrib</Filter>
     </ClInclude>
     <ClInclude Include="src\Application.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OculusVRInstanced.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
