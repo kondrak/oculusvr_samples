@@ -10,7 +10,7 @@
 #include "OVR_CAPI.h"
 
 /*
- * Oculus Rift setup class (as of SDK 1.3.0)
+ * Oculus Rift setup class (as of SDK 1.3)
  */
 class OculusVR
 {

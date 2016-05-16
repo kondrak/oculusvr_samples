@@ -1,6 +1,6 @@
 #include "renderer/OculusVR.hpp"
 #include "renderer/ShaderManager.hpp"
-//#include <GL/CAPI_GLE.h>
+
 
 OculusVR::OVRBuffer::OVRBuffer(const ovrSession &session, int eyeIdx)
 {
@@ -72,7 +72,6 @@ void OculusVR::OVRBuffer::SetupMSAA()
     // linear filter
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_LEVEL, mipcount - 1);    
 
     // create MSAA depth buffer
@@ -85,7 +84,6 @@ void OculusVR::OVRBuffer::SetupMSAA()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_LEVEL, mipcount - 1);
 
     LOG_MESSAGE_ASSERT(!glGetError(), "MSAA setup failed");
