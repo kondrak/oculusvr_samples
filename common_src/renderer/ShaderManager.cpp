@@ -121,12 +121,16 @@ void ShaderManager::CompileShader(GLuint *newShader, GLenum shaderType, const ch
 // create the actual shader program
 bool ShaderManager::LinkShader(GLuint* const pProgramObject,
                                const GLuint VertexShader,
-                               const GLuint FragmentShader)
+                               const GLuint FragmentShader,
+                               const GLuint GeometryShader)
 {
     *pProgramObject = glCreateProgram();
 
-    glAttachShader(*pProgramObject, FragmentShader);
     glAttachShader(*pProgramObject, VertexShader);
+    if (GeometryShader > 0)
+        glAttachShader(*pProgramObject, GeometryShader);
+
+    glAttachShader(*pProgramObject, FragmentShader);
 
     // Link the program object
     GLint Linked;
@@ -150,15 +154,26 @@ bool ShaderManager::LinkShader(GLuint* const pProgramObject,
     return true;
 }
 
-void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename)
+
+void ShaderManager::LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename, const char *gshFilename)
 {
     std::string vShaderSrc = ReadShaderFromFile(vshFilename);
     std::string fShaderSrc = ReadShaderFromFile(fshFilename);
 
     CompileShader(&m_shaderProgram[shaderName].vertShader, GL_VERTEX_SHADER, vShaderSrc.c_str());
+
+    if (strlen(gshFilename) > 0)
+    {
+        std::string gShaderSrc = ReadShaderFromFile(gshFilename);
+        CompileShader(&m_shaderProgram[shaderName].geomShader, GL_GEOMETRY_SHADER, gShaderSrc.c_str());
+    }
+
     CompileShader(&m_shaderProgram[shaderName].fragShader, GL_FRAGMENT_SHADER, fShaderSrc.c_str());
 
-    LinkShader(&m_shaderProgram[shaderName].id, m_shaderProgram[shaderName].vertShader, m_shaderProgram[shaderName].fragShader);
+    LinkShader(&m_shaderProgram[shaderName].id, 
+                m_shaderProgram[shaderName].vertShader, 
+                m_shaderProgram[shaderName].fragShader,
+                m_shaderProgram[shaderName].geomShader);
 
     glUniform1i(glGetUniformLocation(m_shaderProgram[shaderName].id, "sTexture"), 0);  // Texture unit 0 is the primary texture.
 

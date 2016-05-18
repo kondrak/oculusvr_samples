@@ -36,8 +36,8 @@ private:
 
     std::string ReadShaderFromFile(const char *filename);
     void CompileShader(GLuint *newShader, GLenum shaderType, const char *shaderSrc);
-    void LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename);
-    bool LinkShader(GLuint* const pProgramObject, const GLuint VertexShader, const GLuint FragmentShader);
+    void LoadShader(ShaderName shaderName, const char* vshFilename, const char *fshFilename, const char *gshFilename="");
+    bool LinkShader(GLuint* const pProgramObject, const GLuint VertexShader, const GLuint FragmentShader, const GLuint GeometryShader);
 
     ShaderName    m_activeShader;
     ShaderProgram m_shaderProgram[NUM_SHADERS];
