@@ -1,7 +1,7 @@
 Oculus Rift minimum OpenGL instanced rendering
 ================
 
-This is a demonstration of instanced VR rendering in OpenGL. Press R during the demo to toggle between standard (one scene draw per eye) and instanced (single draw for both eyes) rendering. Contrary to other examples, this demo uses single render target for both eyes.
+This is a demonstration of instanced VR rendering in OpenGL. Press R during the demo to toggle between standard (one scene draw per eye) and instanced (single draw for both eyes) rendering. Contrary to other examples, this demo uses single render target for both eyes. Geometry shader capable graphics card with OpenGL 4.1+ support is required.
 
 ![Screenshot](http://kondrak.info/images/vr_minimum.png?raw=true)
 

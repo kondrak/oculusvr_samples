@@ -140,8 +140,10 @@ void RenderInstanced(GLuint &instanceVBO)
     ovrRecti viewPortR = g_oculusVR.GetEyeViewport(1);
 
     // create viewport array for geometry shader
-    GLfloat viewports[] = { viewPortL.Pos.x, viewPortL.Pos.y, viewPortL.Size.w, viewPortL.Size.h,
-                            viewPortR.Pos.x, viewPortR.Pos.y, viewPortR.Size.w, viewPortR.Size.h };
+    GLfloat viewports[] = { (GLfloat)viewPortL.Pos.x, (GLfloat)viewPortL.Pos.y, 
+                            (GLfloat)viewPortL.Size.w, (GLfloat)viewPortL.Size.h,
+                            (GLfloat)viewPortR.Pos.x, (GLfloat)viewPortR.Pos.y, 
+                            (GLfloat)viewPortR.Size.w, (GLfloat)viewPortR.Size.h };
     glViewportArrayv(0, 2, viewports);
 
     // perform instanced render - half the drawcalls compared to "standard" rendering!
