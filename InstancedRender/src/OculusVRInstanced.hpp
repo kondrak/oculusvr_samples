@@ -49,6 +49,7 @@ public:
     void  RenderTrackerChaperone();
     bool  IsDebugHMD() const { return (m_hmdDesc.AvailableHmdCaps & ovrHmdCap_DebugDevice) != 0; }
     void  ShowPerfStats(ovrPerfHudMode statsMode);
+    ovrRecti GetEyeViewport(int eyeIdx) { return m_eyeLayer.Viewport[eyeIdx]; } // used to get specific eye viewport (for instanced rendering)
     void  SetMSAA(bool val) { m_msaaEnabled = val; }
     bool  MSAAEnabled() const { return m_msaaEnabled; }
 private:

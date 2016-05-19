@@ -12,6 +12,7 @@ public:
     enum ShaderName
     {
         BasicShader,
+        BasicShaderInstanced,
         OVRFrustumShader,
         FontShader,
         BasicShaderNoTex,

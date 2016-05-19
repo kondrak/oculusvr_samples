@@ -101,6 +101,39 @@ void Application::OnRender()
     glDisableVertexAttribArray(texCoordAttr);
 }
 
+void Application::OnRenderInstanced()
+{
+    const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShaderInstanced);
+
+    GLuint vertexPosition_modelspaceID = glGetAttribLocation(shader.id, "inVertex");
+    GLuint vertexColorAttr = glGetAttribLocation(shader.id, "inVertexColor");
+    GLuint texCoordAttr = glGetAttribLocation(shader.id, "inTexCoord");
+
+    TextureManager::GetInstance()->BindTexture(m_texture);
+
+    // setup quad data
+    glBindVertexArray(m_vertexArray);
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glEnableVertexAttribArray(vertexColorAttr);
+    glEnableVertexAttribArray(texCoordAttr);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+    glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    // draw the scene twice using instancing
+    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 3);
+
+    glDisableVertexAttribArray(vertexPosition_modelspaceID);
+    glDisableVertexAttribArray(vertexColorAttr);
+    glDisableVertexAttribArray(texCoordAttr);
+}
+
 void Application::OnKeyPress(KeyCode key)
 {
     switch(key)
@@ -108,6 +141,8 @@ void Application::OnKeyPress(KeyCode key)
     case KEY_ESC:
         Terminate();
         break;
+    case KEY_R:
+        m_instancedRender = !m_instancedRender;
     default:
         break;
     } 

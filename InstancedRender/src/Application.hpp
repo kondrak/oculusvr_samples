@@ -19,13 +19,16 @@ public:
 
     void OnStart();
     void OnRender();
+    void OnRenderInstanced();
 
     inline bool Running() const  { return m_running; }
     inline void Terminate()      { m_running = false; }
+    inline bool InstancedRender() const { return m_instancedRender; }
 
     void OnKeyPress(KeyCode key);
 private:
     bool m_running;
+    bool m_instancedRender;
 
     // rendered quad data
     GLuint m_vertexBuffer;

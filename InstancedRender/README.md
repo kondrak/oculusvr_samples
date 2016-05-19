@@ -1,13 +1,13 @@
-Oculus Rift minimum OpenGL setup
+Oculus Rift minimum OpenGL instanced rendering
 ================
 
-A minimum setup application for Oculus Rift development with OpenGL and SDL2 as window manager. While the entire code could be squashed into a single file, a separate OculusVR class exists to handle all OVR initialization and processing. Along with it comes a separate ShaderManager with Shader class for cleaner shader loading. The application also provides head tracking recenter functionality at a keystroke.
+This is a demonstration of instanced VR rendering in OpenGL. Press R during the demo to toggle between standard (one scene draw per eye) and instanced (single draw for both eyes) rendering. Contrary to other examples, this demo uses single render target for both eyes.
 
 ![Screenshot](http://kondrak.info/images/vr_minimum.png?raw=true)
 
 Usage
 -----
-Run <code>MinimumOpenGL.exe</code>
+Run <code>InstancedRender.exe</code>
 
 Press SPACE while "ingame" to recenter tracking position.
 
