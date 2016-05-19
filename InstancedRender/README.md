@@ -1,4 +1,4 @@
-Oculus Rift minimum OpenGL instanced rendering
+Oculus Rift OpenGL instanced rendering
 ================
 
 This is a demonstration of instanced VR rendering in OpenGL. Contrary to other examples, this demo uses single render target for both eyes. Geometry shader capable graphics card with OpenGL 4.1+ support is required.
