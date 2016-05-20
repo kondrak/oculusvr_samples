@@ -18,8 +18,8 @@ public:
     ~Application();
 
     void OnStart();
-    void OnRender();
-    void OnRenderInstanced();
+    void OnRender(float x, float y, float z);
+    void OnRenderInstanced(float x, float y, float z);
 
     inline bool Running() const  { return m_running; }
     inline void Terminate()      { m_running = false; }
@@ -34,6 +34,7 @@ private:
     GLuint m_vertexBuffer;
     GLuint m_colorBuffer;
     GLuint m_texcoordBuffer;
+    GLuint m_quadOffsetBuffer;
     GLuint m_vertexArray;
     Texture *m_texture;
 

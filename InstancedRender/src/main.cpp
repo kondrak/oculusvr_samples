@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     ovrSizei hmdResolution = g_oculusVR.GetResolution();
     ovrSizei windowSize = { hmdResolution.w / 2, hmdResolution.h / 2 };
 
-    g_renderContext.Init("Oculus Rift OpenGL instanced rendering", 100, 100, windowSize.w, windowSize.h);
+    g_renderContext.Init("Oculus Rift OpenGL instanced rendering (press R to toggle)", 100, 100, windowSize.w, windowSize.h);
     SDL_ShowCursor(SDL_DISABLE);
 
     if (glewInit() != GLEW_OK)
@@ -50,6 +50,7 @@ int main(int argc, char **argv)
 
     ShaderManager::GetInstance()->LoadShaders();
     g_application.OnStart();
+    g_oculusVR.ShowPerfStats(ovrPerfHud_AppRenderTiming);
 
     // for instanced rendering we need to store each MVP 
     GLuint mvpInstanceVBO;
@@ -77,6 +78,7 @@ int main(int argc, char **argv)
 
     glDeleteBuffers(1, &mvpInstanceVBO);
 
+    g_oculusVR.ShowPerfStats(ovrPerfHud_Off);
     g_oculusVR.DestroyVR();
     g_renderContext.Destroy();
 
@@ -97,7 +99,9 @@ void Render()
         const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
         glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-        g_application.OnRender();
+        for (int i = 0; i < 50; i++)
+            for (int j = 0; j < 50; j++)
+                g_application.OnRender(-7.f + i * 0.3f, -7.f + j * 0.3f, 0.f);
     }
 }
 
@@ -147,5 +151,7 @@ void RenderInstanced(GLuint &instanceVBO)
     glViewportArrayv(0, 2, viewports);
 
     // perform instanced render - half the drawcalls compared to "standard" rendering!
-    g_application.OnRenderInstanced();
+    for (int i = 0; i < 50; i++)
+        for (int j = 0; j < 50; j++)
+            g_application.OnRenderInstanced(-7.f + i * 0.3f, -7.f + j * 0.3f, 0.f);
 }
