@@ -9,7 +9,7 @@ Usage
 -----
 Run <code>InstancedRender.exe</code>
 
-Press SPACE while "ingame" to recenter tracking position.  Press R during the demo to toggle between standard (one scene draw per eye) and instanced (single draw for both eyes) rendering.
+Press SPACE while "ingame" to recenter tracking position.  Press R during the demo to toggle between standard (one scene draw per eye, red quads) and instanced (single draw for both eyes, green quads) rendering. Notice the performance difference between the two!
 
 How to build
 -------
