@@ -44,7 +44,7 @@ void ShaderManager::DestroyShaders()
 void ShaderManager::LoadShaders()
 {
     LoadShader(BasicShader, "../common_res/Basic.vsh", "../common_res/Basic.fsh");
-    LoadShader(BasicShaderInstanced, "../common_res/BasicInstanced.vsh", "../common_res/BasicInstanced.fsh", "../common_res/BasicInstanced.gsh");
+    LoadShader(BasicShaderInstanced, "../common_res/BasicInstanced.vsh", "../common_res/Basic.fsh", "../common_res/BasicInstanced.gsh");
     LoadShader(OVRFrustumShader, "../common_res/OVRFrustum.vsh", "../common_res/OVRFrustum.fsh");
     LoadShader(FontShader, "../common_res/Font.vsh", "../common_res/Font.fsh");
     LoadShader(BasicShaderNoTex, "../common_res/BasicNoTex.vsh", "../common_res/BasicNoTex.fsh");

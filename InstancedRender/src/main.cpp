@@ -104,7 +104,7 @@ void Render()
 // instanced rendering: draw the scene once using OpenGL instances
 void RenderInstanced(GLuint &instanceVBO)
 {
-    // MVP matricex for left and right eye
+    // MVP matrices for left and right eye
     GLfloat mvps[32];
 
     // fetch MVP matrices for both eyes

@@ -6,8 +6,8 @@ layout(location = 0) in vec3 inVertex;
 layout(location = 1) in vec4 inVertexColor;
 layout(location = 2) in vec2 inTexCoord;
 
-layout(location = 3) out vec4 vertexColor;
-layout(location = 4) out vec2  TexCoord;
+layout(location = 9)  out vec4 vertexColor;
+layout(location = 10) out vec2  TexCoord;
 
 void main()
 {

@@ -2,8 +2,8 @@
 
 uniform sampler2D sTexture;
 
-layout(location = 3) in vec4 vertexColor;
-layout(location = 4) in vec2 TexCoord;
+layout(location = 9)  in vec4 vertexColor;
+layout(location = 10) in vec2 TexCoord;
 
 out vec4 fragmentColor;
 
