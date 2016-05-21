@@ -73,7 +73,7 @@ void Application::OnStart()
     glGenBuffers(1, &m_quadOffsetBuffer);
 }
 
-void Application::OnRender(float x, float y, float z)
+void Application::OnRender()
 {
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
 
@@ -84,41 +84,51 @@ void Application::OnRender(float x, float y, float z)
 
     TextureManager::GetInstance()->BindTexture(m_texture);
 
-    // setup quad data
-    glBindVertexArray(m_vertexArray);
-    glEnableVertexAttribArray(vertexPosition_modelspaceID);
-    glEnableVertexAttribArray(vertexColorAttr);
-    glEnableVertexAttribArray(texCoordAttr);
-    glEnableVertexAttribArray(offsetAttr);
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 50; j++)
+        {
+            // setup quad data
+            glBindVertexArray(m_vertexArray);
+            glEnableVertexAttribArray(vertexPosition_modelspaceID);
+            glEnableVertexAttribArray(vertexColorAttr);
+            glEnableVertexAttribArray(texCoordAttr);
+            glEnableVertexAttribArray(offsetAttr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-    glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+            glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
-    glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+            glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
+            glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    const GLfloat offset[] = { x, y, z,
-                               x, y, z,
-                               x, y, z,
-                               x, y, z };
+            float x = -7.f + i * 0.3f;
+            float y = -7.f + j * 0.3f;
+            float z = 0.f;
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_quadOffsetBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(offset), offset, GL_STATIC_DRAW);
-    glVertexAttribPointer(offsetAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            const GLfloat offset[] = { x, y, z,
+                                       x, y, z,
+                                       x, y, z,
+                                       x, y, z };
 
-    // draw the quad!
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glBindBuffer(GL_ARRAY_BUFFER, m_quadOffsetBuffer);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(offset), offset, GL_STATIC_DRAW);
+            glVertexAttribPointer(offsetAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glDisableVertexAttribArray(vertexPosition_modelspaceID);
-    glDisableVertexAttribArray(vertexColorAttr);
-    glDisableVertexAttribArray(texCoordAttr);
-    glDisableVertexAttribArray(offsetAttr);
+            // draw the quad!
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+            glDisableVertexAttribArray(vertexPosition_modelspaceID);
+            glDisableVertexAttribArray(vertexColorAttr);
+            glDisableVertexAttribArray(texCoordAttr);
+            glDisableVertexAttribArray(offsetAttr);
+        }
+    }
 }
 
-void Application::OnRenderInstanced(float x, float y, float z)
+void Application::OnRenderInstanced()
 {
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShaderInstanced);
 
@@ -130,40 +140,50 @@ void Application::OnRenderInstanced(float x, float y, float z)
 
     TextureManager::GetInstance()->BindTexture(m_texture);
 
-    // setup quad data
-    glBindVertexArray(m_vertexArray);
-    glEnableVertexAttribArray(vertexPosition_modelspaceID);
-    glEnableVertexAttribArray(vertexColorAttr);
-    glEnableVertexAttribArray(texCoordAttr);
-    glEnableVertexAttribArray(mvpAttr);
-    glEnableVertexAttribArray(offsetAttr);
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 50; j++)
+        {
+            // setup quad data
+            glBindVertexArray(m_vertexArray);
+            glEnableVertexAttribArray(vertexPosition_modelspaceID);
+            glEnableVertexAttribArray(vertexColorAttr);
+            glEnableVertexAttribArray(texCoordAttr);
+            glEnableVertexAttribArray(mvpAttr);
+            glEnableVertexAttribArray(offsetAttr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-    glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+            glVertexAttribPointer(vertexPosition_modelspaceID, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
-    glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_colorBuffer);
+            glVertexAttribPointer(vertexColorAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glBindBuffer(GL_ARRAY_BUFFER, m_texcoordBuffer);
+            glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    const GLfloat offset[] = { x, y, z,
-                               x, y, z,
-                               x, y, z,
-                               x, y, z };
+            float x = -7.f + i * 0.3f;
+            float y = -7.f + j * 0.3f;
+            float z = 0.f;
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_quadOffsetBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(offset), offset, GL_STATIC_DRAW);
-    glVertexAttribPointer(offsetAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            const GLfloat offset[] = { x, y, z,
+                                       x, y, z,
+                                       x, y, z,
+                                       x, y, z };
 
-    // draw the scene twice using instancing
-    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 2);
+            glBindBuffer(GL_ARRAY_BUFFER, m_quadOffsetBuffer);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(offset), offset, GL_STATIC_DRAW);
+            glVertexAttribPointer(offsetAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glDisableVertexAttribArray(vertexPosition_modelspaceID);
-    glDisableVertexAttribArray(vertexColorAttr);
-    glDisableVertexAttribArray(texCoordAttr);
-    glDisableVertexAttribArray(mvpAttr);
-    glDisableVertexAttribArray(offsetAttr);
+            // draw the scene twice using instancing
+            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 2);
+
+            glDisableVertexAttribArray(vertexPosition_modelspaceID);
+            glDisableVertexAttribArray(vertexColorAttr);
+            glDisableVertexAttribArray(texCoordAttr);
+            glDisableVertexAttribArray(mvpAttr);
+            glDisableVertexAttribArray(offsetAttr);
+        }
+    }
 }
 
 void Application::OnKeyPress(KeyCode key)

@@ -99,9 +99,7 @@ void Render()
         const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::BasicShader);
         glUniformMatrix4fv(shader.uniforms[ModelViewProjectionMatrix], 1, GL_FALSE, &MVPMatrix.Transposed().M[0][0]);
 
-        for (int i = 0; i < 50; i++)
-            for (int j = 0; j < 50; j++)
-                g_application.OnRender(-7.f + i * 0.3f, -7.f + j * 0.3f, 0.f);
+        g_application.OnRender();
     }
 }
 
@@ -151,7 +149,5 @@ void RenderInstanced(GLuint &instanceVBO)
     glViewportArrayv(0, 2, viewports);
 
     // perform instanced render - half the drawcalls compared to "standard" rendering!
-    for (int i = 0; i < 50; i++)
-        for (int j = 0; j < 50; j++)
-            g_application.OnRenderInstanced(-7.f + i * 0.3f, -7.f + j * 0.3f, 0.f);
+    g_application.OnRenderInstanced();
 }

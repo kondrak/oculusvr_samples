@@ -18,8 +18,8 @@ public:
     ~Application();
 
     void OnStart();
-    void OnRender(float x, float y, float z);
-    void OnRenderInstanced(float x, float y, float z);
+    void OnRender();
+    void OnRenderInstanced();
 
     inline bool Running() const  { return m_running; }
     inline void Terminate()      { m_running = false; }
