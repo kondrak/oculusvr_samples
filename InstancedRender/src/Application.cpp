@@ -135,7 +135,6 @@ void Application::OnRenderInstanced()
     GLuint vertexPosition_modelspaceID = glGetAttribLocation(shader.id, "inVertex");
     GLuint vertexColorAttr = glGetAttribLocation(shader.id, "inVertexColor");
     GLuint texCoordAttr = glGetAttribLocation(shader.id, "inTexCoord");
-    GLuint mvpAttr = glGetAttribLocation(shader.id, "ModelViewProjectionMatrix");
     GLuint offsetAttr = glGetAttribLocation(shader.id, "inOffset");
 
     TextureManager::GetInstance()->BindTexture(m_texture);
@@ -149,7 +148,6 @@ void Application::OnRenderInstanced()
             glEnableVertexAttribArray(vertexPosition_modelspaceID);
             glEnableVertexAttribArray(vertexColorAttr);
             glEnableVertexAttribArray(texCoordAttr);
-            glEnableVertexAttribArray(mvpAttr);
             glEnableVertexAttribArray(offsetAttr);
 
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -180,7 +178,6 @@ void Application::OnRenderInstanced()
             glDisableVertexAttribArray(vertexPosition_modelspaceID);
             glDisableVertexAttribArray(vertexColorAttr);
             glDisableVertexAttribArray(texCoordAttr);
-            glDisableVertexAttribArray(mvpAttr);
             glDisableVertexAttribArray(offsetAttr);
         }
     }

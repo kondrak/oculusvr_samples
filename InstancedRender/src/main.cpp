@@ -52,9 +52,12 @@ int main(int argc, char **argv)
     g_application.OnStart();
     g_oculusVR.ShowPerfStats(ovrPerfHud_AppRenderTiming);
 
-    // for instanced rendering we need to store each MVP 
-    GLuint mvpInstanceVBO;
-    glGenBuffers(1, &mvpInstanceVBO);
+    // for instanced rendering, store both eyes' MVPs in UBO
+    GLuint mvpUBO;
+    glGenBuffers(1, &mvpUBO);
+    glBindBuffer(GL_UNIFORM_BUFFER, mvpUBO);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(GLfloat) * 16, 0, GL_STREAM_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     while (g_application.Running())
     {
@@ -65,7 +68,7 @@ int main(int argc, char **argv)
         g_oculusVR.OnRenderStart();
 
         if(g_application.InstancedRender())
-            RenderInstanced(mvpInstanceVBO);
+            RenderInstanced(mvpUBO);
         else
             Render();
 
@@ -76,7 +79,7 @@ int main(int argc, char **argv)
         SDL_GL_SwapWindow(g_renderContext.window);
     }
 
-    glDeleteBuffers(1, &mvpInstanceVBO);
+    glDeleteBuffers(1, &mvpUBO);
 
     g_oculusVR.ShowPerfStats(ovrPerfHud_Off);
     g_oculusVR.DestroyVR();
@@ -103,11 +106,18 @@ void Render()
     }
 }
 
-// instanced rendering: draw the scene once using OpenGL instances
-void RenderInstanced(GLuint &instanceVBO)
+// instanced rendering: draw the scene once using OpenGL instancing
+void RenderInstanced(GLuint &ubo)
 {
     // MVP matrices for left and right eye
     GLfloat mvps[32];
+
+    const ShaderProgram &shader = ShaderManager::GetInstance()->GetShaderProgram(ShaderManager::BasicShaderInstanced);
+
+    // fetch location of MVP UBO in shader
+    GLuint mvpBinding = 0;
+    GLint blockIdx = glGetUniformBlockIndex(shader.id, "EyeMVPs");
+    glUniformBlockBinding(shader.id, blockIdx, mvpBinding);
 
     // fetch MVP matrices for both eyes
     for (int i = 0; i < 2; i++)
@@ -116,27 +126,10 @@ void RenderInstanced(GLuint &instanceVBO)
         memcpy(&mvps[i * 16], &MVPMatrix.Transposed().M[0][0], sizeof(GLfloat) * 16);
     }
 
-    // update instanceVBO with new matrix values
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferData(GL_ARRAY_BUFFER, 2 * sizeof(GLfloat) * 16, mvps, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // a 4x4 mat4 shader attribute is broken down into 4 vec4s taking up consecutive locations
-    glEnableVertexAttribArray(5);
-    glEnableVertexAttribArray(6);
-    glEnableVertexAttribArray(7);
-    glEnableVertexAttribArray(8);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 16, (GLvoid*)0);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 16, (GLvoid*)(4  * sizeof(GLfloat)));
-    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 16, (GLvoid*)(8  * sizeof(GLfloat)));
-    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 16, (GLvoid*)(12 * sizeof(GLfloat)));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // fetch next MVP after rendering a single instance
-    glVertexAttribDivisor(5, 1);
-    glVertexAttribDivisor(6, 1);
-    glVertexAttribDivisor(7, 1);
-    glVertexAttribDivisor(8, 1);
+    // update MVP UBO with new eye matrices
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, 2 * sizeof(GLfloat) * 16, mvps);
+    glBindBufferRange(GL_UNIFORM_BUFFER, mvpBinding, ubo, 0, 2 * sizeof(GLfloat) * 16);
 
     ovrRecti viewPortL = g_oculusVR.GetEyeViewport(0);
     ovrRecti viewPortR = g_oculusVR.GetEyeViewport(1);
