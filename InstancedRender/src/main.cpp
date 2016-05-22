@@ -55,9 +55,6 @@ int main(int argc, char **argv)
     // for instanced rendering, store both eyes' MVPs in UBO
     GLuint mvpUBO;
     glGenBuffers(1, &mvpUBO);
-    glBindBuffer(GL_UNIFORM_BUFFER, mvpUBO);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(GLfloat) * 16, 0, GL_STREAM_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     while (g_application.Running())
     {
@@ -128,7 +125,7 @@ void RenderInstanced(GLuint &ubo)
 
     // update MVP UBO with new eye matrices
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, 2 * sizeof(GLfloat) * 16, mvps);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(GLfloat) * 16, mvps, GL_STREAM_DRAW);
     glBindBufferRange(GL_UNIFORM_BUFFER, mvpBinding, ubo, 0, 2 * sizeof(GLfloat) * 16);
 
     ovrRecti viewPortL = g_oculusVR.GetEyeViewport(0);
