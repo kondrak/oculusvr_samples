@@ -10,7 +10,7 @@ layout(location = 15) in  vec3 inOffset;
 layout(location = 20) out int instanceID;
 
 // store MVP for each eye in a separate matrix UBO
-// rendering will be done determined on gl_InstanceID (0 - left, 1 - right)
+// rendering will be done determined by gl_InstanceID (0 - left, 1 - right)
 layout(std140) uniform EyeMVPs
 {
     mat4 ModelViewProjectionMatrix[2];
