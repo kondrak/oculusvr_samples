@@ -1,4 +1,4 @@
-Samples for Oculus Rift (SDK 1.3)
+Samples for Oculus Rift (SDK 1.3+)
 =======
 
 - <code>CameraBounds</code>     - IR tracking camera bounds renderer (OpenGL).

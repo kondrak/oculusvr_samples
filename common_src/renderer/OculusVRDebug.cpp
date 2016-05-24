@@ -3,7 +3,6 @@
 #include "renderer/Font.hpp"
 #include "renderer/OculusVR.hpp"
 #include "renderer/RenderContext.hpp"
-#include "Kernel/OVR_Std.h"
 #include <sstream>
 
 extern RenderContext  g_renderContext;
@@ -44,21 +43,21 @@ void OculusVRDebug::OnRender(const ovrSession session, const ovrTrackingState &t
     OVR::Quatf headOrientation(trackingState.HeadPose.ThePose.Orientation);
     headOrientation.GetEulerAngles<OVR::Axis_Y, OVR::Axis_X, OVR::Axis_Z>(&hmdYaw, &hmdPitch, &hmdRoll);
 
-    OVR::OVR_sprintf(buf, sizeof(buf), "HMD YPR:%2.0f %2.0f %2.0f  HMD: %s", hmdYaw * PIdiv180inv, hmdPitch * PIdiv180inv, hmdRoll * PIdiv180inv, hmdDesc.ProductName);
+    sprintf(buf, "HMD YPR:%2.0f %2.0f %2.0f  HMD: %s", hmdYaw * PIdiv180inv, hmdPitch * PIdiv180inv, hmdRoll * PIdiv180inv, hmdDesc.ProductName);
     m_font->drawText(buf, xPos, 0.1f, 0.f);
 
-    OVR::OVR_sprintf(buf, sizeof(buf), "FPS: %.1f  ms/frame: %.1f  Frame: %03d %d", m_fps, m_secondsPerFrame * 1000.0f, m_frameCounter, m_totalFrameCounter % 2);
+    sprintf(buf, "FPS: %.1f  ms/frame: %.1f  Frame: %03d %d", m_fps, m_secondsPerFrame * 1000.0f, m_frameCounter, m_totalFrameCounter % 2);
     m_font->drawText(buf, xPos, 0.1f - ySpacing, 0.f);
 
-    OVR::OVR_sprintf(buf, sizeof(buf), "Pos: %2.2f %2.2f %2.2f  Tracking: %s", g_cameraDirector.GetActiveCamera()->Position().m_x, 
-                                                                 g_cameraDirector.GetActiveCamera()->Position().m_y,
-                                                                 g_cameraDirector.GetActiveCamera()->Position().m_z,
-                                                                 trackingState.StatusFlags & ovrStatus_PositionTracked ? "YES" : "NO");
+    sprintf(buf, "Pos: %2.2f %2.2f %2.2f  Tracking: %s", g_cameraDirector.GetActiveCamera()->Position().m_x, 
+                                                         g_cameraDirector.GetActiveCamera()->Position().m_y,
+                                                         g_cameraDirector.GetActiveCamera()->Position().m_z,
+                                                         trackingState.StatusFlags & ovrStatus_PositionTracked ? "YES" : "NO");
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 2.f, 0.f);
 
     float eyeNeckDist[2] = {};
     ovr_GetFloatArray(session, OVR_KEY_EYE_TO_NOSE_DISTANCE, eyeNeckDist, 2);
-    OVR::OVR_sprintf(buf, sizeof(buf), "EyeHeight: %2.2f IPD: %2.1fmm", ovr_GetFloat(session, OVR_KEY_EYE_HEIGHT, 0.f), (eyeNeckDist[0] + eyeNeckDist[1]) * 1000.f);
+    sprintf(buf, "EyeHeight: %2.2f IPD: %2.1fmm", ovr_GetFloat(session, OVR_KEY_EYE_HEIGHT, 0.f), (eyeNeckDist[0] + eyeNeckDist[1]) * 1000.f);
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 3.f, 0.f);
 
     // Average FOVs
@@ -66,9 +65,9 @@ void OculusVRDebug::OnRender(const ovrSession session, const ovrTrackingState &t
     OVR::FovPort rightFov = eyeRenderDescs[1].Fov;
 
     // Rendered size changes based on selected options & dynamic rendering.
-    OVR::OVR_sprintf(buf, sizeof(buf), "FOV %2.1fx%2.1f, Resolution: %ix%i", (leftFov.GetHorizontalFovDegrees() + rightFov.GetHorizontalFovDegrees()) * 0.5f,
-                                                                             (leftFov.GetVerticalFovDegrees() + rightFov.GetVerticalFovDegrees()) * 0.5,
-                                                                             eyeTextureSize.w, eyeTextureSize.h);
+    sprintf(buf, "FOV %2.1fx%2.1f, Resolution: %ix%i", (leftFov.GetHorizontalFovDegrees() + rightFov.GetHorizontalFovDegrees()) * 0.5f,
+                                                       (leftFov.GetVerticalFovDegrees() + rightFov.GetVerticalFovDegrees()) * 0.5,
+                                                       eyeTextureSize.w, eyeTextureSize.h);
     m_font->drawText(buf, xPos, 0.1f - ySpacing * 4.f, 0.f);
 
     // latency readings
@@ -110,7 +109,7 @@ void OculusVRDebug::UpdateFrameRateCounter(double curtime)
 void OculusVRDebug::FormatLatencyReading(char* buff, size_t size, float val)
 {
     if (val < 0.000001f)
-        OVR::OVR_strcpy(buff, size, "N/A   ");
+        strcpy(buff, "N/A   ");
     else
-        OVR::OVR_sprintf(buff, size, "%4.2fms", val * 1000.0f);
+        sprintf(buff, "%4.2fms", val * 1000.0f);
 }
