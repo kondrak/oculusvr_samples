@@ -242,7 +242,7 @@ void LeapMotion::RenderSkeletonHands()
     const ShaderProgram &shader = ShaderManager::GetInstance()->UseShaderProgram(ShaderManager::OVRFrustumShader);
     GLuint vertexPositionAttr = glGetAttribLocation(shader.id, "inVertex");
 
-    const float boneColor[3] = { 0.f, 1.f, 0.f };
+    const float boneColor[4] = { 0.f, 1.f, 0.f, 1.0f };
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -258,7 +258,7 @@ void LeapMotion::RenderSkeletonHands()
         glBindBuffer(GL_ARRAY_BUFFER, m_leapData->m_handVertexBuffers[i]);
         glVertexAttribPointer(vertexPositionAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-        glUniform3fv(shader.uniforms[VertexColor], 1, boneColor);
+        glUniform4fv(shader.uniforms[VertexColor], 1, boneColor);
         glDrawArrays(GL_LINES, 0, 126 / 3);
     }
 
