@@ -1,8 +1,8 @@
 Samples for Oculus Rift (SDK 1.3+)
 =======
 
-- <code>CameraBounds</code>     - IR tracking camera bounds renderer (OpenGL).
-- <code>DebugInfoRender</code>  - Oculus Rift Debug Data Rendering (pre-debug overlay).
+- <code>CameraBounds</code>     - IR tracking camera bounds renderer.
+- <code>DebugInfoRender</code>  - Oculus Rift Debug Data Rendering (obsoleted by OVR overlay).
 - <code>InstancedRender</code>  - Instanced VR rendering in OpenGL.
 - <code>LeapMotion</code>       - Leap Motion SDK integration demo.
 - <code>MinimumOpenGL</code>    - My personal minimum setup using OpenGL and SDL2.
