@@ -8,8 +8,8 @@ This application introduces different ways to mirror the Oculus Rift output to a
 
 A green rectangle will determine which eye is currently rendered in single eye mode.
 
-![Screenshot](http://kondrak.info/images/vr_mirror1.png?raw=true)
-![Screenshot](http://kondrak.info/images/vr_mirror2.png?raw=true)
+![Screenshot](vr_mirror1.png?raw=true)
+![Screenshot](vr_mirror2.png?raw=true)
 
 Usage
 -----

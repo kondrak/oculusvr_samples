@@ -3,7 +3,7 @@ Oculus Rift OpenGL Multisampling
 
 Example application displaying OpenGL multisampling (MSAA) capabilities with Oculus Rift.
 
-![Screenshot](http://kondrak.info/images/vr_multisample.png?raw=true)
+![Screenshot](vr_multisample.png?raw=true)
 
 Usage
 -----

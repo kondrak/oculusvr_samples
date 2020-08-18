@@ -3,7 +3,7 @@ Oculus Rift Vive-style tracker chaperone
 
 Sample program demonstrating a HTC Vive-like chaperone for Oculus Rift tracker camera. Tracking planes will lit up once the users move their heads too close to them.
 
-[![Screenshot](http://kondrak.info/images/vr_chaperone.png?raw=true)](https://www.youtube.com/watch?v=GoWwFa_TDGM)
+[![Screenshot](vr_chaperone.png?raw=true)](https://www.youtube.com/watch?v=GoWwFa_TDGM)
 
 Usage
 -----
